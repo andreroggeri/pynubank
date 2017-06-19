@@ -7,5 +7,12 @@ setup(
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
     license='BSD',
-    packages=['pynubank']
+    packages=['pynubank'],
+    install_requires=[
+        'certifi==2017.4.17',
+        'chardet==3.0.4',
+        'idna==2.5',
+        'requests==2.18.1',
+        'urllib3==1.21.1'
+    ]
 )
