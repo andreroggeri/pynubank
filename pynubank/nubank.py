@@ -1,4 +1,5 @@
 import json
+
 import requests
 
 
@@ -39,4 +40,4 @@ class Nubank:
 
     def get_account_statements(self):
         request = requests.get(self.feed_url, headers=self.headers)
-        return json.loads(request.content)
+        return json.loads(request.content.decode('utf-8'))
