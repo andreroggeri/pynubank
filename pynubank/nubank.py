@@ -34,7 +34,7 @@ class Nubank:
         if request.status_code != 200:
             raise NuException('Authentication failed. Check your credentials!')
 
-        data = json.loads(request.content)
+        data = json.loads(request.content.decode('utf-8'))
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
         self.feed_url = data['_links']['purchases']['href']
 
