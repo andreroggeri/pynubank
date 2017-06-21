@@ -36,7 +36,7 @@ class Nubank:
 
         data = json.loads(request.content.decode('utf-8'))
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
-        self.feed_url = data['_links']['purchases']['href']
+        self.feed_url = data['_links']['events']['href']
 
     def get_account_statements(self):
         request = requests.get(self.feed_url, headers=self.headers)
