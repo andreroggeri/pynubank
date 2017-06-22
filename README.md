@@ -1,4 +1,6 @@
 # pynubank
+[![PyPI version](https://badge.fury.io/py/pynubank.svg)](https://badge.fury.io/py/pynubank)
+
 Acesse seus extratos do Nubank pelo Python ([Baseado na versão js](https://github.com/Astrocoders/nubank-api))
 
 ## Instalação
@@ -13,23 +15,28 @@ Disponível via pip
 ```
 from pynubank import Nubank
 
-nu = Nubank('123456789', 'senha') # Utilize o CPF sem pontos ou traços
-stmts = nu.get_account_statements() # Retorna uma lista de dicionários contendo todas as transações
+# Utilize o CPF sem pontos ou traços
+nu = Nubank('123456789', 'senha') 
 
-sum([stmt['amount'] for stmt in stmts['transactions']]) # Soma de todas as compras
+# Lista de dicionários contendo todos os eventos do seu Nubank (Compras, aumento de limite, pagamentos,etc)
+transactions = nu.get_account_statements() 
+
+# Soma de todas as compras
+sum([t['amount'] for t in transactions]) 
 ```
 
 #### Utilizando com Pandas
 ```
-import pandas as pd
-from pynubank import Nubank
+>>> import pandas as pd
+>>> from pynubank import Nubank
 
-nu = Nubank('123456789', 'senha')
-transactions = nu.get_account_statements()['transactions']
+>>> nu = Nubank('123456789', 'senha')
 
-df = pd.DataFrame(transactions, columns=['time', 'amount'])
-df['time'] = pd.to_datetime(df['time'])
-df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
+>>> transactions = nu.get_account_statements()
+
+>>> df = pd.DataFrame(transactions, columns=['time', 'amount'])
+>>> df['time'] = pd.to_datetime(df['time'])
+>>> df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
 Year Month  Amount   
 2016 6      20000
      7      20000
@@ -45,6 +52,20 @@ Year Month  Amount
      4      35000
      5      12000
      6      22000
+     
+>>> df.groupby([df.title]).sum() # Agrupado por categoria
+title         amount
+casa           13000
+eletrônicos   123000
+lazer          32800
+outros        100000
+restaurante    98505
+saúde           3435
+serviços      456785
+supermercado   45621
+transporte    489152
+vestuário      45612
+viagem         78456
 
 ```
 
