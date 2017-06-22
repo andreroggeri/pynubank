@@ -38,6 +38,10 @@ class Nubank:
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
         self.feed_url = data['_links']['events']['href']
 
-    def get_account_statements(self):
+    def get_account_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)
         return json.loads(request.content.decode('utf-8'))
+
+    def get_account_statements(self):
+        feed = self.get_account_feed()
+        return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
