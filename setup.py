@@ -1,4 +1,13 @@
 from setuptools import setup
+from pip.req import parse_requirements
+
+
+def _to_list(requires):
+    return [str(ir.req) for ir in requires]
+
+
+install_requires = _to_list(parse_requirements('requirements.txt', session=False))
+tests_require = _to_list(parse_requirements('requirements-test.txt', session=False))
 
 setup(
     name='pynubank',
@@ -8,7 +17,6 @@ setup(
     author_email='a.roggeri.c@gmail.com',
     license='BSD',
     packages=['pynubank'],
-    install_requires=[
-        'requests==2.18.1',
-    ]
+    install_requires=install_requires,
+    tests_require=tests_require,
 )
