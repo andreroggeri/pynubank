@@ -69,6 +69,17 @@ viagem         78456
 
 ```
 
+## Testes
+1. Instale os requirements
+1. Execute o comando pytest
+
+```
+$ pip install -r requirements.txt
+$ pip install -r requirements-test.txt
+
+$ pytest
+```
+
 
 ## Contribuindo
 
