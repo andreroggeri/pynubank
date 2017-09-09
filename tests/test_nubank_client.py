@@ -1,10 +1,78 @@
-from unittest.mock import MagicMock
-
+import json
 import pytest
+
+from unittest.mock import MagicMock
 
 from requests import Response
 
 from pynubank.nubank import Nubank, NuException
+
+
+@pytest.fixture
+def authentication_return():
+    return {
+        "access_token": "access_token_123",
+        "token_type": "bearer",
+        "_links": {
+            "change_password": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/change_password_123"
+            },
+            "enabled_features": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/enabled_features_123"
+            },
+            "revoke_token": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/revoke_token_123"
+            },
+            "userinfo": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/userinfo_123"
+            },
+            "events_page": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_page_123"
+            },
+            "events": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123"
+            },
+            "postcode": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/post_code_123"
+            },
+            "app_flows": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/app_flows_123"
+            },
+            "revoke_all": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/revoke_all_123"
+            },
+            "customer": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/customer_123"
+            },
+            "account": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/account_123"
+            },
+            "bills_summary": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/bills_summary_123"
+            },
+            "savings_account": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/savings_account_123"
+            },
+            "purchases": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/purchases_123"
+            },
+            "ghostflame": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/ghostflame_123"
+            },
+            "user_change_password": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/user_change_password_123"
+            }
+        },
+        "refresh_token": "refresh_token_123",
+        "refresh_before": "2017-09-16T12:41:13Z"
+    }
+
+
+def create_fake_response(dict_response, status_code=200):
+    response = Response()
+    response.status_code = status_code
+    response._content = bytes(json.dumps(dict_response).encode('utf-8'))
+    return response
 
 
 @pytest.mark.parametrize("http_status", [
@@ -22,3 +90,12 @@ def test_authentication_failure_raise_exception(monkeypatch, http_status):
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     with pytest.raises(NuException):
         Nubank('12345678909', '12345678')
+
+
+def test_authentication_succeeds(monkeypatch, authentication_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
