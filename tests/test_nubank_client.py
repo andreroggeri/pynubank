@@ -68,6 +68,43 @@ def authentication_return():
     }
 
 
+@pytest.fixture
+def events_return():
+    return {
+        "events": [
+            {
+                "description": "Shopping Iguatemi",
+                "category": "transaction",
+                "amount": 700,
+                "time": "2017-09-09T02:03:55Z",
+                "title": "transporte",
+                "details": {
+                    "lat": -12.9818258,
+                    "lon": -38.4652058,
+                    "subcategory": "card_present"
+                },
+                "id": "abcde-fghi-jklmn-opqrst-uvxz",
+                "_links": {
+                    "self": {
+                        "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123"
+                    }
+                },
+                "href": "nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz"
+            }
+        ],
+        "as_of": "2017-09-09T06:50:22.323Z",
+        "customer_id": "abcde-fghi-jklmn-opqrst-uvxz",
+        "_links": {
+            "updates": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/updates_123"
+            },
+            "next": {
+                "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/next_123"
+            }
+        }
+    }
+
+
 def create_fake_response(dict_response, status_code=200):
     response = Response()
     response.status_code = status_code
@@ -99,3 +136,32 @@ def test_authentication_succeeds(monkeypatch, authentication_return):
 
     assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
     assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
+
+
+def test_get_account_feed(monkeypatch, authentication_return, events_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(events_return)
+    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
+
+    feed = nubank_client.get_account_feed()
+    assert feed['as_of'] == '2017-09-09T06:50:22.323Z'
+    assert feed['customer_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert feed['_links']['updates']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/updates_123'
+    assert feed['_links']['next']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/next_123'
+
+    events = feed['events']
+    assert len(events) == 1
+    assert events[0]['description'] == 'Shopping Iguatemi'
+    assert events[0]['category'] == 'transaction'
+    assert events[0]['amount'] == 700
+    assert events[0]['time'] == '2017-09-09T02:03:55Z'
+    assert events[0]['title'] == 'transporte'
+    assert events[0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert events[0]['details']['lat'] == -12.9818258
+    assert events[0]['details']['lon'] == -38.4652058
+    assert events[0]['details']['subcategory'] == 'card_present'
+    assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
+    assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
