@@ -165,3 +165,26 @@ def test_get_account_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['details']['subcategory'] == 'card_present'
     assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
+
+
+def test_get_account_statements(monkeypatch, authentication_return, events_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(events_return)
+    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
+    statements = nubank_client.get_account_statements()
+
+    assert len(statements) == 1
+    assert statements[0]['description'] == 'Shopping Iguatemi'
+    assert statements[0]['category'] == 'transaction'
+    assert statements[0]['amount'] == 700
+    assert statements[0]['time'] == '2017-09-09T02:03:55Z'
+    assert statements[0]['title'] == 'transporte'
+    assert statements[0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert statements[0]['details']['lat'] == -12.9818258
+    assert statements[0]['details']['lon'] == -38.4652058
+    assert statements[0]['details']['subcategory'] == 'card_present'
+    assert statements[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
+    assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
