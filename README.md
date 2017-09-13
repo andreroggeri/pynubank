@@ -1,5 +1,6 @@
 # pynubank
 [![PyPI version](https://badge.fury.io/py/pynubank.svg)](https://badge.fury.io/py/pynubank)
+[![Coverage Status](https://coveralls.io/repos/github/andreroggeri/pynubank/badge.svg?branch=add-coverage-check)](https://coveralls.io/github/andreroggeri/pynubank?branch=add-coverage-check)
 
 Acesse seus extratos do Nubank pelo Python ([Baseado na versão js](https://github.com/Astrocoders/nubank-api))
 
