@@ -5,8 +5,9 @@ install:
   - pip install -q -r requirements.txt
   - pip install -q -r requirements-test.txt
 script:
-  - pytest
-  - python --version
+  - pytest --cov=pynubank --cov-report=
+after_success:
+  - coveralls
 deploy:
   provider: pypi
   user: andreroggeri
