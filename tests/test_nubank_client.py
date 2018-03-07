@@ -146,7 +146,7 @@ def test_get_account_feed(monkeypatch, authentication_return, events_return):
     response = create_fake_response(events_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
-    feed = nubank_client.get_account_feed()
+    feed = nubank_client.get_card_feed()
     assert feed['as_of'] == '2017-09-09T06:50:22.323Z'
     assert feed['customer_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert feed['_links']['updates']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/updates_123'
@@ -174,7 +174,7 @@ def test_get_account_statements(monkeypatch, authentication_return, events_retur
 
     response = create_fake_response(events_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
-    statements = nubank_client.get_account_statements()
+    statements = nubank_client.get_card_statements()
 
     assert len(statements) == 1
     assert statements[0]['description'] == 'Shopping Iguatemi'
