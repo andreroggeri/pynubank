@@ -12,19 +12,40 @@ Disponível via pip
 ## Utilizando
 
 
-#### Básico
+#### Cartão de Crédito
 ```
 from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
 nu = Nubank('123456789', 'senha') 
 
-# Lista de dicionários contendo todos os eventos do seu Nubank (Compras, aumento de limite, pagamentos,etc)
-transactions = nu.get_account_statements() 
+# Lista de dicionários contendo todas as transações de seu cartão de crédito
+card_statements = nu.get_card_statements()
 
 # Soma de todas as compras
-sum([t['amount'] for t in transactions]) 
+print(sum([t['amount'] for t in card_statements])) 
 ```
+
+### NuConta
+```
+from pynubank import Nubank
+
+# Utilize o CPF sem pontos ou traços
+nu = Nubank('123456789', 'senha') 
+
+# Lista de dicionários contendo todas as transações de seu cartão de crédito
+account_statements = nu.get_account_statements() 
+
+# Soma de todas as transações na NuConta
+# Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propiedade "__typename".
+# TransferInEvent = Entrada
+# TransferOutEvent = Saída
+print(sum([t['amount'] for t in account_statements])) 
+
+# Saldo atual
+print(nu.get_account_balance())
+```
+
 
 #### Utilizando com Pandas
 ```

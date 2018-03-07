@@ -105,6 +105,32 @@ def events_return():
     }
 
 
+@pytest.fixture
+def account_balance_return():
+    return {'data': {'viewer': {'savingsAccount': {'currentSavingsBalance': {'netAmount': 127.33}}}}}
+
+
+@pytest.fixture
+def account_statements_return():
+    return {'data': {'viewer': {'savingsAccount': {'feed': [
+        {
+            'id': 'abcde-fghi-jklmn-opqrst-uvxz', '__typename': 'TransferOutEvent',
+            'title': 'Transferência enviada', 'detail': 'Juquinha da Silva Sauro - R$ 20,00',
+            'postDate': '2018-03-06',
+            'amount': 20.0, 'destinationAccount': {'name': 'Juquinha da Silva Sauro'}
+        },
+        {
+            'id': 'abcde-fghi-jklmn-opqrst-uvx1', '__typename': 'TransferInEvent',
+            'title': 'Transferência recebida', 'detail': 'R$127.33', 'postDate': '2018-03-06', 'amount': 127.33
+        },
+        {'id': 'abcde-fghi-jklmn-opqrst-uvx2', '__typename': 'WelcomeEvent',
+         'title': 'Bem vindo à sua conta!',
+         'detail': 'Waldisney Santos\nBanco 260 - Nu Pagamentos S.A.\nAgência 0001\nConta 000000-1',
+         'postDate': '2017-12-18'
+         }
+    ]}}}}
+
+
 def create_fake_response(dict_response, status_code=200):
     response = Response()
     response.status_code = status_code
@@ -138,7 +164,7 @@ def test_authentication_succeeds(monkeypatch, authentication_return):
     assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
 
 
-def test_get_account_feed(monkeypatch, authentication_return, events_return):
+def test_get_card_feed(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     nubank_client = Nubank('12345678909', '12345678')
@@ -146,7 +172,7 @@ def test_get_account_feed(monkeypatch, authentication_return, events_return):
     response = create_fake_response(events_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
-    feed = nubank_client.get_account_feed()
+    feed = nubank_client.get_card_feed()
     assert feed['as_of'] == '2017-09-09T06:50:22.323Z'
     assert feed['customer_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert feed['_links']['updates']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/updates_123'
@@ -167,14 +193,14 @@ def test_get_account_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-def test_get_account_statements(monkeypatch, authentication_return, events_return):
+def test_get_card_statements(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     nubank_client = Nubank('12345678909', '12345678')
 
     response = create_fake_response(events_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
-    statements = nubank_client.get_account_statements()
+    statements = nubank_client.get_card_statements()
 
     assert len(statements) == 1
     assert statements[0]['description'] == 'Shopping Iguatemi'
@@ -188,3 +214,61 @@ def test_get_account_statements(monkeypatch, authentication_return, events_retur
     assert statements[0]['details']['subcategory'] == 'card_present'
     assert statements[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
+
+
+def test_get_account_balance(monkeypatch, authentication_return, account_balance_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(account_balance_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    balance = nubank_client.get_account_balance()
+
+    assert balance == 127.33
+
+
+def test_get_account_feed(monkeypatch, authentication_return, account_statements_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(account_statements_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    statements = nubank_client.get_account_feed()
+
+    assert len(statements) == 3
+
+
+def test_get_account_statements(monkeypatch, authentication_return, account_statements_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(account_statements_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    statements = nubank_client.get_account_statements()
+
+    assert len(statements) == 2
+
+
+@pytest.mark.parametrize("http_status", [
+    100, 101, 102, 103,
+    201, 202, 203, 204, 205, 206, 207, 208, 226,
+    300, 301, 302, 303, 304, 305, 306, 307, 308,
+    400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 420, 421, 422,
+    423,
+    424, 426, 428, 429, 431, 440, 444, 449, 450, 451, 495, 496, 497, 498, 499,
+    500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526, 527, 530, 598
+])
+def test_grapql_query_raises_exeption(monkeypatch, authentication_return, http_status):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = Response()
+    response.status_code = http_status
+
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    with pytest.raises(NuException):
+        nubank_client.get_account_balance()

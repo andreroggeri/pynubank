@@ -17,6 +17,7 @@ setup(
     author_email='a.roggeri.c@gmail.com',
     license='BSD',
     packages=['pynubank'],
+    package_data={'pynubank': ['queries/*.gql']},
     install_requires=install_requires,
     tests_require=tests_require,
 )
