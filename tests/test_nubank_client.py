@@ -104,6 +104,132 @@ def events_return():
         }
     }
 
+@pytest.fixture
+def bills_return():
+    return {
+        "_links": {
+            "future": {
+                "href": "https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/future"
+            },
+            "open": {
+                "href": "https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/open"
+            }
+        },
+        "bills": [
+            {
+                "state": "future",
+                "summary": {
+                    "adjustments": "0",
+                    "close_date": "2018-05-03",
+                    "due_date": "2018-05-10",
+                    "effective_due_date": "2018-05-10",
+                    "expenses": "126.94",
+                    "fees": "0",
+                    "interest": 0,
+                    "interest_charge": "0",
+                    "interest_rate": "0.1375",
+                    "interest_reversal": "0",
+                    "international_tax": "0",
+                    "minimum_payment": 0,
+                    "open_date": "2018-04-03",
+                    "paid": 0,
+                    "past_balance": 0,
+                    "payments": "0",
+                    "precise_minimum_payment": "0",
+                    "precise_total_balance": "126.94",
+                    "previous_bill_balance": "0",
+                    "tax": "0",
+                    "total_accrued": "0",
+                    "total_balance": 12694,
+                    "total_credits": "0",
+                    "total_cumulative": 12694,
+                    "total_financed": "0",
+                    "total_international": "0",
+                    "total_national": "126.94",
+                    "total_payments": "0"
+                }
+            },
+            {
+                "_links": {
+                    "self": {
+                        "href": "https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/open"
+                    }
+                },
+                "state": "open",
+                "summary": {
+                    "adjustments": "0",
+                    "close_date": "2018-04-03",
+                    "due_date": "2018-04-10",
+                    "effective_due_date": "2018-04-10",
+                    "expenses": "303.36",
+                    "fees": "0",
+                    "interest": 0,
+                    "interest_charge": "0",
+                    "interest_rate": "0.1375",
+                    "interest_reversal": "0",
+                    "international_tax": "0",
+                    "minimum_payment": 0,
+                    "open_date": "2018-03-03",
+                    "paid": 0,
+                    "past_balance": 0,
+                    "payments": "-285.15",
+                    "precise_minimum_payment": "0",
+                    "precise_total_balance": "303.362041645013",
+                    "previous_bill_balance": "285.152041645013",
+                    "tax": "0",
+                    "total_accrued": "0",
+                    "total_balance": 30336,
+                    "total_credits": "0",
+                    "total_cumulative": 30336,
+                    "total_financed": "0",
+                    "total_international": "0",
+                    "total_national": "303.36",
+                    "total_payments": "-285.15"
+                }
+            },
+            {
+                "_links": {
+                    "self": {
+                        "href": "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+                    }
+                },
+                "href": "nuapp://bill/abcde-fghi-jklmn-opqrst-uvxz",
+                "id": "abcde-fghi-jklmn-opqrst-uvxz",
+                "state": "overdue",
+                "summary": {
+                    "adjustments": "-63.99106066",
+                    "close_date": "2018-03-03",
+                    "due_date": "2018-03-10",
+                    "effective_due_date": "2018-03-12",
+                    "expenses": "364.14",
+                    "fees": "0",
+                    "interest": 0,
+                    "interest_charge": "0",
+                    "interest_rate": "0.1375",
+                    "interest_reversal": "0",
+                    "international_tax": "0",
+                    "minimum_payment": 8003,
+                    "open_date": "2018-02-03",
+                    "paid": 28515,
+                    "past_balance": -1500,
+                    "payments": "-960.47",
+                    "precise_minimum_payment": "480.02544320601300",
+                    "precise_total_balance": "285.152041645013",
+                    "previous_bill_balance": "945.473102305013",
+                    "remaining_minimum_payment": 0,
+                    "tax": "0",
+                    "total_accrued": "0",
+                    "total_balance": 28515,
+                    "total_credits": "-64.18",
+                    "total_cumulative": 30015,
+                    "total_financed": "0",
+                    "total_international": "0",
+                    "total_national": "364.32893934",
+                    "total_payments": "-960.47"
+                }
+            },
+        ]
+    }
 
 @pytest.fixture
 def account_balance_return():
@@ -192,6 +318,55 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
+def test_get_card_bills(monkeypatch, authentication_return, bills_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(bills_return)
+    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
+
+    bills_response = nubank_client.get_card_bills()
+    assert bills_response['_links']['future']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/future'
+    assert bills_response['_links']['open']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/open'
+
+    bills = bills_response['bills']
+    assert len(bills) == 3
+    assert bills[2]['_links']['self']['href'] == "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+    assert bills[2]['href'] == 'nuapp://bill/abcde-fghi-jklmn-opqrst-uvxz'
+    assert bills[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert bills[2]['state'] == 'overdue'
+
+    summary = bills[2]['summary']
+    assert summary["adjustments"] == "-63.99106066"
+    assert summary["close_date"] == "2018-03-03"
+    assert summary["due_date"] == "2018-03-10"
+    assert summary["effective_due_date"] == "2018-03-12"
+    assert summary["expenses"] == "364.14"
+    assert summary["fees"] == "0"
+    assert summary["interest"] == 0
+    assert summary["interest_charge"] == "0"
+    assert summary["interest_rate"] == "0.1375"
+    assert summary["interest_reversal"] == "0"
+    assert summary["international_tax"] == "0"
+    assert summary["minimum_payment"] == 8003
+    assert summary["open_date"] == "2018-02-03"
+    assert summary["paid"] == 28515
+    assert summary["past_balance"] == -1500
+    assert summary["payments"] == "-960.47"
+    assert summary["precise_minimum_payment"] == "480.02544320601300"
+    assert summary["precise_total_balance"] == "285.152041645013"
+    assert summary["previous_bill_balance"] == "945.473102305013"
+    assert summary["remaining_minimum_payment"] == 0
+    assert summary["tax"] == "0"
+    assert summary["total_accrued"] == "0"
+    assert summary["total_balance"] == 28515
+    assert summary["total_credits"] == "-64.18"
+    assert summary["total_cumulative"] == 30015
+    assert summary["total_financed"] == "0"
+    assert summary["total_international"] == "0"
+    assert summary["total_national"] == "364.32893934"
+    assert summary["total_payments"] == "-960.47"
 
 def test_get_card_statements(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)
