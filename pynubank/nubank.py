@@ -54,6 +54,7 @@ class Nubank:
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
         self.feed_url = data['_links']['events']['href']
         self.query_url = data['_links']['ghostflame']['href']
+        self.bills_url = data['_links']['bills_summary']['href']
 
     def get_card_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)
@@ -62,6 +63,10 @@ class Nubank:
     def get_card_statements(self):
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
+
+    def get_card_bills(self):
+        request = requests.get(self.bills_url, headers=self.headers)
+        return json.loads(request.content.decode('utf-8'))
 
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
