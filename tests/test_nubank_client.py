@@ -318,7 +318,7 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
-def test_get_card_bills(monkeypatch, authentication_return, bills_return):
+def test_get_bills(monkeypatch, authentication_return, bills_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     nubank_client = Nubank('12345678909', '12345678')
@@ -326,7 +326,7 @@ def test_get_card_bills(monkeypatch, authentication_return, bills_return):
     response = create_fake_response(bills_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
-    bills_response = nubank_client.get_card_bills()
+    bills_response = nubank_client.get_bills()
     assert bills_response['_links']['future']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/future'
     assert bills_response['_links']['open']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/open'
 

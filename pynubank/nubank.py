@@ -64,7 +64,7 @@ class Nubank:
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
-    def get_card_bills(self):
+    def get_bills(self):
         request = requests.get(self.bills_url, headers=self.headers)
         return json.loads(request.content.decode('utf-8'))
 
