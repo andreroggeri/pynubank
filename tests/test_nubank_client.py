@@ -232,6 +232,89 @@ def bills_return():
     }
 
 @pytest.fixture
+def bill_details_return():
+    return {
+        'bill': {
+            '_links': {
+                'barcode': {
+                    'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
+                },
+                'boleto_email': {
+                    'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
+                },
+                'invoice_email': {
+                    'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
+                },
+                'self': {
+                    'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'
+                }
+            },
+            'account_id': 'abcde-fghi-jklmn-opqrst-uvxz',
+            'auto_debit_failed': False,
+            'barcode': '',
+            'id': 'abcde-fghi-jklmn-opqrst-uvxz',
+            'line_items': [
+                {
+                    'amount': 2390,
+                    'category': 'Eletrônicos',
+                    'charges': 1,
+                    'href': 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz',
+                    'id': 'abcde-fghi-jklmn-opqrst-uvxz',
+                    'index': 0,
+                    'post_date': '2015-09-09',
+                    'title': 'Mercadopago Mlivre'
+                },
+                {
+                    'amount': 5490,
+                    'category': 'Eletrônicos',
+                    'charges': 1,
+                    'href': 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz',
+                    'id': 'abcde-fghi-jklmn-opqrst-uvxz',
+                    'index': 0,
+                    'post_date': '2015-09-09',
+                    'title': 'Mercadopago Mlivre'
+                }
+            ],
+            'linha_digitavel': '',
+            'payment_method': 'boleto',
+            'state': 'overdue',
+            'status': 'paid',
+            'summary': {
+                'adjustments': '0',
+                'close_date': '2015-09-25',
+                'due_date': '2015-10-10',
+                'effective_due_date': '2015-10-13',
+                'expenses': '78.8000',
+                'fees': '0',
+                'interest': 0,
+                'interest_charge': '0',
+                'interest_rate': '0.0775',
+                'interest_reversal': '0',
+                'international_tax': '0',
+                'late_fee': '0.02',
+                'late_interest_rate': '0.0875',
+                'minimum_payment': 7005,
+                'open_date': '2015-07-23',
+                'paid': 7880,
+                'past_balance': 0,
+                'payments': '0',
+                'precise_minimum_payment': '70.054500',
+                'precise_total_balance': '78.8000',
+                'previous_bill_balance': '0',
+                'tax': '0',
+                'total_accrued': '0',
+                'total_balance': 7880,
+                'total_credits': '0',
+                'total_cumulative': 7880,
+                'total_financed': '0',
+                'total_international': '0',
+                'total_national': '78.8000',
+                'total_payments': '0'
+            }
+        }
+    }
+
+@pytest.fixture
 def account_balance_return():
     return {'data': {'viewer': {'savingsAccount': {'currentSavingsBalance': {'netAmount': 127.33}}}}}
 
@@ -367,6 +450,70 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     assert summary["total_international"] == "0"
     assert summary["total_national"] == "364.32893934"
     assert summary["total_payments"] == "-960.47"
+
+def test_get_bill_details(monkeypatch, authentication_return, bill_details_return):
+    response = create_fake_response(authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    nubank_client = Nubank('12345678909', '12345678')
+
+    response = create_fake_response(bill_details_return)
+    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
+
+    bill_mock = {'_links':{'self':{'href':'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
+    bill_response = nubank_client.get_bill_details(bill_mock)
+
+    bill = bill_response['bill']
+
+    assert bill['_links']['barcode']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
+    assert bill['_links']['boleto_email']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
+    assert bill['_links']['invoice_email']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
+    assert bill['_links']['self']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['account_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['auto_debit_failed'] == False
+    assert bill['barcode'] == ''
+    assert bill['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['line_items'][0]['amount'] == 2390
+    assert bill['line_items'][0]['category'] == 'Eletrônicos'
+    assert bill['line_items'][0]['charges'] == 1
+    assert bill['line_items'][0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['line_items'][0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['line_items'][0]['index'] == 0
+    assert bill['line_items'][0]['post_date'] == '2015-09-09'
+    assert bill['line_items'][0]['title'] == 'Mercadopago Mlivre'
+    assert bill['linha_digitavel'] == ''
+    assert bill['payment_method'] == 'boleto'
+    assert bill['state'] == 'overdue'
+    assert bill['status'] == 'paid'
+    assert bill['summary']['adjustments'] == '0'
+    assert bill['summary']['close_date'] == '2015-09-25'
+    assert bill['summary']['due_date'] == '2015-10-10'
+    assert bill['summary']['effective_due_date'] == '2015-10-13'
+    assert bill['summary']['expenses'] == '78.8000'
+    assert bill['summary']['fees'] == '0'
+    assert bill['summary']['interest'] == 0
+    assert bill['summary']['interest_charge'] == '0'
+    assert bill['summary']['interest_rate'] == '0.0775'
+    assert bill['summary']['interest_reversal'] == '0'
+    assert bill['summary']['international_tax'] == '0'
+    assert bill['summary']['late_fee'] == '0.02'
+    assert bill['summary']['late_interest_rate'] == '0.0875'
+    assert bill['summary']['minimum_payment'] == 7005
+    assert bill['summary']['open_date'] == '2015-07-23'
+    assert bill['summary']['paid'] == 7880
+    assert bill['summary']['past_balance'] == 0
+    assert bill['summary']['payments'] == '0'
+    assert bill['summary']['precise_minimum_payment'] == '70.054500'
+    assert bill['summary']['precise_total_balance'] == '78.8000'
+    assert bill['summary']['previous_bill_balance'] == '0'
+    assert bill['summary']['tax'] == '0'
+    assert bill['summary']['total_accrued'] == '0'
+    assert bill['summary']['total_balance'] == 7880
+    assert bill['summary']['total_credits'] == '0'
+    assert bill['summary']['total_cumulative'] == 7880
+    assert bill['summary']['total_financed'] == '0'
+    assert bill['summary']['total_international'] == '0'
+    assert bill['summary']['total_national'] == '78.8000'
+    assert bill['summary']['total_payments'] == '0'
 
 def test_get_card_statements(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)

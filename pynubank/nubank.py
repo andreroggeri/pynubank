@@ -68,6 +68,10 @@ class Nubank:
         request = requests.get(self.bills_url, headers=self.headers)
         return json.loads(request.content.decode('utf-8'))
 
+    def get_bill_details(self, bill):
+        request = requests.get(bill['_links']['self']['href'], headers=self.headers)
+        return json.loads(request.content.decode('utf-8'))
+
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
         return data['data']['viewer']['savingsAccount']['feed']
