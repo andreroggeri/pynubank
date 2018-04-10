@@ -66,7 +66,7 @@ class Nubank:
 
     def get_bills(self):
         request = requests.get(self.bills_url, headers=self.headers)
-        return json.loads(request.content.decode('utf-8'))
+        return json.loads(request.content.decode('utf-8'))['bills']
 
     def get_bill_details(self, bill):
         request = requests.get(bill['_links']['self']['href'], headers=self.headers)

@@ -409,11 +409,8 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     response = create_fake_response(bills_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
-    bills_response = nubank_client.get_bills()
-    assert bills_response['_links']['future']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/future'
-    assert bills_response['_links']['open']['href'] == 'https://prod-s0-billing.nubank.com.br/api/accounts/abcde-fghi-jklmn-opqrst-uvxz/bills/open'
+    bills = nubank_client.get_bills()
 
-    bills = bills_response['bills']
     assert len(bills) == 3
     assert bills[2]['_links']['self']['href'] == "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
     assert bills[2]['href'] == 'nuapp://bill/abcde-fghi-jklmn-opqrst-uvxz'
