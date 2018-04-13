@@ -13,7 +13,7 @@ Disponível via pip
 
 ### Ponto de atenção
 O Nubank pode trancar a sua conta por 72 horas caso detecte algum comportamento anormal !!
-Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta durante o desenvolvimento para que o bloqueio não ocorra.
+Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
 #### Cartão de Crédito
 ```
