@@ -31,8 +31,7 @@ print(sum([t['amount'] for t in card_statements]))
 # Lista de dicionários contendo todas as faturas do seu cartão de crédito
 bills = nu.get_bills()
 
-# Retorna um dicionário contendo os detalhes de uma fatura retornada por
-get_bills()
+# Retorna um dicionário contendo os detalhes de uma fatura retornada por get_bills()
 bill_details = nu.get_bill_details(bills[1])
 ```
 
@@ -47,7 +46,7 @@ nu = Nubank('123456789', 'senha')
 account_statements = nu.get_account_statements()
 
 # Soma de todas as transações na NuConta
-# Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propiedade "__typename".
+# Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propriedade "__typename".
 # TransferInEvent = Entrada
 # TransferOutEvent = Saída
 print(sum([t['amount'] for t in account_statements]))
