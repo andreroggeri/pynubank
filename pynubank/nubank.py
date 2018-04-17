@@ -48,7 +48,8 @@ class Nubank:
         }
         request = requests.post(Nubank.TOKEN_URL, json=body, headers=self.headers)
         if request.status_code != 200:
-            raise NuException('Authentication failed. {} ({})'.format(json.loads(request.content)['error'], request.status_code))
+            message = '{} ({})'.format(json.loads(request.content)['error'], request.status_code)
+            raise NuException('Authentication failed. {}'.format(message))
 
         data = json.loads(request.content.decode('utf-8'))
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
