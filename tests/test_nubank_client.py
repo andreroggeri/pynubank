@@ -358,7 +358,7 @@ def create_fake_response(dict_response, status_code=200):
 def test_authentication_failure_raise_exception(monkeypatch, http_status):
     response = Response()
     response.status_code = http_status
-    response._content = b'{"error":"Error"}'
+
 
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     with pytest.raises(NuException):
@@ -588,7 +588,7 @@ def test_grapql_query_raises_exeption(monkeypatch, authentication_return, http_s
 
     response = Response()
     response.status_code = http_status
-    response._content = b'{"error":"Error"}'
+
 
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     with pytest.raises(NuException):
