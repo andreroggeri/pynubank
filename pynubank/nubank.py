@@ -35,7 +35,8 @@ class Nubank:
         }
         request = requests.post(self.query_url, json=body, headers=self.headers)
         if request.status_code != 200:
-            raise NuException('Something wrong with your request. Check and try again', request.text)
+            message = '{} ({})'.format(request.reason, request.status_code)
+            raise NuException('Something wrong with your request. Check and try again. {}'.format(message))
         return json.loads(request.content.decode('utf-8'))
 
     def authenticate(self, cpf, password):
@@ -48,7 +49,7 @@ class Nubank:
         }
         request = requests.post(Nubank.TOKEN_URL, json=body, headers=self.headers)
         if request.status_code != 200:
-            message = '{} ({})'.format(json.loads(request.content)['error'], request.status_code)
+            message = '{} ({})'.format(request.reason, request.status_code)
             raise NuException('Authentication failed. {}'.format(message))
 
         data = json.loads(request.content.decode('utf-8'))
