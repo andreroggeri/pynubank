@@ -322,20 +322,45 @@ def account_balance_return():
 @pytest.fixture
 def account_statements_return():
     return {'data': {'viewer': {'savingsAccount': {'feed': [
+		{
+            'id': 'abcde-fghi-jklmn-opqrst-uvxw',
+		    '__typename': 'BillPaymentEvent',
+		    'title': 'Pagamento da fatura',
+		    'detail': 'Cartão Nubank - R$ 50,00',
+		    'postDate': '2018-03-07'
+        },
+    	{
+		    'id': 'abcde-fghi-jklmn-opqrst-uvxy',
+		    '__typename': 'TransferOutReversalEvent',
+		    'title': 'Transferência devolvida',
+		    'detail': 'Juquinha da Silva Sauro - R$ 20,00',
+		    'postDate': '2018-03-06'
+	    },
         {
-            'id': 'abcde-fghi-jklmn-opqrst-uvxz', '__typename': 'TransferOutEvent',
-            'title': 'Transferência enviada', 'detail': 'Juquinha da Silva Sauro - R$ 20,00',
+            'id': 'abcde-fghi-jklmn-opqrst-uvxz', 
+            '__typename': 'TransferOutEvent',
+            'title': 'Transferência enviada', 
+            'detail': 'Juquinha da Silva Sauro - R$ 20,00',
             'postDate': '2018-03-06',
-            'amount': 20.0, 'destinationAccount': {'name': 'Juquinha da Silva Sauro'}
+            'amount': 20.0, 
+            'destinationAccount': {
+                'name': 'Juquinha da Silva Sauro'
+            }
         },
         {
-            'id': 'abcde-fghi-jklmn-opqrst-uvx1', '__typename': 'TransferInEvent',
-            'title': 'Transferência recebida', 'detail': 'R$127.33', 'postDate': '2018-03-06', 'amount': 127.33
+            'id': 'abcde-fghi-jklmn-opqrst-uvx1', 
+            '__typename': 'TransferInEvent',
+            'title': 'Transferência recebida', 
+            'detail': 'R$127.33', 
+            'postDate': '2018-03-06', 
+            'amount': 127.33
         },
-        {'id': 'abcde-fghi-jklmn-opqrst-uvx2', '__typename': 'WelcomeEvent',
-         'title': 'Bem vindo à sua conta!',
-         'detail': 'Waldisney Santos\nBanco 260 - Nu Pagamentos S.A.\nAgência 0001\nConta 000000-1',
-         'postDate': '2017-12-18'
+        {
+            'id': 'abcde-fghi-jklmn-opqrst-uvx2',
+            '__typename': 'WelcomeEvent',
+            'title': 'Bem vindo à sua conta!',
+            'detail': 'Waldisney Santos\nBanco 260 - Nu Pagamentos S.A.\nAgência 0001\nConta 000000-1',
+            'postDate': '2017-12-18'
          }
     ]}}}}
 
@@ -557,7 +582,20 @@ def test_get_account_feed(monkeypatch, authentication_return, account_statements
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_feed()
 
-    assert len(statements) == 3
+    assert len(statements) == 5
+    assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvxy'
+    assert statements[1]['__typename'] == 'TransferOutReversalEvent'
+    assert statements[1]['title'] == 'Transferência devolvida'
+    assert statements[1]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
+    assert statements[1]['postDate'] == '2018-03-06'
+    
+    assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
+    assert statements[2]['__typename'] == 'TransferOutEvent'
+    assert statements[2]['title'] == 'Transferência enviada'
+    assert statements[2]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
+    assert statements[2]['postDate'] == '2018-03-06'
+    assert statements[2]['amount'] == 20.0
+    assert statements[2]['destinationAccount']['name'] == 'Juquinha da Silva Sauro'
 
 
 def test_get_account_statements(monkeypatch, authentication_return, account_statements_return):
@@ -570,6 +608,12 @@ def test_get_account_statements(monkeypatch, authentication_return, account_stat
     statements = nubank_client.get_account_statements()
 
     assert len(statements) == 2
+    assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
+    assert statements[1]['__typename'] == 'TransferInEvent'
+    assert statements[1]['title'] == 'Transferência recebida'
+    assert statements[1]['detail'] == 'R$127.33'
+    assert statements[1]['postDate'] == '2018-03-06'
+    assert statements[1]['amount'] == 127.33
 
 
 @pytest.mark.parametrize("http_status", [
