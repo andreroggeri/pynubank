@@ -14,11 +14,16 @@ class Nubank:
         'X-Correlation-Id': 'WEB-APP.pewW9',
         'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
     }
-    TOKEN_URL = 'https://prod-auth.nubank.com.br/api/token'
+    TOKEN_URL = None
+    discovery_url = 'https://prod-s0-webapp-proxy.nubank.com.br/api/discovery'
     feed_url = None
+    proxy_list_url = None
     query_url = None
 
     def __init__(self, cpf, password):
+        self.proxy_list_url = self._get_proxy_urls()
+        self.TOKEN_URL = self.proxy_list_url['login']
+
         self.authenticate(cpf, password)
 
     @staticmethod
@@ -28,6 +33,10 @@ class Nubank:
         path = os.path.join(root, 'queries', gql_file)
         with open(path) as gql:
             return gql.read()
+
+    def _get_proxy_urls(self):
+        request = requests.get(self.discovery_url, headers=self.headers)
+        return json.loads(request.content.decode('utf-8'))
 
     def _make_graphql_request(self, graphql_object):
         body = {
@@ -47,7 +56,7 @@ class Nubank:
             "client_id": "other.conta",
             "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
         }
-        request = requests.post(Nubank.TOKEN_URL, json=body, headers=self.headers)
+        request = requests.post(self.TOKEN_URL, json=body, headers=self.headers)
         if request.status_code != 200:
             message = '{} ({})'.format(request.reason, request.status_code)
             raise NuException('Authentication failed. {}'.format(message))
