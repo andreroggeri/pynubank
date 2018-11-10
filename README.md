@@ -49,6 +49,7 @@ account_statements = nu.get_account_statements()
 # Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propriedade "__typename".
 # TransferInEvent = Entrada
 # TransferOutEvent = Saída
+# TransferOutReversalEvent = Devolução
 print(sum([t['amount'] for t in account_statements]))
 
 # Saldo atual

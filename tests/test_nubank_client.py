@@ -607,13 +607,13 @@ def test_get_account_statements(monkeypatch, authentication_return, account_stat
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_statements()
 
-    assert len(statements) == 2
-    assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
-    assert statements[1]['__typename'] == 'TransferInEvent'
-    assert statements[1]['title'] == 'Transferência recebida'
-    assert statements[1]['detail'] == 'R$127.33'
-    assert statements[1]['postDate'] == '2018-03-06'
-    assert statements[1]['amount'] == 127.33
+    assert len(statements) == 3
+    assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
+    assert statements[2]['__typename'] == 'TransferInEvent'
+    assert statements[2]['title'] == 'Transferência recebida'
+    assert statements[2]['detail'] == 'R$127.33'
+    assert statements[2]['postDate'] == '2018-03-06'
+    assert statements[2]['amount'] == 127.33
 
 
 @pytest.mark.parametrize("http_status", [
