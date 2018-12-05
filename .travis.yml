@@ -2,17 +2,17 @@ language: python
 python:
 - '3.6'
 install:
-  - pip install -q -r requirements.txt
-  - pip install -q -r requirements-test.txt
+- pip install -q -r requirements.txt
+- pip install -q -r requirements-test.txt
 script:
-  - pytest --cov=pynubank --cov-report=
+- pytest --cov=pynubank --cov-report=
 after_success:
-  - coveralls
+- coveralls
 deploy:
   provider: pypi
   user: andreroggeri
   skip_upload_docs: true
   password:
-    secure: rV6vCur89PWkSkaz6/q5PrSMqthiol74yDRuw+FJekelQtVqNEKWp8sTCuwbmSad+dzalvtKyTY3QV0oU2yiUMjRwpbDUqPCT2oZ7I50+clencB4rwmcUpI8c9I+18yBTK25KRDJb8bKRA9SfGHOHzPxiuHNjJklfo6ic2X++H4Cv4vfNBAyuJOHbaER2caPaIk06wsxFZBixDrTS3KJx0aSqBS3x5gONrLVOxzXDvpf0lQqKjlo8CXTp+22os/YPchIeFDVIqqkPAU4duh7Hfg6u0IVLlShlD8WxiPN+QC5yat2b5lWUOvrJtRC40L+fvao4APKzCmza0GQRj1keHk439Zpbl62ce+o3AayowvGQEk9SQELlSQJfRTBaRsJFspKs1Z2pvMAVj490x+yQVyZ7ylqEwjTQWxSJHMk+B8VYuE/sM6F6PEzOBoTc0SYhITIi2KvMZMZeesrYACsyppjpOzooZ69sgX+ynPEhhdktrUg7ugJ+dtnlnsetuH8cf2190KlKSOzc1EYVkJYcBAYXh4cGU1AWX9vWJlykr8CNTocwLp5icCTJYupT1z96KCOUui/QYdjie9z715rHWLan2rrlhsBeCY6oEq5Vl5z9CkW/u64TiL62MAvz2tSZjrjSK/yXw244pb3+Yi43XkhmXoEdbcPm59Sfdm3PX8=
+    secure: Tvc1QMsgO6/a/UoBqjrxLSyySUBQ5RIug9JU/BzP4HAGgUz68+8WRpelwGJUmKmcPrZ0OmhDohl8CDGsBuKLw/eXuxrJaWZbnEzFfEHoFOSRsDKdJYlEOhH71P5J1A3AmyDJ1b7n0cCfg/g4/uRgiA/3pBB+2/OA2y0YbL1nHdQ8M2xD9VvmPTVrjx7fqKLBRbxi1MU9LguPsRqzLAO6rJ/m9dP0YHiorpXbgghidquJMv5q0rq6NQSxsZU4bsP62BxJxtNXc64uot2DXTXNpx2SlyQabMA9rFPWu9OU/WjChcv1t25JbVBmS/KtKlOe3o7Zm7VS5tMjJg9m1LYI29iXuS75nQWzwTUv5CzLxzq4O0YF5ds29QfO8os5tYI3hKeyMFmiCEL1dK5/T9JdjVbDSFGSyXvGq4D9u3lTvm/OyKqnnyeT+88UMogfyFA3OZRmlCzzALjqPfdxfcLoNkE3xa9LZe9cZ4wtMLmsfC+wqqLqJ0WSQtDjbx5SYgF6bqzy70fnFZ2+IQLlJTSRn3UwkF5Fw3joi9fK3yKwBFQ0kIRPAoP/xq63ZTEWGFtq/tO9wCZFmhoXFqpiwY3xFl9zTXjjE0JNdzGLKXtdpVqoNV0mHuryrNGmbGJfFBoUdK16NgJgqf0FDhqdfqGdIuW7vflvTCpDgbK5mNzkUDo=
   on:
     tags: true
