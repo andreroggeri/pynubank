@@ -63,7 +63,9 @@ class Nubank:
 
         data = json.loads(request.content.decode('utf-8'))
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
-        self.feed_url = data['_links']['events']['href']
+        self.feed_url = data.get('_links', {}).get('events', {}).get('href')
+        if self.feed_url is None:
+            raise NuException('Authentication failed. Invalid feed_url returned')
         self.query_url = data['_links']['ghostflame']['href']
         self.bills_url = data['_links']['bills_summary']['href']
 
