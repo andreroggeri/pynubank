@@ -399,6 +399,27 @@ def test_authentication_succeeds(monkeypatch, authentication_return):
     assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
 
 
+@pytest.mark.parametrize("token_needed_authentication_return",
+                         [
+                             {'access_token': 'ACCESS_TOKEN', 'token_type': 'bearer',
+                              '_links': {'account_emergency': {
+                                  'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'bill_emergency': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_token': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_all': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'}},
+                              'refresh_token': 'token',
+                              'refresh_before': '2018-12-24T09:50:02Z'}
+                         ])
+def test_authentication_failed_token_needed(monkeypatch, token_needed_authentication_return):
+    response = create_fake_response(token_needed_authentication_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    with pytest.raises(NuException):
+        Nubank('12345678909', '12345678')
+
+
 def test_get_card_feed(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
