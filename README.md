@@ -11,20 +11,51 @@ Disponível via pip
 
 ## Utilizando
 
+### Ponto de atenção
+O Nubank pode trancar a sua conta por 72 horas caso detecte algum comportamento anormal !!
+Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
-#### Básico
+#### Cartão de Crédito
 ```
 from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
-nu = Nubank('123456789', 'senha') 
+nu = Nubank('123456789', 'senha')
 
-# Lista de dicionários contendo todos os eventos do seu Nubank (Compras, aumento de limite, pagamentos,etc)
-transactions = nu.get_account_statements() 
+# Lista de dicionários contendo todas as transações de seu cartão de crédito
+card_statements = nu.get_card_statements()
 
 # Soma de todas as compras
-sum([t['amount'] for t in transactions]) 
+print(sum([t['amount'] for t in card_statements]))
+
+# Lista de dicionários contendo todas as faturas do seu cartão de crédito
+bills = nu.get_bills()
+
+# Retorna um dicionário contendo os detalhes de uma fatura retornada por get_bills()
+bill_details = nu.get_bill_details(bills[1])
 ```
+
+### NuConta
+```
+from pynubank import Nubank
+
+# Utilize o CPF sem pontos ou traços
+nu = Nubank('123456789', 'senha')
+
+# Lista de dicionários contendo todas as transações de seu cartão de crédito
+account_statements = nu.get_account_statements()
+
+# Soma de todas as transações na NuConta
+# Observacão: As transações de saída não possuem o valor negativo, então deve-se olhar a propriedade "__typename".
+# TransferInEvent = Entrada
+# TransferOutEvent = Saída
+# TransferOutReversalEvent = Devolução
+print(sum([t['amount'] for t in account_statements]))
+
+# Saldo atual
+print(nu.get_account_balance())
+```
+
 
 #### Utilizando com Pandas
 ```
@@ -38,7 +69,7 @@ sum([t['amount'] for t in transactions])
 >>> df = pd.DataFrame(transactions, columns=['time', 'amount'])
 >>> df['time'] = pd.to_datetime(df['time'])
 >>> df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
-Year Month  Amount   
+Year Month  Amount
 2016 6      20000
      7      20000
      8      20000
@@ -46,14 +77,14 @@ Year Month  Amount
      10     20000
      11     40000
      12     40000
-     
+
 2017 1     100000
      2      20000
      3      30000
      4      35000
      5      12000
      6      22000
-     
+
 >>> df.groupby([df.title]).sum() # Agrupado por categoria
 title         amount
 casa           13000

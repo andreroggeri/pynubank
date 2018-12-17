@@ -1,0 +1,22 @@
+{
+    viewer {
+        savingsAccount {
+            feed {
+                id
+                __typename
+                title
+                detail
+                postDate
+                ... on TransferInEvent {
+                    amount
+                }
+                ... on TransferOutEvent {
+                    amount
+                    destinationAccount {
+                        name
+                    }
+                }
+            }
+        }
+    }
+}
