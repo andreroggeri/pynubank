@@ -356,6 +356,14 @@ def account_statements_return():
             'amount': 127.33
         },
         {
+            "id": "abcdefgh-ijkl-mnop-qrst-uvwxyz0123",
+            "__typename": "BarcodePaymentEvent",
+            "title": "Pagamento efetuado",
+            "detail": "AES ELETROPAULO",
+            "postDate": "2018-02-05",
+            "amount": 169.2
+        },
+        {
             'id': 'abcde-fghi-jklmn-opqrst-uvx2',
             '__typename': 'WelcomeEvent',
             'title': 'Bem vindo à sua conta!',
@@ -603,7 +611,7 @@ def test_get_account_feed(monkeypatch, authentication_return, account_statements
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_feed()
 
-    assert len(statements) == 5
+    assert len(statements) == 6
     assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvxy'
     assert statements[1]['__typename'] == 'TransferOutReversalEvent'
     assert statements[1]['title'] == 'Transferência devolvida'
@@ -628,13 +636,20 @@ def test_get_account_statements(monkeypatch, authentication_return, account_stat
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_statements()
 
-    assert len(statements) == 3
+    assert len(statements) == 4
     assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
     assert statements[2]['__typename'] == 'TransferInEvent'
     assert statements[2]['title'] == 'Transferência recebida'
     assert statements[2]['detail'] == 'R$127.33'
     assert statements[2]['postDate'] == '2018-03-06'
     assert statements[2]['amount'] == 127.33
+
+    assert statements[3]['id'] == 'abcdefgh-ijkl-mnop-qrst-uvwxyz0123'
+    assert statements[3]['__typename'] == 'BarcodePaymentEvent'
+    assert statements[3]['title'] == 'Pagamento efetuado'
+    assert statements[3]['detail'] == 'AES ELETROPAULO'
+    assert statements[3]['postDate'] == '2018-02-05'
+    assert statements[3]['amount'] == 169.2
 
 
 @pytest.mark.parametrize("http_status", [

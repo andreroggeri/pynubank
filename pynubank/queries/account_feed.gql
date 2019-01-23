@@ -16,6 +16,9 @@
                         name
                     }
                 }
+                ... on BarcodePaymentEvent {
+                    amount
+                }
             }
         }
     }
