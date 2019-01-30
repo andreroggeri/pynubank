@@ -9,6 +9,9 @@
                 postDate
                 ... on TransferInEvent {
                     amount
+                    originAccount {
+                        name
+                    }
                 }
                 ... on TransferOutEvent {
                     amount
