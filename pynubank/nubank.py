@@ -62,11 +62,9 @@ class Nubank:
                     data = json.loads(file.read())
 
             except FileNotFoundError as exc:
-                print(exc)
                 token_valid = False
 
             except json.decoder.JSONDecodeError as exc:
-                print(exc)
                 token_valid = False
 
             else:
