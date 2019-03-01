@@ -100,10 +100,6 @@ class Nubank:
         self.query_url = data['_links']['ghostflame']['href']
         self.bills_url = data['_links']['bills_summary']['href']
 
-
-        exit()
-
-
     def get_card_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)
         return json.loads(request.content.decode('utf-8'))
