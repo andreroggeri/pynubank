@@ -1,7 +1,7 @@
+import datetime
 import json
-
-import os
 import requests
+import os
 
 
 class NuException(BaseException):
@@ -15,6 +15,7 @@ class Nubank:
         'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
     }
     TOKEN_URL = None
+    CACHE_DIR = os.path.join(os.path.dirname(__file__), '.cache')
     discovery_url = 'https://prod-s0-webapp-proxy.nubank.com.br/api/discovery'
     feed_url = None
     proxy_list_url = None
@@ -49,25 +50,59 @@ class Nubank:
         return json.loads(request.content.decode('utf-8'))
 
     def authenticate(self, cpf, password):
-        body = {
-            "grant_type": "password",
-            "login": cpf,
-            "password": password,
-            "client_id": "other.conta",
-            "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
-        }
-        request = requests.post(self.TOKEN_URL, json=body, headers=self.headers)
-        if request.status_code != 200:
-            message = '{} ({})'.format(request.reason, request.status_code)
-            raise NuException('Authentication failed. {}'.format(message))
 
-        data = json.loads(request.content.decode('utf-8'))
+        cache_path = os.path.join(self.CACHE_DIR, 'auth.json')
+        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+        token_valid = False
+
+        if os.path.isfile(cache_path):
+
+            try:
+                with open(cache_path, 'r+') as file:
+                    data = json.loads(file.read())
+
+            except FileNotFoundError as exc:
+                print(exc)
+                token_valid = False
+
+            except json.decoder.JSONDecodeError as exc:
+                print(exc)
+                token_valid = False
+
+            else:
+                token_validity = datetime.datetime.strptime(data['refresh_before'], '%Y-%m-%dT%H:%M:%SZ')
+                token_valid = token_validity > datetime.datetime.utcnow()
+
+        if not token_valid:
+            print('Requesting')
+            body = {
+                "grant_type": "password",
+                "login": cpf,
+                "password": password,
+                "client_id": "other.conta",
+                "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
+            }
+            request = requests.post(self.TOKEN_URL, json=body, headers=self.headers)
+            if request.status_code != 200:
+                message = '{} ({})'.format(request.reason, request.status_code)
+                raise NuException('Authentication failed. {}'.format(message))
+
+            data = json.loads(request.content.decode('utf-8'))
+
+            with open(cache_path, 'w+') as file:
+
+                file.write(json.dumps(data))
+
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
         self.feed_url = data.get('_links', {}).get('events', {}).get('href')
         if self.feed_url is None:
             raise NuException('Authentication failed. Login using NuBank website, make all steps of authentication and try again.')
         self.query_url = data['_links']['ghostflame']['href']
         self.bills_url = data['_links']['bills_summary']['href']
+
+
+        exit()
+
 
     def get_card_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)
