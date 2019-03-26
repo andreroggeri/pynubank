@@ -1,7 +1,9 @@
 import json
-
 import os
+import uuid
+
 import requests
+from qrcode import QRCode
 
 
 class NuException(BaseException):
@@ -16,14 +18,17 @@ class Nubank:
     }
     TOKEN_URL = None
     discovery_url = 'https://prod-s0-webapp-proxy.nubank.com.br/api/discovery'
+    discovery_app_url = 'https://prod-s0-webapp-proxy.nubank.com.br/api/app/discovery'
     feed_url = None
     proxy_list_url = None
+    proxy_list_app_url = None
     query_url = None
+    allow_qr_code_auth = False
 
-    def __init__(self, cpf, password):
-        self.proxy_list_url = self._get_proxy_urls()
+    def __init__(self, cpf, password, allow_qr_code_auth=False):
+        self._get_proxy_urls()
         self.TOKEN_URL = self.proxy_list_url['login']
-
+        self.allow_qr_code_auth = allow_qr_code_auth
         self.authenticate(cpf, password)
 
     @staticmethod
@@ -36,7 +41,9 @@ class Nubank:
 
     def _get_proxy_urls(self):
         request = requests.get(self.discovery_url, headers=self.headers)
-        return json.loads(request.content.decode('utf-8'))
+        self.proxy_list_url = json.loads(request.content.decode('utf-8'))
+        request = requests.get(self.discovery_app_url, headers=self.headers)
+        self.proxy_list_app_url = json.loads(request.content.decode('utf-8'))
 
     def _make_graphql_request(self, graphql_object):
         body = {
@@ -47,6 +54,29 @@ class Nubank:
             message = '{} ({})'.format(request.reason, request.status_code)
             raise NuException('Something wrong with your request. Check and try again. {}'.format(message))
         return json.loads(request.content.decode('utf-8'))
+
+    def _qr_code_auth(self):
+        print('You must authenticate with your phone to be able to access your data.')
+        print('Scan the QRCode below with you Nubank application on the following menu:')
+        print('Nu(Seu Nome) > Perfil > Acesso pelo site')
+        content = uuid.uuid4()
+        qr = QRCode()
+        qr.add_data(content)
+        qr.print_ascii(invert=True)
+        input('After the scan, press enter do proceed')
+        payload = {
+            'qr_code_id': str(content),
+            'type': 'login-webapp'
+        }
+        req = requests.post(self.proxy_list_app_url['lift'], json=payload, headers=self.headers)
+        if req.status_code != 200:
+            raise NuException('Failed to authenticate with QRCode')
+
+        data = json.loads(req.content.decode('utf-8'))
+        self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
+        self.feed_url = data['_links']['events']['href']
+        self.query_url = data['_links']['ghostflame']['href']
+        self.bills_url = data['_links']['bills_summary']['href']
 
     def authenticate(self, cpf, password):
         body = {
@@ -63,11 +93,17 @@ class Nubank:
 
         data = json.loads(request.content.decode('utf-8'))
         self.headers['Authorization'] = 'Bearer {}'.format(data['access_token'])
-        self.feed_url = data.get('_links', {}).get('events', {}).get('href')
-        if self.feed_url is None:
-            raise NuException('Authentication failed. Login using NuBank website, make all steps of authentication and try again.')
-        self.query_url = data['_links']['ghostflame']['href']
-        self.bills_url = data['_links']['bills_summary']['href']
+
+        if data['_links'].get('events'):
+            self.feed_url = data['_links']['events']['href']
+            self.query_url = data['_links']['ghostflame']['href']
+            self.bills_url = data['_links']['bills_summary']['href']
+        else:
+            if self.allow_qr_code_auth:
+                self._qr_code_auth()
+            else:
+                raise NuException('QRCode authentication is not enabled.'
+                                  ' Enable it on the Nubank constructor, passing allow_qr_code_auth=True')
 
     def get_card_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)

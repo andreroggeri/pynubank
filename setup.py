@@ -10,5 +10,5 @@ setup(
     license='BSD',
     packages=['pynubank'],
     package_data={'pynubank': ['queries/*.gql']},
-    install_requires=['requests'],
+    install_requires=['requests', 'qrcode'],
 )
