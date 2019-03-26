@@ -55,7 +55,16 @@ print(sum([t['amount'] for t in account_statements]))
 # Saldo atual
 print(nu.get_account_balance())
 ```
+### Autenticando com QR Code
+Caso a autenticação por QRCode esteja ativada na sua conta, será necessário utilizar o seu telefone par autorizar o acesso a API.
 
+Basta configurar o construtor para habilitar o fluxo de QRCode:
+```python
+from pynubank import Nubank
+
+nu = Nubank('1234', '1234', True) # <--- O parâmetro True habilita o fluxo com QRCode
+
+```
 
 #### Utilizando com Pandas
 ```

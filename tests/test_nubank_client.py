@@ -1,8 +1,7 @@
 import json
-import pytest
-
 from unittest.mock import MagicMock
 
+import pytest
 from requests import Response
 
 from pynubank.nubank import Nubank, NuException
@@ -103,6 +102,7 @@ def events_return():
             }
         }
     }
+
 
 @pytest.fixture
 def bills_return():
@@ -231,6 +231,7 @@ def bills_return():
         ]
     }
 
+
 @pytest.fixture
 def bill_details_return():
     return {
@@ -314,6 +315,7 @@ def bill_details_return():
         }
     }
 
+
 @pytest.fixture
 def account_balance_return():
     return {'data': {'viewer': {'savingsAccount': {'currentSavingsBalance': {'netAmount': 127.33}}}}}
@@ -322,37 +324,37 @@ def account_balance_return():
 @pytest.fixture
 def account_statements_return():
     return {'data': {'viewer': {'savingsAccount': {'feed': [
-		{
-            'id': 'abcde-fghi-jklmn-opqrst-uvxw',
-		    '__typename': 'BillPaymentEvent',
-		    'title': 'Pagamento da fatura',
-		    'detail': 'Cartão Nubank - R$ 50,00',
-		    'postDate': '2018-03-07'
-        },
-    	{
-		    'id': 'abcde-fghi-jklmn-opqrst-uvxy',
-		    '__typename': 'TransferOutReversalEvent',
-		    'title': 'Transferência devolvida',
-		    'detail': 'Juquinha da Silva Sauro - R$ 20,00',
-		    'postDate': '2018-03-06'
-	    },
         {
-            'id': 'abcde-fghi-jklmn-opqrst-uvxz', 
+            'id': 'abcde-fghi-jklmn-opqrst-uvxw',
+            '__typename': 'BillPaymentEvent',
+            'title': 'Pagamento da fatura',
+            'detail': 'Cartão Nubank - R$ 50,00',
+            'postDate': '2018-03-07'
+        },
+        {
+            'id': 'abcde-fghi-jklmn-opqrst-uvxy',
+            '__typename': 'TransferOutReversalEvent',
+            'title': 'Transferência devolvida',
+            'detail': 'Juquinha da Silva Sauro - R$ 20,00',
+            'postDate': '2018-03-06'
+        },
+        {
+            'id': 'abcde-fghi-jklmn-opqrst-uvxz',
             '__typename': 'TransferOutEvent',
-            'title': 'Transferência enviada', 
+            'title': 'Transferência enviada',
             'detail': 'Juquinha da Silva Sauro - R$ 20,00',
             'postDate': '2018-03-06',
-            'amount': 20.0, 
+            'amount': 20.0,
             'destinationAccount': {
                 'name': 'Juquinha da Silva Sauro'
             }
         },
         {
-            'id': 'abcde-fghi-jklmn-opqrst-uvx1', 
+            'id': 'abcde-fghi-jklmn-opqrst-uvx1',
             '__typename': 'TransferInEvent',
-            'title': 'Transferência recebida', 
-            'detail': 'R$127.33', 
-            'postDate': '2018-03-06', 
+            'title': 'Transferência recebida',
+            'detail': 'R$127.33',
+            'postDate': '2018-03-06',
             'amount': 127.33
         },
         {
@@ -369,7 +371,7 @@ def account_statements_return():
             'title': 'Bem vindo à sua conta!',
             'detail': 'Waldisney Santos\nBanco 260 - Nu Pagamentos S.A.\nAgência 0001\nConta 000000-1',
             'postDate': '2017-12-18'
-         }
+        }
     ]}}}}
 
 
@@ -392,7 +394,6 @@ def test_authentication_failure_raise_exception(monkeypatch, http_status):
     response = Response()
     response.status_code = http_status
 
-
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     with pytest.raises(NuException):
         Nubank('12345678909', '12345678')
@@ -405,27 +406,6 @@ def test_authentication_succeeds(monkeypatch, authentication_return):
 
     assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
     assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
-
-
-@pytest.mark.parametrize("token_needed_authentication_return",
-                         [
-                             {'access_token': 'ACCESS_TOKEN', 'token_type': 'bearer',
-                              '_links': {'account_emergency': {
-                                  'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
-                                  'bill_emergency': {
-                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
-                                  'revoke_token': {
-                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
-                                  'revoke_all': {
-                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'}},
-                              'refresh_token': 'token',
-                              'refresh_before': '2018-12-24T09:50:02Z'}
-                         ])
-def test_authentication_failed_token_needed(monkeypatch, token_needed_authentication_return):
-    response = create_fake_response(token_needed_authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-    with pytest.raises(NuException):
-        Nubank('12345678909', '12345678')
 
 
 def test_get_card_feed(monkeypatch, authentication_return, events_return):
@@ -456,6 +436,7 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
+
 def test_get_bills(monkeypatch, authentication_return, bills_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
@@ -467,7 +448,8 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     bills = nubank_client.get_bills()
 
     assert len(bills) == 3
-    assert bills[2]['_links']['self']['href'] == "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+    assert bills[2]['_links']['self'][
+               'href'] == "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
     assert bills[2]['href'] == 'nuapp://bill/abcde-fghi-jklmn-opqrst-uvxz'
     assert bills[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bills[2]['state'] == 'overdue'
@@ -503,6 +485,7 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     assert summary["total_national"] == "364.32893934"
     assert summary["total_payments"] == "-960.47"
 
+
 def test_get_bill_details(monkeypatch, authentication_return, bill_details_return):
     response = create_fake_response(authentication_return)
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
@@ -511,15 +494,20 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     response = create_fake_response(bill_details_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
-    bill_mock = {'_links':{'self':{'href':'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
+    bill_mock = {
+        '_links': {'self': {'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
     bill_response = nubank_client.get_bill_details(bill_mock)
 
     bill = bill_response['bill']
 
-    assert bill['_links']['barcode']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
-    assert bill['_links']['boleto_email']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
-    assert bill['_links']['invoice_email']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
-    assert bill['_links']['self']['href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'
+    assert bill['_links']['barcode'][
+               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
+    assert bill['_links']['boleto_email'][
+               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
+    assert bill['_links']['invoice_email'][
+               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
+    assert bill['_links']['self'][
+               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['account_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['auto_debit_failed'] == False
     assert bill['barcode'] == ''
@@ -566,6 +554,7 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     assert bill['summary']['total_international'] == '0'
     assert bill['summary']['total_national'] == '78.8000'
     assert bill['summary']['total_payments'] == '0'
+
 
 def test_get_card_statements(monkeypatch, authentication_return, events_return):
     response = create_fake_response(authentication_return)
@@ -617,7 +606,7 @@ def test_get_account_feed(monkeypatch, authentication_return, account_statements
     assert statements[1]['title'] == 'Transferência devolvida'
     assert statements[1]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
     assert statements[1]['postDate'] == '2018-03-06'
-    
+
     assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert statements[2]['__typename'] == 'TransferOutEvent'
     assert statements[2]['title'] == 'Transferência enviada'
@@ -669,7 +658,53 @@ def test_grapql_query_raises_exeption(monkeypatch, authentication_return, http_s
     response = Response()
     response.status_code = http_status
 
-
     monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     with pytest.raises(NuException):
         nubank_client.get_account_balance()
+
+
+@pytest.mark.parametrize("qr_code_auth_required_return",
+                         [
+                             {'access_token': 'ACCESS_TOKEN', 'token_type': 'bearer',
+                              '_links': {'account_emergency': {
+                                  'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'bill_emergency': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_token': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_all': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'}},
+                              'refresh_token': 'token',
+                              'refresh_before': '2018-12-24T09:50:02Z'}
+                         ])
+def test_qr_code_disabled_should_throw_error_on_phone_auth_required(monkeypatch, qr_code_auth_required_return):
+    response = create_fake_response(qr_code_auth_required_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    with pytest.raises(NuException):
+        Nubank('12345678909', '12345678', False)
+
+
+@pytest.mark.parametrize("qr_code_auth_required_return",
+                         [
+                             {'access_token': 'ACCESS_TOKEN', 'token_type': 'bearer',
+                              '_links': {'account_emergency': {
+                                  'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'bill_emergency': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_token': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'},
+                                  'revoke_all': {
+                                      'href': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/XXX'}},
+                              'refresh_token': 'token',
+                              'refresh_before': '2018-12-24T09:50:02Z'}
+                         ])
+def test_qr_code_enabled_follow_the_qr_scan_flow(monkeypatch, qr_code_auth_required_return, authentication_return):
+    def patch_response():
+        qr_code_response = create_fake_response(authentication_return)
+        monkeypatch.setattr('requests.post', MagicMock(return_value=qr_code_response))
+        return ''
+
+    response = create_fake_response(qr_code_auth_required_return)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    monkeypatch.setattr('builtins.input', lambda x: patch_response())
+    Nubank('12345678909', 'hunter2', True)
