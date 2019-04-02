@@ -3,7 +3,8 @@ import os
 import uuid
 
 import requests
-from qrcode import QRCode
+
+from pynubank import utils
 
 
 class NuException(BaseException):
@@ -60,9 +61,7 @@ class Nubank:
         print('Scan the QRCode below with you Nubank application on the following menu:')
         print('Nu(Seu Nome) > Perfil > Acesso pelo site')
         content = uuid.uuid4()
-        qr = QRCode()
-        qr.add_data(content)
-        qr.print_ascii(invert=True)
+        utils.print_qr_code(str(content))
         input('After the scan, press enter do proceed')
         payload = {
             'qr_code_id': str(content),
