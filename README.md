@@ -17,11 +17,12 @@ O Nubank pode trancar a sua conta por 72 horas caso detecte algum comportamento 
 Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
 #### Cartão de Crédito
-```
+```python
 from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
-nu = Nubank('123456789', 'senha')
+nu = Nubank()
+nu.authenticate('123456789', 'senha')
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 card_statements = nu.get_card_statements()
@@ -37,11 +38,12 @@ bill_details = nu.get_bill_details(bills[1])
 ```
 
 ### NuConta
-```
+```python
 from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
-nu = Nubank('123456789', 'senha')
+nu = Nubank()
+nu.authenticate('123456789', 'senha')
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 account_statements = nu.get_account_statements()
@@ -63,8 +65,16 @@ Basta configurar o construtor para habilitar o fluxo de QRCode:
 ```python
 from pynubank import Nubank
 
-nu = Nubank('1234', '1234', True) # <--- O parâmetro True habilita o fluxo com QRCode
-
+nu = Nubank()
+uuid, qr_code = nu.get_qr_code()
+# Nesse momeento será printado o QRCode no console
+# Você precisa escanear pelo o seu app do celular
+# Esse menu fica em NU > Perfil > Acesso pelo site
+qr_code.print_ascii(invert=True)
+input('Após escanear o QRCode pressione enter para continuar')
+# Somente após escanear o QRCode você pode chamar a linha abaixo
+nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+print(nu.get_account_balance())
 ```
 
 #### Utilizando com Pandas
