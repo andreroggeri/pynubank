@@ -5,7 +5,7 @@ install:
 - pip install -q -r requirements.txt
 - pip install -q -r requirements-test.txt
 script:
-- pytest -n 4 --cov=pynubank --cov-report=
+- pytest --cov=pynubank --cov-report=
 after_success:
 - coveralls
 deploy:
