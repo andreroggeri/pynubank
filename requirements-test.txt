@@ -1,4 +1,5 @@
-pytest==3.2.2
+pytest==4.4.0
 pytest-cov==2.5.1
 python-coveralls==2.9.1
 pillow==6.0.0
+pytest-xdist==1.28.0
