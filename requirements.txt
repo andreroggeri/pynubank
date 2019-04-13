@@ -1,2 +1,2 @@
-requests==2.20.0
+requests==2.21.0
 qrcode==6.1
