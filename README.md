@@ -82,7 +82,8 @@ print(nu.get_account_balance())
 >>> import pandas as pd
 >>> from pynubank import Nubank
 
->>> nu = Nubank('123456789', 'senha')
+>>> nu = Nubank()
+>>> nu.authenticate('123456789', 'senha')
 
 >>> transactions = nu.get_account_statements()
 
