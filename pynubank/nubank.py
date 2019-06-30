@@ -11,7 +11,9 @@ PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
     'TransferInEvent',
     'TransferOutReversalEvent',
-    'BarcodePaymentEvent'
+    'BarcodePaymentEvent',
+    'DebitPurchaseEvent',
+    'DebitPurchaseReversalEvent',
 )
 
 
