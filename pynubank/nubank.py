@@ -125,7 +125,7 @@ class Nubank:
         response = requests.post(self.auth_url, json=body, headers=self.headers)
 
         auth_data = self._handle_response(response)
-        self.refresh_token = auth_data['refresh_token']
+        self.refresh_token = auth_data.get('refresh_token')
         self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
         self.feed_url = auth_data['_links']['events']['href']
         self.query_url = auth_data['_links']['ghostflame']['href']
