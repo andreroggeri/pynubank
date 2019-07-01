@@ -19,6 +19,9 @@
                         name
                     }
                 }
+                ... on DebitPurchaseEvent {
+                    amount
+                }
                 ... on BarcodePaymentEvent {
                     amount
                 }
