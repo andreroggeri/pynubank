@@ -35,7 +35,6 @@ class Nubank:
     proxy_list_app_url = None
     query_url = None
     bills_url = None
-    refresh_token = None
 
     def __init__(self):
         self.headers = {
@@ -78,7 +77,6 @@ class Nubank:
         }
         response = requests.post(self.auth_url, json=payload, headers=self.headers)
         data = self._handle_response(response)
-        self.refresh_token = data['refresh_token']
         return data
 
     def _handle_response(self, response: Response) -> dict:
@@ -94,10 +92,6 @@ class Nubank:
         qr.add_data(content)
         return content, qr
 
-    def authenticate(self, cpf: str, password: str):
-        auth_data = self._password_auth(cpf, password)
-        self.authenticate_with_refresh_token(auth_data['refresh_token'])
-
     def authenticate_with_qr_code(self, cpf: str, password, uuid: str):
         auth_data = self._password_auth(cpf, password)
         self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
@@ -110,24 +104,6 @@ class Nubank:
         response = requests.post(self.proxy_list_app_url['lift'], json=payload, headers=self.headers)
 
         auth_data = self._handle_response(response)
-        self.refresh_token = auth_data['refresh_token']
-        self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
-        self.feed_url = auth_data['_links']['events']['href']
-        self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['bills_summary']['href']
-
-    def authenticate_with_refresh_token(self, token: str):
-        body = {
-            "grant_type": "refresh_token",
-            "refresh_token": token,
-            "client_id": "other.conta",
-            "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
-        }
-
-        response = requests.post(self.auth_url, json=body, headers=self.headers)
-
-        auth_data = self._handle_response(response)
-        self.refresh_token = auth_data['refresh_token']
         self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
         self.feed_url = auth_data['_links']['events']['href']
         self.query_url = auth_data['_links']['ghostflame']['href']

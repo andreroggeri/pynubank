@@ -22,7 +22,8 @@ from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
 nu = Nubank()
-nu.authenticate('123456789', 'senha')
+uuid, qr_code = nu.get_qr_code()
+nu.authenticate_with_qr_code('123456789', 'senha', uuid)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 card_statements = nu.get_card_statements()
@@ -43,7 +44,8 @@ from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
 nu = Nubank()
-nu.authenticate('123456789', 'senha')
+uuid, qr_code = nu.get_qr_code()
+nu.authenticate_with_qr_code('123456789', 'senha', uuid)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 account_statements = nu.get_account_statements()
@@ -58,10 +60,9 @@ print(sum([t['amount'] for t in account_statements]))
 # Saldo atual
 print(nu.get_account_balance())
 ```
-### Autenticando com QR Code
+### Autenticação
 Caso a autenticação por QRCode esteja ativada na sua conta, será necessário utilizar o seu telefone par autorizar o acesso a API.
 
-Basta configurar o construtor para habilitar o fluxo de QRCode:
 ```python
 from pynubank import Nubank
 
@@ -78,18 +79,20 @@ print(nu.get_account_balance())
 ```
 
 #### Utilizando com Pandas
-```
->>> import pandas as pd
->>> from pynubank import Nubank
+```python
+import pandas as pd
+from pynubank import Nubank
 
->>> nu = Nubank()
->>> nu.authenticate('123456789', 'senha')
+nu = Nubank()
+uuid, qr_code = nu.get_qr_code()
+nu.authenticate_with_qr_code('123456789', 'senha', uuid)
 
->>> transactions = nu.get_account_statements()
+transactions = nu.get_account_statements()
 
->>> df = pd.DataFrame(transactions, columns=['time', 'amount'])
->>> df['time'] = pd.to_datetime(df['time'])
->>> df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
+df = pd.DataFrame(transactions, columns=['time', 'amount'])
+df['time'] = pd.to_datetime(df['time'])
+df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
+"""
 Year Month  Amount
 2016 6      20000
      7      20000
@@ -105,8 +108,9 @@ Year Month  Amount
      4      35000
      5      12000
      6      22000
-
->>> df.groupby([df.title]).sum() # Agrupado por categoria
+"""
+df.groupby([df.title]).sum() # Agrupado por categoria
+"""
 title         amount
 casa           13000
 eletrônicos   123000
@@ -119,7 +123,7 @@ supermercado   45621
 transporte    489152
 vestuário      45612
 viagem         78456
-
+"""
 ```
 
 ## Testes
