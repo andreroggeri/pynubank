@@ -63,8 +63,6 @@ def authentication_return():
                 "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/user_change_password_123"
             }
         },
-        "refresh_token": "refresh_token_123",
-        "refresh_before": "2017-09-16T12:41:13Z"
     }
 
 
@@ -400,29 +398,6 @@ def fake_update_proxy(self: Nubank):
     }
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_authentication_failure_raise_exception(monkeypatch):
-    response = create_fake_response({}, 401)
-
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-    with pytest.raises(NuException):
-        nu = Nubank()
-        nu.authenticate('12345678912', 'hunter12')
-
-
-def test_authentication_succeeds(monkeypatch, authentication_return, proxy_list_return):
-    proxy_list = create_fake_response(proxy_list_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=proxy_list))
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-
-    nubank_client = Nubank()
-    nubank_client.authenticate('12345678912', 'hunter12')
-
-    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
-    assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
-
-
 def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return, proxy_list_return):
     proxy_list = create_fake_response(proxy_list_return)
     monkeypatch.setattr('requests.get', MagicMock(return_value=proxy_list))
@@ -444,29 +419,6 @@ def test_authentication_with_qr_code_failure_raise_exception(monkeypatch):
     with pytest.raises(NuException):
         nu = Nubank()
         nu.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
-
-
-def test_authenticate_with_refresh_token_succeeds(monkeypatch, authentication_return, proxy_list_return):
-    proxy_list = create_fake_response(proxy_list_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=proxy_list))
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-
-    nubank_client = Nubank()
-    nubank_client.authenticate_with_refresh_token('some-token')
-
-    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
-    assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_authentication_with_refresh_token_failure_raise_exception(monkeypatch):
-    response = create_fake_response({}, 401)
-
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-    with pytest.raises(NuException):
-        nu = Nubank()
-        nu.authenticate_with_refresh_token('some-token')
 
 
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
