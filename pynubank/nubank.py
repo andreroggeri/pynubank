@@ -20,7 +20,7 @@ PAYMENT_EVENT_TYPES = (
 class NuException(Exception):
 
     def __init__(self, status_code, response, url):
-        super().__init__()
+        super().__init__(f'The request made failed with HTTP status code {status_code}')
         self.url = url
         self.status_code = status_code
         self.response = response
@@ -81,8 +81,7 @@ class Nubank:
 
     def _handle_response(self, response: Response) -> dict:
         if response.status_code != 200:
-            raise NuException(f'The request made failed with HTTP status code {response.status_code}',
-                              response.status_code, response.json())
+            raise NuException(response.status_code, response.status_code, response.json())
 
         return response.json()
 
