@@ -683,8 +683,7 @@ def test_get_qr_code():
     assert uid != ''
     assert isinstance(qr, QRCode)
 
-
-@pytest.mark.parametrize("http_status", [
+not_accepted_http_codes = [
     100, 101, 102, 103,
     201, 202, 203, 204, 205, 206, 207, 208, 226,
     300, 301, 302, 303, 304, 305, 306, 307, 308,
@@ -692,10 +691,48 @@ def test_get_qr_code():
     423,
     424, 426, 428, 429, 431, 440, 444, 449, 450, 451, 495, 496, 497, 498, 499,
     500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526, 527, 530, 598
-])
+]
+
+@pytest.mark.parametrize("http_status", not_accepted_http_codes)
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_on_status_different_of_200(http_status):
     response = create_fake_response({}, http_status)
     client = Nubank()
     with pytest.raises(NuException):
         client._handle_response(response)
+
+@pytest.mark.parametrize("http_status", not_accepted_http_codes)
+@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
+def test_nubank_request_handler_throws_exception_with_status_code_attribute(http_status):
+    response = create_fake_response({}, http_status)
+    client = Nubank()
+    with pytest.raises(NuException) as exception_info:
+        client._handle_response(response)
+
+    assert exception_info.value.status_code == http_status
+
+@pytest.mark.parametrize("http_status", not_accepted_http_codes)
+@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
+def test_nubank_request_handler_throws_exception_status_code_in_the_exception_message(http_status):
+    response = create_fake_response({}, http_status)
+    client = Nubank()
+    with pytest.raises(NuException, match=fr".*{http_status}.*"):
+        client._handle_response(response)
+
+@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
+def test_nubank_request_handler_throws_exception_with_url_attribute():
+    response = create_fake_response({}, 400)
+    client = Nubank()
+    with pytest.raises(NuException) as exception_info:
+        client._handle_response(response)
+
+    assert exception_info.value.url == response.url
+
+@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
+def test_nubank_request_handler_throws_exception_with_response_attribute():
+    response = create_fake_response({}, 400)
+    client = Nubank()
+    with pytest.raises(NuException) as exception_info:
+        client._handle_response(response)
+
+    assert exception_info.value.response == response.json()
