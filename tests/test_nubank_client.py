@@ -683,6 +683,7 @@ def test_get_qr_code():
     assert uid != ''
     assert isinstance(qr, QRCode)
 
+
 not_accepted_http_codes = [
     100, 101, 102, 103,
     201, 202, 203, 204, 205, 206, 207, 208, 226,
@@ -693,7 +694,8 @@ not_accepted_http_codes = [
     500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526, 527, 530, 598
 ]
 
-@pytest.mark.parametrize("http_status", not_accepted_http_codes)
+
+@pytest.mark.parametrize('http_status', not_accepted_http_codes)
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_on_status_different_of_200(http_status):
     response = create_fake_response({}, http_status)
@@ -701,7 +703,8 @@ def test_nubank_request_handler_throws_exception_on_status_different_of_200(http
     with pytest.raises(NuException):
         client._handle_response(response)
 
-@pytest.mark.parametrize("http_status", not_accepted_http_codes)
+
+@pytest.mark.parametrize('http_status', not_accepted_http_codes)
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_with_status_code_attribute(http_status):
     response = create_fake_response({}, http_status)
@@ -711,13 +714,15 @@ def test_nubank_request_handler_throws_exception_with_status_code_attribute(http
 
     assert exception_info.value.status_code == http_status
 
-@pytest.mark.parametrize("http_status", not_accepted_http_codes)
+
+@pytest.mark.parametrize('http_status', not_accepted_http_codes)
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_status_code_in_the_exception_message(http_status):
     response = create_fake_response({}, http_status)
     client = Nubank()
-    with pytest.raises(NuException, match=fr".*{http_status}.*"):
+    with pytest.raises(NuException, match=fr'.*{http_status}.*'):
         client._handle_response(response)
+
 
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_with_url_attribute():
@@ -727,6 +732,7 @@ def test_nubank_request_handler_throws_exception_with_url_attribute():
         client._handle_response(response)
 
     assert exception_info.value.url == response.url
+
 
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_nubank_request_handler_throws_exception_with_response_attribute():
