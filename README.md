@@ -13,8 +13,8 @@ Disponível via pip
 ## Utilizando
 
 ### Ponto de atenção
-O Nubank pode trancar a sua conta por 72 horas caso detecte algum comportamento anormal !!
-Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
+O Nubank pode bloquear a sua conta por 72 horas caso detecte algum comportamento anormal !!
+Por conta disso, evite enviar muitas requisições (Especialmente autenticação). Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
 #### Cartão de Crédito
 ```python
@@ -22,8 +22,7 @@ from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
 nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+nu.authenticate('123456789', 'senha')
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 card_statements = nu.get_card_statements()
@@ -44,8 +43,7 @@ from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
 nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+nu.authenticate('123456789', 'senha')
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 account_statements = nu.get_account_statements()
@@ -60,23 +58,7 @@ print(sum([t['amount'] for t in account_statements]))
 # Saldo atual
 print(nu.get_account_balance())
 ```
-### Autenticação
-Caso a autenticação por QRCode esteja ativada na sua conta, será necessário utilizar o seu telefone par autorizar o acesso a API.
 
-```python
-from pynubank import Nubank
-
-nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-# Nesse momeento será printado o QRCode no console
-# Você precisa escanear pelo o seu app do celular
-# Esse menu fica em NU > Perfil > Acesso pelo site
-qr_code.print_ascii(invert=True)
-input('Após escanear o QRCode pressione enter para continuar')
-# Somente após escanear o QRCode você pode chamar a linha abaixo
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
-print(nu.get_account_balance())
-```
 
 #### Utilizando com Pandas
 ```python
@@ -84,8 +66,7 @@ import pandas as pd
 from pynubank import Nubank
 
 nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+nu.authenticate('123456789', 'senha')
 
 transactions = nu.get_account_statements()
 

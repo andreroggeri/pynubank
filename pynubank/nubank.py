@@ -1,10 +1,7 @@
 import json
 import os
-import uuid
-from typing import Tuple
 
 import requests
-from qrcode import QRCode
 from requests import Response
 
 PAYMENT_EVENT_TYPES = (
@@ -66,7 +63,7 @@ class Nubank:
 
         return self._handle_response(response)
 
-    def _password_auth(self, cpf: str, password: str):
+    def authenticate(self, cpf: str, password: str):
         payload = {
             "grant_type": "password",
             "login": cpf,
@@ -75,7 +72,13 @@ class Nubank:
             "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
         }
         response = requests.post(self.auth_url, json=payload, headers=self.headers)
+
         data = self._handle_response(response)
+
+        self.headers['Authorization'] = f'Bearer {data["access_token"]}'
+        self.feed_url = data['_links']['events']['href']
+        self.query_url = data['_links']['ghostflame']['href']
+        self.bills_url = data['_links']['bills_summary']['href']
         return data
 
     def _handle_response(self, response: Response) -> dict:
@@ -83,29 +86,6 @@ class Nubank:
             raise NuException(response.status_code, response.json(), response.url)
 
         return response.json()
-
-    def get_qr_code(self) -> Tuple[str, QRCode]:
-        content = str(uuid.uuid4())
-        qr = QRCode()
-        qr.add_data(content)
-        return content, qr
-
-    def authenticate_with_qr_code(self, cpf: str, password, uuid: str):
-        auth_data = self._password_auth(cpf, password)
-        self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
-
-        payload = {
-            'qr_code_id': uuid,
-            'type': 'login-webapp'
-        }
-
-        response = requests.post(self.proxy_list_app_url['lift'], json=payload, headers=self.headers)
-
-        auth_data = self._handle_response(response)
-        self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
-        self.feed_url = auth_data['_links']['events']['href']
-        self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['bills_summary']['href']
 
     def get_card_feed(self):
         request = requests.get(self.feed_url, headers=self.headers)
