@@ -21,6 +21,7 @@ Por conta disso, evite enviar muitas requisições (Especialmente autenticação
 from pynubank import Nubank
 
 # Utilize o CPF sem pontos ou traços
+# A senha é a mesma que você usa no app/site, não a do cartão.
 nu = Nubank()
 nu.authenticate('123456789', 'senha')
 
