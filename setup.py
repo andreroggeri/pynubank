@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='pynubank',
-    version='1.0.1',
+    version='1.2.0',
     url='https://github.com/andreroggeri/pynubank',
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
