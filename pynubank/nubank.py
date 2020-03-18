@@ -134,3 +134,6 @@ class Nubank:
     def get_account_balance(self):
         data = self._make_graphql_request('account_balance')
         return data['data']['viewer']['savingsAccount']['currentSavingsBalance']['netAmount']
+
+    def is_authenticated(self):
+        return 'Authorization' in self.headers.keys()
