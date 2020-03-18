@@ -409,7 +409,7 @@ def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return, 
 
     assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
     assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
-    assert nubank_client.is_authenticated == True
+    assert nubank_client.is_authenticated() == True
 
 
 @patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
