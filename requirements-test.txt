@@ -1,4 +1,4 @@
 -r requirements.txt
-pytest==5.4.2
+pytest==5.4.3
 pytest-cov==2.9.0
 coveralls==2.0.0
