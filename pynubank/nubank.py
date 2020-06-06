@@ -1,11 +1,11 @@
-import json
 import os
 import uuid
 from typing import Tuple
 
-import requests
 from qrcode import QRCode
-from requests import Response
+
+from pynubank.utils.discovery import Discovery
+from pynubank.utils.http import HttpClient
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -17,32 +17,14 @@ PAYMENT_EVENT_TYPES = (
 )
 
 
-class NuException(Exception):
-    def __init__(self, status_code, response, url):
-        super().__init__(f'The request made failed with HTTP status code {status_code}')
-        self.url = url
-        self.status_code = status_code
-        self.response = response
-
-
 class Nubank:
-    DISCOVERY_URL = 'https://prod-s0-webapp-proxy.nubank.com.br/api/discovery'
-    DISCOVERY_APP_URL = 'https://prod-s0-webapp-proxy.nubank.com.br/api/app/discovery'
-    auth_url = None
     feed_url = None
-    proxy_list_url = None
-    proxy_list_app_url = None
     query_url = None
     bills_url = None
 
     def __init__(self):
-        self.headers = {
-            'Content-Type': 'application/json',
-            'X-Correlation-Id': 'WEB-APP.pewW9',
-            'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
-        }
-        self._update_proxy_urls()
-        self.auth_url = self.proxy_list_url['login']
+        self.client = HttpClient()
+        self.discovery = Discovery(self.client)
 
     @staticmethod
     def _get_query(query_name):
@@ -52,19 +34,11 @@ class Nubank:
         with open(path) as gql:
             return gql.read()
 
-    def _update_proxy_urls(self):
-        request = requests.get(self.DISCOVERY_URL, headers=self.headers)
-        self.proxy_list_url = json.loads(request.content.decode('utf-8'))
-        request = requests.get(self.DISCOVERY_APP_URL, headers=self.headers)
-        self.proxy_list_app_url = json.loads(request.content.decode('utf-8'))
-
     def _make_graphql_request(self, graphql_object):
         body = {
             'query': self._get_query(graphql_object)
         }
-        response = requests.post(self.query_url, json=body, headers=self.headers)
-
-        return self._handle_response(response)
+        return self.client.post(self.query_url, json=body)
 
     def _password_auth(self, cpf: str, password: str):
         payload = {
@@ -74,15 +48,13 @@ class Nubank:
             "client_id": "other.conta",
             "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
         }
-        response = requests.post(self.auth_url, json=payload, headers=self.headers)
-        data = self._handle_response(response)
-        return data
+        return self.client.post(self.discovery.get_url('login'), json=payload)
 
-    def _handle_response(self, response: Response) -> dict:
-        if response.status_code != 200:
-            raise NuException(response.status_code, response.json(), response.url)
-
-        return response.json()
+    def _save_auth_data(self, auth_data: dict) -> None:
+        self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
+        self.feed_url = auth_data['_links']['events']['href']
+        self.query_url = auth_data['_links']['ghostflame']['href']
+        self.bills_url = auth_data['_links']['bills_summary']['href']
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
@@ -92,36 +64,62 @@ class Nubank:
 
     def authenticate_with_qr_code(self, cpf: str, password, uuid: str):
         auth_data = self._password_auth(cpf, password)
-        self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
+        self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
 
         payload = {
             'qr_code_id': uuid,
             'type': 'login-webapp'
         }
 
-        response = requests.post(self.proxy_list_app_url['lift'], json=payload, headers=self.headers)
+        response = self.client.post(self.discovery.get_app_url('lift'), json=payload)
 
-        auth_data = self._handle_response(response)
-        self.headers['Authorization'] = f'Bearer {auth_data["access_token"]}'
-        self.feed_url = auth_data['_links']['events']['href']
-        self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['bills_summary']['href']
+        self._save_auth_data(response)
+
+    def authenticate_with_cert(self, cpf: str, password: str, cert_path: str):
+        self.client.set_cert(cert_path)
+        url = self.discovery.get_app_url('token')
+        payload = {
+            'grant_type': 'password',
+            'client_id': 'legacy_client_id',
+            'client_secret': 'legacy_client_secret',
+            'login': cpf,
+            'password': password
+        }
+
+        response = self.client.post(url, json=payload)
+
+        self._save_auth_data(response)
+
+        return response.get('refresh_token')
+
+    def authenticate_with_refresh_token(self, refresh_token: str, cert_path: str):
+        self.client.set_cert(cert_path)
+
+        url = self.discovery.get_app_url('token')
+        payload = {
+            'grant_type': 'refresh_token',
+            'client_id': 'legacy_client_id',
+            'client_secret': 'legacy_client_secret',
+            'refresh_token': refresh_token,
+        }
+
+        response = self.client.post(url, json=payload)
+
+        self._save_auth_data(response)
 
     def get_card_feed(self):
-        request = requests.get(self.feed_url, headers=self.headers)
-        return json.loads(request.content.decode('utf-8'))
+        return self.client.get(self.feed_url)
 
     def get_card_statements(self):
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
     def get_bills(self):
-        request = requests.get(self.bills_url, headers=self.headers)
-        return json.loads(request.content.decode('utf-8'))['bills']
+        request = self.client.get(self.bills_url)
+        return request['bills']
 
     def get_bill_details(self, bill):
-        request = requests.get(bill['_links']['self']['href'], headers=self.headers)
-        return json.loads(request.content.decode('utf-8'))
+        return self.client.get(bill['_links']['self']['href'])
 
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')

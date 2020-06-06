@@ -1,22 +1,15 @@
-import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
-import pytest
 from qrcode import QRCode
-from requests import Response
 
-from pynubank.nubank import Nubank, NuException
-
-
-def create_fake_response(dict_response, status_code=200):
-    response = Response()
-    response.status_code = status_code
-    response._content = bytes(json.dumps(dict_response).encode('utf-8'))
-    return response
+from pynubank.nubank import Nubank
+from pynubank.utils.discovery import Discovery
+from pynubank.utils.http import HttpClient
 
 
-def fake_update_proxy(self: Nubank):
+def fake_update_proxy(self: Discovery):
     self.proxy_list_app_url = {
+        'token': 'https://some-url/token',
         'lift': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/B'
     }
     self.proxy_list_url = {
@@ -24,37 +17,46 @@ def fake_update_proxy(self: Nubank):
     }
 
 
-def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return, proxy_return):
-    proxy_list = create_fake_response(proxy_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=proxy_list))
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
 
     nubank_client = Nubank()
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
-    assert nubank_client.headers['Authorization'] == 'Bearer access_token_123'
+    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_authentication_with_qr_code_failure_raise_exception(monkeypatch):
-    response = create_fake_response({}, 401)
+def test_authenticate_with_cert(monkeypatch, authentication_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
 
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-    with pytest.raises(NuException):
-        nu = Nubank()
-        nu.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_card_feed(monkeypatch, authentication_return, events_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     nubank_client = Nubank()
 
-    response = create_fake_response(events_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+
+
+def test_authenticate_with_refresh_token(monkeypatch, authentication_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
+
+    nubank_client = Nubank()
+
+    nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
+
+    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+
+
+def test_get_card_feed(monkeypatch, authentication_return, events_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
+    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=events_return))
+    nubank_client = Nubank()
 
     feed = nubank_client.get_card_feed()
     assert feed['as_of'] == '2017-09-09T06:50:22.323Z'
@@ -77,14 +79,11 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_get_bills(monkeypatch, authentication_return, bills_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
+    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=bills_return))
     nubank_client = Nubank()
-
-    response = create_fake_response(bills_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
     bills = nubank_client.get_bills()
 
@@ -125,19 +124,13 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     assert summary["total_international"] == "0"
     assert summary["total_national"] == "364.32893934"
     assert summary["total_payments"] == "-960.47"
-    response = create_fake_response({}, 401)
-
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
 def test_get_bill_details(monkeypatch, authentication_return, bill_details_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
+    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=bill_details_return))
     nubank_client = Nubank()
-
-    response = create_fake_response(bill_details_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
 
     bill_mock = {
         '_links': {'self': {'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
@@ -201,14 +194,11 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     assert bill['summary']['total_payments'] == '0'
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_card_statements(monkeypatch, authentication_return, events_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+def test_get_card_statements(monkeypatch, events_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=events_return))
     nubank_client = Nubank()
 
-    response = create_fake_response(events_return)
-    monkeypatch.setattr('requests.get', MagicMock(return_value=response))
     statements = nubank_client.get_card_statements()
 
     assert len(statements) == 1
@@ -225,27 +215,21 @@ def test_get_card_statements(monkeypatch, authentication_return, events_return):
     assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_account_balance(monkeypatch, authentication_return, account_balance_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+def test_get_account_balance(monkeypatch, account_balance_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_balance_return))
     nubank_client = Nubank()
 
-    response = create_fake_response(account_balance_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     balance = nubank_client.get_account_balance()
 
     assert balance == 127.33
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_account_feed(monkeypatch, authentication_return, account_statements_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+def test_get_account_feed(monkeypatch, account_statements_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
     nubank_client = Nubank()
 
-    response = create_fake_response(account_statements_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_feed()
 
     assert len(statements) == 6
@@ -264,14 +248,11 @@ def test_get_account_feed(monkeypatch, authentication_return, account_statements
     assert statements[2]['destinationAccount']['name'] == 'Juquinha da Silva Sauro'
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_account_statements(monkeypatch, authentication_return, account_statements_return):
-    response = create_fake_response(authentication_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
+def test_get_account_statements(monkeypatch, account_statements_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
     nubank_client = Nubank()
 
-    response = create_fake_response(account_statements_return)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
     statements = nubank_client.get_account_statements()
 
     assert len(statements) == 4
@@ -290,78 +271,10 @@ def test_get_account_statements(monkeypatch, authentication_return, account_stat
     assert statements[3]['amount'] == 169.2
 
 
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_grapql_query_raises_exeption(monkeypatch, authentication_return):
-    nubank_client = Nubank()
-
-    response = create_fake_response({}, 401)
-
-    monkeypatch.setattr('requests.post', MagicMock(return_value=response))
-    with pytest.raises(NuException):
-        nubank_client.get_account_balance()
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_get_qr_code():
+def test_get_qr_code(monkeypatch):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
     client = Nubank()
     uid, qr = client.get_qr_code()
 
     assert uid != ''
     assert isinstance(qr, QRCode)
-
-
-@pytest.mark.parametrize('http_status', [
-    100, 101, 102, 103,
-    201, 202, 203, 204, 205, 206, 207, 208, 226,
-    300, 301, 302, 303, 304, 305, 306, 307, 308,
-    400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 420, 421, 422,
-    423,
-    424, 426, 428, 429, 431, 440, 444, 449, 450, 451, 495, 496, 497, 498, 499,
-    500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526, 527, 530, 598
-])
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_nubank_request_handler_throws_exception_on_status_different_of_200(http_status):
-    response = create_fake_response({}, http_status)
-    client = Nubank()
-    with pytest.raises(NuException):
-        client._handle_response(response)
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_nubank_request_handler_throws_exception_with_status_code_attribute():
-    http_status = 400
-    response = create_fake_response({}, http_status)
-    client = Nubank()
-    with pytest.raises(NuException) as exception_info:
-        client._handle_response(response)
-
-    assert exception_info.value.status_code == http_status
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_nubank_request_handler_throws_exception_status_code_in_the_exception_message():
-    http_status = 400
-    response = create_fake_response({}, http_status)
-    client = Nubank()
-    with pytest.raises(NuException, match=fr'.*{http_status}.*'):
-        client._handle_response(response)
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_nubank_request_handler_throws_exception_with_url_attribute():
-    response = create_fake_response({}, 400)
-    client = Nubank()
-    with pytest.raises(NuException) as exception_info:
-        client._handle_response(response)
-
-    assert exception_info.value.url == response.url
-
-
-@patch.object(Nubank, '_update_proxy_urls', fake_update_proxy)
-def test_nubank_request_handler_throws_exception_with_response_attribute():
-    response = create_fake_response({}, 400)
-    client = Nubank()
-    with pytest.raises(NuException) as exception_info:
-        client._handle_response(response)
-
-    assert exception_info.value.response == response.json()
