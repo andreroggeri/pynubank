@@ -1,1 +1,2 @@
-from .nubank import Nubank, NuException
+from .exception import NuRequestException, NuException
+from .nubank import Nubank
