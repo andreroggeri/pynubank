@@ -1,0 +1,7 @@
+plugins:
+  bandit:
+    enabled: true
+  fixme:
+    enabled: true
+  pep8:
+    enabled: true
