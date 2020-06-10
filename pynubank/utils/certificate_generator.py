@@ -28,7 +28,7 @@ class CertificateGenerator:
         parsed = self._parse_authenticate_headers(response.headers.get('WWW-Authenticate'))
         self.encrypted_code = parsed.get('device-authorization_encrypted-code')
 
-        return parsed['sent-to']
+        return parsed.get('sent-to')
 
     def exchange_certs(self, code: str):
         if not self.encrypted_code:
