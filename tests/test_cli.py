@@ -33,7 +33,8 @@ def clean():
 
 
 @patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'request_code', mock_error)
-@patch('sys.stdin', StringIO('1234\n1234\nabcabc\n'))
+@patch('builtins.input', lambda *args: '12341234')
+@patch('getpass.getpass', lambda *args: '12341234')
 def test_request_code_exception_should_stop_execution():
     from pynubank import cli
 
@@ -49,7 +50,8 @@ def test_request_code_exception_should_stop_execution():
 
 @patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'exchange_certs', mock_certs)
 @patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'request_code', lambda x: 'email@tld')
-@patch('sys.stdin', StringIO('1234\n1234\nabcabc\n'))
+@patch('builtins.input', lambda *args: '12341234')
+@patch('getpass.getpass', lambda *args: '12341234')
 def test_should_generate_certs():
     from pynubank import cli
 
