@@ -2,7 +2,6 @@ from unittest.mock import MagicMock
 
 import pytest
 from requests import Response
-import requests_pkcs12
 
 from pynubank import NuRequestException
 from pynubank.utils.http import HttpClient
@@ -67,6 +66,7 @@ def test_get(monkeypatch):
     response = client.get('some-url')
 
     assert response['key'] == 123
+
 
 def test_post(monkeypatch):
     response = Response()
