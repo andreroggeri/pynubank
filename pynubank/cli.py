@@ -42,7 +42,7 @@ def main():
         email = generator.request_code()
     except NuException:
         log(f'{Fore.RED}Failed to request code. Check your credentials!', Fore.RED)
-        exit(1)
+        return
 
     log(f'Email sent to {Fore.LIGHTBLACK_EX}{email}{Fore.LIGHTBLUE_EX}')
     code = input('[>] Type the code received by email: ')
@@ -50,7 +50,6 @@ def main():
     cert1, cert2 = generator.exchange_certs(code)
 
     save_cert(cert1, 'cert.p12')
-    save_cert(cert2, 'cert_crypto.p12')
 
     print(f'{Fore.GREEN}Certificates generated successfully. (cert.pem and cert_crypto.pem)')
     print(f'{Fore.YELLOW}Warning, keep these certificates safe (Do not share or version in git)')
