@@ -22,8 +22,8 @@ class CertificateGenerator:
     def request_code(self) -> str:
         response = requests.post(self.url, json=self._get_payload())
 
-        if response.status_code != 401:
-            raise NuException('Authentication code request failure.')
+        if response.status_code != 401 or not response.headers.get('WWW-Authenticate'):
+            raise NuException('Authentication code request failed.')
 
         parsed = self._parse_authenticate_headers(response.headers.get('WWW-Authenticate'))
         self.encrypted_code = parsed.get('device-authorization_encrypted-code')
