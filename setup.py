@@ -1,14 +1,18 @@
-# -*- coding: utf-8 -*-
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='pynubank',
-    version='1.2.0',
+    version='2.0.0b',
     url='https://github.com/andreroggeri/pynubank',
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
     license='MIT',
-    packages=['pynubank'],
+    packages=find_packages(),
     package_data={'pynubank': ['queries/*.gql']},
-    install_requires=['requests', 'qrcode'],
+    install_requires=['requests', 'qrcode', 'pyOpenSSL', 'colorama', 'requests-pkcs12'],
+    entry_points={
+        'console_scripts': [
+            'pynubank = pynubank.cli:main'
+        ]
+    }
 )
