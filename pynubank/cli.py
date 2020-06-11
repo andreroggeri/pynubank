@@ -51,7 +51,7 @@ def main():
 
     save_cert(cert1, 'cert.p12')
 
-    print(f'{Fore.GREEN}Certificates generated successfully. (cert.pem and cert_crypto.pem)')
+    print(f'{Fore.GREEN}Certificates generated successfully. (cert.pem)')
     print(f'{Fore.YELLOW}Warning, keep these certificates safe (Do not share or version in git)')
 
 
