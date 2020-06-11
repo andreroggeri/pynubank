@@ -42,6 +42,19 @@ def test_request_code_fails_when_status_code_is_different_from_401(monkeypatch):
         assert email is None
 
 
+def test_request_code_fails_when_there_is_no_authenticate_header(monkeypatch):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, {}, 401)))
+
+    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+
+    with pytest.raises(NuException) as ex:
+        email = generator.request_code()
+
+        assert ex is not None
+        assert email is None
+
+
 def test_request_code(monkeypatch):
     monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
     monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, headers, 401)))
@@ -67,7 +80,7 @@ def test_exchange_certs_fails_when_called_without_request_code(monkeypatch):
         assert ex is not None
 
 
-def test_excahnge_cert_fails_when_status_code_is_different_from_200(monkeypatch):
+def test_exchange_cert_fails_when_status_code_is_different_from_200(monkeypatch):
     monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
     monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, headers, 401)))
 
