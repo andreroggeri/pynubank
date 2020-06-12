@@ -12,17 +12,17 @@ Disponível via pip
 
 ## Utilizando
 
-### Ponto de atenção
-O Nubank pode trancar a sua conta por 72 horas caso detecte algum comportamento anormal !!
+### Atenção !
+O Nubank pode bloquear a sua conta por 72 horas caso detecte algum comportamento anormal !
 Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
-#### Cartão de Crédito
+### Cartão de Crédito
 ```python
 from pynubank import Nubank
 
-# Utilize o CPF sem pontos ou traços
 nu = Nubank()
 uuid, qr_code = nu.get_qr_code()
+# Utilize o CPF sem pontos ou traços
 nu.authenticate_with_qr_code('123456789', 'senha', uuid)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
@@ -42,9 +42,9 @@ bill_details = nu.get_bill_details(bills[1])
 ```python
 from pynubank import Nubank
 
-# Utilize o CPF sem pontos ou traços
 nu = Nubank()
 uuid, qr_code = nu.get_qr_code()
+# Utilize o CPF sem pontos ou traços
 nu.authenticate_with_qr_code('123456789', 'senha', uuid)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
@@ -60,71 +60,8 @@ print(sum([t['amount'] for t in account_statements]))
 # Saldo atual
 print(nu.get_account_balance())
 ```
-### Autenticação
-Caso a autenticação por QRCode esteja ativada na sua conta, será necessário utilizar o seu telefone par autorizar o acesso a API.
-
-```python
-from pynubank import Nubank
-
-nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-# Nesse momeento será printado o QRCode no console
-# Você precisa escanear pelo o seu app do celular
-# Esse menu fica em NU > Perfil > Acesso pelo site
-qr_code.print_ascii(invert=True)
-input('Após escanear o QRCode pressione enter para continuar')
-# Somente após escanear o QRCode você pode chamar a linha abaixo
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
-print(nu.get_account_balance())
-```
-
-#### Utilizando com Pandas
-```python
-import pandas as pd
-from pynubank import Nubank
-
-nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
-
-transactions = nu.get_account_statements()
-
-df = pd.DataFrame(transactions, columns=['time', 'amount'])
-df['time'] = pd.to_datetime(df['time'])
-df.groupby([df.time.dt.year, df.time.dt.month]).sum() # Agrupado por Ano/Mês
-"""
-Year Month  Amount
-2016 6      20000
-     7      20000
-     8      20000
-     9      20000
-     10     20000
-     11     40000
-     12     40000
-
-2017 1     100000
-     2      20000
-     3      30000
-     4      35000
-     5      12000
-     6      22000
-"""
-df.groupby([df.title]).sum() # Agrupado por categoria
-"""
-title         amount
-casa           13000
-eletrônicos   123000
-lazer          32800
-outros        100000
-restaurante    98505
-saúde           3435
-serviços      456785
-supermercado   45621
-transporte    489152
-vestuário      45612
-viagem         78456
-"""
-```
+### Mais exemplos
+A pasta [examples](./examples/) possui mais referencias de uso com autenticação e visualização dos dados
 
 ## Testes
 1. Instale os requirements
@@ -136,7 +73,6 @@ $ pip install -r requirements-test.txt
 
 $ pytest
 ```
-
 
 ## Contribuindo
 
