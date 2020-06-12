@@ -1,5 +1,5 @@
 # Autenticação por Usuário e Senha com certificado
-Ao utilizar a autenticação por QRCode, você estará reproduzindo o fluxo de acesso pelo app.
+Ao utilizar a autenticação com certificado, você estará reproduzindo o fluxo de acesso pelo app.
 
 ![Fluxo de geração de certificado](./img/diagram.PNG)
 
