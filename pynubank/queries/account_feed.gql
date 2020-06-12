@@ -19,6 +19,9 @@
                         name
                     }
                 }
+                ... on BillPaymentEvent {
+                    amount
+                }
                 ... on DebitPurchaseEvent {
                     amount
                 }
