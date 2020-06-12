@@ -255,20 +255,20 @@ def test_get_account_statements(monkeypatch, account_statements_return):
 
     statements = nubank_client.get_account_statements()
 
-    assert len(statements) == 4
-    assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
-    assert statements[2]['__typename'] == 'TransferInEvent'
-    assert statements[2]['title'] == 'Transferência recebida'
-    assert statements[2]['detail'] == 'R$127.33'
-    assert statements[2]['postDate'] == '2018-03-06'
-    assert statements[2]['amount'] == 127.33
+    assert len(statements) == 5
+    assert statements[3]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
+    assert statements[3]['__typename'] == 'TransferInEvent'
+    assert statements[3]['title'] == 'Transferência recebida'
+    assert statements[3]['detail'] == 'R$127.33'
+    assert statements[3]['postDate'] == '2018-03-06'
+    assert statements[3]['amount'] == 127.33
 
-    assert statements[3]['id'] == 'abcdefgh-ijkl-mnop-qrst-uvwxyz0123'
-    assert statements[3]['__typename'] == 'BarcodePaymentEvent'
-    assert statements[3]['title'] == 'Pagamento efetuado'
-    assert statements[3]['detail'] == 'AES ELETROPAULO'
-    assert statements[3]['postDate'] == '2018-02-05'
-    assert statements[3]['amount'] == 169.2
+    assert statements[4]['id'] == 'abcdefgh-ijkl-mnop-qrst-uvwxyz0123'
+    assert statements[4]['__typename'] == 'BarcodePaymentEvent'
+    assert statements[4]['title'] == 'Pagamento efetuado'
+    assert statements[4]['detail'] == 'AES ELETROPAULO'
+    assert statements[4]['postDate'] == '2018-02-05'
+    assert statements[4]['amount'] == 169.2
 
 
 def test_get_qr_code(monkeypatch):
