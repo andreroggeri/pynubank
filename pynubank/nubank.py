@@ -35,10 +35,15 @@ class Nubank:
         with open(path) as gql:
             return gql.read()
 
-    def _make_graphql_request(self, graphql_object):
+    def _make_graphql_request(self, graphql_object, variables=None):
+        if variables is None:
+            variables = {}
+
         body = {
+            'variables': variables,
             'query': self._get_query(graphql_object)
         }
+
         return self.client.post(self.query_url, json=body)
 
     def _password_auth(self, cpf: str, password: str):
@@ -133,3 +138,17 @@ class Nubank:
     def get_account_balance(self):
         data = self._make_graphql_request('account_balance')
         return data['data']['viewer']['savingsAccount']['currentSavingsBalance']['netAmount']
+
+    def create_boleto(self, amount: float) -> str:
+        customer_id_response = self._make_graphql_request('account_id')
+        customer_id = customer_id_response['data']['viewer']['id']
+
+        payload = {
+            "input": {"amount": str(amount), "customerId": customer_id}
+        }
+
+        boleto_response = self._make_graphql_request('create_boleto', payload)
+
+        barcode = boleto_response['data']['createTransferInBoleto']['boleto']['readableBarcode']
+
+        return barcode

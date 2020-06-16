@@ -1,0 +1,13 @@
+mutation withCreateBoleto_Mutation(
+  $input: CreateTransferInBoletoInput!
+) {
+  createTransferInBoleto(input: $input) {
+    boleto {
+      id
+      dueDate
+      barcode
+      readableBarcode
+      amount
+    }
+  }
+}

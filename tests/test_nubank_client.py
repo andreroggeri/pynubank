@@ -278,3 +278,13 @@ def test_get_qr_code(monkeypatch):
 
     assert uid != ''
     assert isinstance(qr, QRCode)
+
+
+def test_should_generate_boleto(monkeypatch, create_boleto_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=create_boleto_return))
+    client = Nubank()
+
+    boleto = client.create_boleto(200.50)
+
+    assert boleto == create_boleto_return['data']['createTransferInBoleto']['boleto']['readableBarcode']
