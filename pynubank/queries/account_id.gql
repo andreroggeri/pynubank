@@ -1,0 +1,12 @@
+query RequestMoney_Query {
+  viewer {
+    ...RequestMoney_viewer
+    id
+  }
+}
+
+fragment RequestMoney_viewer on Customer {
+  savingsAccount {
+    id
+  }
+}
