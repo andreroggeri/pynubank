@@ -5,12 +5,14 @@ from pynubank import NuRequestException
 
 
 class HttpClient:
-    _cert = None
-    _headers = {
-        'Content-Type': 'application/json',
-        'X-Correlation-Id': 'WEB-APP.pewW9',
-        'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
-    }
+
+    def __init__(self):
+        self._cert = None
+        self._headers = {
+            'Content-Type': 'application/json',
+            'X-Correlation-Id': 'WEB-APP.pewW9',
+            'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
+        }
 
     def set_cert(self, cert_path: str):
         self._cert = cert_path

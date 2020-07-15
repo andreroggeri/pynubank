@@ -79,3 +79,13 @@ def test_post(monkeypatch):
     response = client.post('some-url', {})
 
     assert response['key'] == 555
+
+def test_client_should_clear_headers_on_new_instance():
+    client = HttpClient()
+    client.set_header('SomeHeader', 'SomeValue')
+
+    client = HttpClient()
+    client.set_header('OtherHeader', 'SomeValue')
+
+    assert client.get_header('SomeHeader') is None
+    assert client.get_header('OtherHeader') == 'SomeValue'
