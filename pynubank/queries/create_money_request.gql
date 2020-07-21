@@ -1,0 +1,12 @@
+mutation createMoneyRequest_createMoneyRequestMutation(
+  $input: CreateMoneyRequestInput!
+) {
+  createMoneyRequest(input: $input) {
+    moneyRequest {
+      amount
+      message
+      url
+      id
+    }
+  }
+}

@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, Mock
 
 from qrcode import QRCode
 
@@ -288,3 +288,15 @@ def test_should_generate_boleto(monkeypatch, create_boleto_return):
     boleto = client.create_boleto(200.50)
 
     assert boleto == create_boleto_return['data']['createTransferInBoleto']['boleto']['readableBarcode']
+
+
+def test_should_create_money_request(monkeypatch, create_money_request_return, account_statements_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    post_mock = Mock()
+    post_mock.side_effect = [account_statements_return, create_money_request_return]
+    monkeypatch.setattr(HttpClient, 'post', post_mock)
+    client = Nubank()
+
+    url = client.create_money_request(200)
+
+    assert url == create_money_request_return['data']['createMoneyRequest']['moneyRequest']['url']

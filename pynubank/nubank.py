@@ -152,3 +152,16 @@ class Nubank:
         barcode = boleto_response['data']['createTransferInBoleto']['boleto']['readableBarcode']
 
         return barcode
+
+    def create_money_request(self, amount: float) -> str:
+        account_data = self._make_graphql_request('account_feed')
+        account_id = account_data['data']['viewer']['savingsAccount']['id']
+        payload = {
+            'input': {
+                'amount': amount, 'savingsAccountId': account_id
+            }
+        }
+
+        money_request_response = self._make_graphql_request('create_money_request', payload)
+
+        return money_request_response['data']['createMoneyRequest']['moneyRequest']['url']

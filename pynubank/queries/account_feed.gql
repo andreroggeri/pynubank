@@ -1,6 +1,7 @@
 {
     viewer {
         savingsAccount {
+            id
             feed {
                 id
                 __typename
