@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pynubank',
-    version='2.2.2',
+    version='2.3.0',
     url='https://github.com/andreroggeri/pynubank',
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
