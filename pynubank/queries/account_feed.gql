@@ -29,6 +29,12 @@
                 ... on BarcodePaymentEvent {
                     amount
                 }
+                ... on DebitWithdrawalFeeEvent {
+                    amount
+                }
+                ... on DebitWithdrawalEvent {
+                    amount
+                }               
             }
         }
     }
