@@ -20,6 +20,9 @@
                         name
                     }
                 }
+                ... on TransferOutReversalEvent {
+                    amount
+                }
                 ... on BillPaymentEvent {
                     amount
                 }
@@ -34,7 +37,7 @@
                 }
                 ... on DebitWithdrawalEvent {
                     amount
-                }               
+                }    
             }
         }
     }
