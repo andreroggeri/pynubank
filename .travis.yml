@@ -23,12 +23,13 @@ after_success:
 jobs:
   include:
     - stage: deploy
-      provider: pypi
-      user: andreroggeri
-      skip_upload_docs: true
       script: skip
       after_success: skip
       python: '3.8'
-      password:
-        secure: Tvc1QMsgO6/a/UoBqjrxLSyySUBQ5RIug9JU/BzP4HAGgUz68+8WRpelwGJUmKmcPrZ0OmhDohl8CDGsBuKLw/eXuxrJaWZbnEzFfEHoFOSRsDKdJYlEOhH71P5J1A3AmyDJ1b7n0cCfg/g4/uRgiA/3pBB+2/OA2y0YbL1nHdQ8M2xD9VvmPTVrjx7fqKLBRbxi1MU9LguPsRqzLAO6rJ/m9dP0YHiorpXbgghidquJMv5q0rq6NQSxsZU4bsP62BxJxtNXc64uot2DXTXNpx2SlyQabMA9rFPWu9OU/WjChcv1t25JbVBmS/KtKlOe3o7Zm7VS5tMjJg9m1LYI29iXuS75nQWzwTUv5CzLxzq4O0YF5ds29QfO8os5tYI3hKeyMFmiCEL1dK5/T9JdjVbDSFGSyXvGq4D9u3lTvm/OyKqnnyeT+88UMogfyFA3OZRmlCzzALjqPfdxfcLoNkE3xa9LZe9cZ4wtMLmsfC+wqqLqJ0WSQtDjbx5SYgF6bqzy70fnFZ2+IQLlJTSRn3UwkF5Fw3joi9fK3yKwBFQ0kIRPAoP/xq63ZTEWGFtq/tO9wCZFmhoXFqpiwY3xFl9zTXjjE0JNdzGLKXtdpVqoNV0mHuryrNGmbGJfFBoUdK16NgJgqf0FDhqdfqGdIuW7vflvTCpDgbK5mNzkUDo=
+      deploy:
+        - provider: pypi
+        user: andreroggeri
+        skip_upload_docs: true
+        password:
+          secure: Tvc1QMsgO6/a/UoBqjrxLSyySUBQ5RIug9JU/BzP4HAGgUz68+8WRpelwGJUmKmcPrZ0OmhDohl8CDGsBuKLw/eXuxrJaWZbnEzFfEHoFOSRsDKdJYlEOhH71P5J1A3AmyDJ1b7n0cCfg/g4/uRgiA/3pBB+2/OA2y0YbL1nHdQ8M2xD9VvmPTVrjx7fqKLBRbxi1MU9LguPsRqzLAO6rJ/m9dP0YHiorpXbgghidquJMv5q0rq6NQSxsZU4bsP62BxJxtNXc64uot2DXTXNpx2SlyQabMA9rFPWu9OU/WjChcv1t25JbVBmS/KtKlOe3o7Zm7VS5tMjJg9m1LYI29iXuS75nQWzwTUv5CzLxzq4O0YF5ds29QfO8os5tYI3hKeyMFmiCEL1dK5/T9JdjVbDSFGSyXvGq4D9u3lTvm/OyKqnnyeT+88UMogfyFA3OZRmlCzzALjqPfdxfcLoNkE3xa9LZe9cZ4wtMLmsfC+wqqLqJ0WSQtDjbx5SYgF6bqzy70fnFZ2+IQLlJTSRn3UwkF5Fw3joi9fK3yKwBFQ0kIRPAoP/xq63ZTEWGFtq/tO9wCZFmhoXFqpiwY3xFl9zTXjjE0JNdzGLKXtdpVqoNV0mHuryrNGmbGJfFBoUdK16NgJgqf0FDhqdfqGdIuW7vflvTCpDgbK5mNzkUDo=
 
