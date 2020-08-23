@@ -1,5 +1,7 @@
 # Autenticação por QRCode
-Ao utilizar a autenticação por QRCode, você estará reproduzindo o fluxo de acesso pelo site.
+Ao utilizar a autenticação por QRCode, você estará reproduzindo o fluxo de acesso feito no app web:
+
+<img src="img/qrcode-web.png" width="650" alt="Exemplo do app web do Nubank"/>
 
 Dessa maneira sempre será necessário utilizar o celular para escanear o QRCode e autorizar o acesso.
 
