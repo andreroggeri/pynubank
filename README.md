@@ -11,20 +11,32 @@ Disponível via pip
 
 `pip install pynubank`
 
-## Utilizando
 
-### Atenção !
-O Nubank pode bloquear a sua conta por 72 horas caso detecte algum comportamento anormal !
-Por conta disso, evite enviar muitas requisições. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
+## Autenticação
+Primeiro de tudo, precisamos nos autenticar. 
+
+Para isso, além do seu CPF e senha usuais, precisamos de um fator extra de autenticação.
+
+Temos 3 opções disponíveis, com seus respectivos exemplos:
+- [QR Code](https://github.com/andreroggeri/pynubank/blob/master/examples/login-qrcode.md) (assim como é feito no app web) 
+- [Certificado](https://github.com/andreroggeri/pynubank/blob/master/examples/login-certificate.md) (assim como é feito no app mobile)
+- [Certificado e Refresh Token](https://github.com/andreroggeri/pynubank/blob/master/examples/login-refresh-token.md)
+
+Tendo seguido com sucesso uma das opções, você pode tentar um dos exemplos a seguir!
+
+## Exemplos
+
+> :warning:  **Atenção**: O Nubank pode bloquear a sua conta por 72 horas caso detecte algum comportamento anormal !
+Por conta disso, **evite enviar muitas requisições**. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
 
 ### Cartão de Crédito
 ```python
 from pynubank import Nubank
 
 nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-# Utilize o CPF sem pontos ou traços
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+
+# Insira aqui o código para se autenticar!
+# Veja a seção acima sobre autenticação para mais detalhes ;)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 card_statements = nu.get_card_statements()
@@ -44,9 +56,9 @@ bill_details = nu.get_bill_details(bills[1])
 from pynubank import Nubank
 
 nu = Nubank()
-uuid, qr_code = nu.get_qr_code()
-# Utilize o CPF sem pontos ou traços
-nu.authenticate_with_qr_code('123456789', 'senha', uuid)
+
+# Insira aqui o código para se autenticar!
+# Veja a seção acima sobre autenticação para mais detalhes ;)
 
 # Lista de dicionários contendo todas as transações de seu cartão de crédito
 account_statements = nu.get_account_statements()
@@ -62,7 +74,7 @@ print(sum([t['amount'] for t in account_statements]))
 print(nu.get_account_balance())
 ```
 ### Mais exemplos
-A pasta [examples](./examples/) possui mais referencias de uso com autenticação e visualização dos dados
+A pasta [examples](./examples/) possui mais referencias de uso com autenticação e visualização dos dados.
 
 ## Testes
 1. Instale os requirements
