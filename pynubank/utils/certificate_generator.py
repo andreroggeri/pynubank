@@ -9,11 +9,11 @@ from pynubank.utils.http import HttpClient
 
 class CertificateGenerator:
 
-    def __init__(self, login, password, device_id):
+    def __init__(self, login, password, device_id, encrypted_code=None):
         self.login = login
         self.password = password
         self.device_id = device_id
-        self.encrypted_code = None
+        self.encrypted_code = encrypted_code
         self.key1 = self._generate_key()
         self.key2 = self._generate_key()
         discovery = Discovery(HttpClient())
