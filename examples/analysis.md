@@ -48,12 +48,12 @@ nu = Nubank()
 # Recupera as transações da NuConta
 transactions = nu.get_account_statements()
 
-IN_EVENT = 'TransferInEvent'
+IN_EVENT = ['TransferInEvent', 'TransferOutReversalEvent']
 
 # Transformamos os valores que não são TransferInEvent em negativo
 # Para que a soma seja feita corretamente
 def transform_value(transaction):
-    if transaction.get('__typename') != IN_EVENT:
+    if not transaction.get('__typename') in IN_EVENT:
         transaction['amount'] = transaction['amount'] * -1
     return transaction
 
