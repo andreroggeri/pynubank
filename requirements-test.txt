@@ -2,5 +2,5 @@
 pytest==6.0.1
 pytest-cov==2.10.1
 coveralls==2.1.2
-tox==3.19.0
+tox==3.20.0
 six==1.15.0
