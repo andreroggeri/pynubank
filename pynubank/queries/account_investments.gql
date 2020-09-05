@@ -1,7 +1,6 @@
 {
   	viewer {
     		savingsAccount {
-      			id
       			redeemableDeposits {
       				id
               rate
