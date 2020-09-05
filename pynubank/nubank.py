@@ -145,7 +145,6 @@ class Nubank:
         data = self._make_graphql_request('account_deposits')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']
 
-
     def create_boleto(self, amount: float) -> str:
         customer_id_response = self._make_graphql_request('account_id')
         customer_id = customer_id_response['data']['viewer']['id']
