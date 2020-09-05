@@ -16,15 +16,6 @@
                   iofTax
                   id
               }
-              balance{
-                  grossAmount
-                  netAmount
-                  incomeTax
-                  iofTax
-                  principal
-                  yield
-                  id
-              }
     			}
   		}
   		id
