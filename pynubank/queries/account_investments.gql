@@ -1,0 +1,32 @@
+{
+  	viewer {
+    		savingsAccount {
+      			id
+      			redeemableDeposits {
+      				id
+              rate
+              vehicle
+              openDate
+              maturityDate
+              principal
+              redeemedBalance{
+                  netAmount
+                  yield
+                  incomeTax
+                  iofTax
+                  id
+              }
+              balance{
+                  grossAmount
+                  netAmount
+                  incomeTax
+                  iofTax
+                  principal
+                  yield
+                  id
+              }
+    			}
+  		}
+  		id
+  	}
+}
