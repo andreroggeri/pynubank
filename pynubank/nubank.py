@@ -142,7 +142,7 @@ class Nubank:
         return data['data']['viewer']['savingsAccount']['currentSavingsBalance']['netAmount']
 
     def get_account_investments_details(self):
-        data = self._make_graphql_request('account_deposits')
+        data = self._make_graphql_request('account_investments')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']
 
     def create_boleto(self, amount: float) -> str:
