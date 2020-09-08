@@ -1,4 +1,5 @@
 from .account_balance import account_balance_return
+from .account_investments_details import account_investments_details_return
 from .account_statements import account_statements_return
 from .authentication import authentication_return
 from .bills import bills_return

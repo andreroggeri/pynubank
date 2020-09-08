@@ -270,6 +270,37 @@ def test_get_account_statements(monkeypatch, account_statements_return):
     assert statements[4]['postDate'] == '2018-02-05'
     assert statements[4]['amount'] == 169.2
 
+def test_get_account_investments_details(monkeypatch, account_investments_details_return):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_investments_details_return))
+    nubank_client = Nubank()
+
+    statements = nubank_client.get_account_investments_details()
+
+    assert len(statements) == 3
+    assert statements[0]['id'] == 'vjdhausd-asdg-bgfs-vfsg-jrthfuv'
+    assert statements[0]['rate'] == 1
+    assert statements[0]['vehicle'] == 'RECEIPT_DEPOSIT'
+    assert statements[0]['openDate'] == '2020-07-13'
+    assert statements[0]['maturityDate'] == '2022-07-05'
+    assert statements[0]['principal'] == 156.52
+    assert statements[0]['redeemedBalance']['netAmount'] == 0
+    assert statements[0]['redeemedBalance']['yield'] == 0
+    assert statements[0]['redeemedBalance']['incomeTax'] == 0
+    assert statements[0]['redeemedBalance']['iofTax'] == 0
+    assert statements[0]['redeemedBalance']['id'] == 'abcdefgh-ijkl-mnop-qrst-uvwxyz0123'
+
+    assert statements[2]['id'] == 'ffghjyu-ktyu-dfgn-nfgh-asdgre'
+    assert statements[2]['rate'] == 1
+    assert statements[2]['vehicle'] == 'RECEIPT_DEPOSIT'
+    assert statements[2]['openDate'] == '2020-08-11'
+    assert statements[2]['maturityDate'] == '2022-08-03'
+    assert statements[2]['principal'] == 77.77
+    assert statements[2]['redeemedBalance']['netAmount'] == 39.99
+    assert statements[2]['redeemedBalance']['yield'] == 0.05
+    assert statements[2]['redeemedBalance']['incomeTax'] == 0.01
+    assert statements[2]['redeemedBalance']['iofTax'] == 0.01
+    assert statements[2]['redeemedBalance']['id'] == 'sdfgehhdf-jkre-thre-nghh-kuvsnjue633'
 
 def test_get_qr_code(monkeypatch):
     monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
