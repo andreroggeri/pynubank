@@ -56,7 +56,7 @@ class CertificateGenerator:
             'password': self.password,
             'public_key': self._get_public_key(self.key1),
             'public_key_crypto': self._get_public_key(self.key2),
-            'model': 'PyNubank Client',
+            'model': f'PyNubank Client ({self.device_id})',
             'device_id': self.device_id
         }
 
