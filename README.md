@@ -27,7 +27,20 @@ Tendo seguido com sucesso uma das opções, você pode tentar um dos exemplos a 
 ## Exemplos
 
 > :warning:  **Atenção**: O Nubank pode bloquear a sua conta por 72 horas caso detecte algum comportamento anormal !
-Por conta disso, **evite enviar muitas requisições**. Se for necessário, faça um mock da resposta ou utilize o Jupyter durante o desenvolvimento para que o bloqueio não ocorra.
+Por conta disso, **evite enviar muitas requisições**. Você também pode utilizar o MockHttpClient descrito abaixo.
+
+### Realizando testes com dados falsos
+Você pode utilizar este recurso para receber dados falsos para testar a sua solução sem correr riscos de ser bloqueado pelo Nubank e com tempo de resposta instantâneo. Para isso, utilize o exemplo a seguir:
+
+```python
+from pynubank import Nubank
+from pynubank.utils.mock_http import MockHttpClient
+
+nu = Nubank(MockHttpClient())
+
+# A partir daqui, não haverá nenhuma requisição para os servidores do NuBank ;) 
+```
+
 
 ### Cartão de Crédito
 ```python
@@ -73,6 +86,7 @@ print(sum([t['amount'] for t in account_statements]))
 # Saldo atual
 print(nu.get_account_balance())
 ```
+
 ### Mais exemplos
 A pasta [examples](./examples/) possui mais referencias de uso com autenticação e visualização dos dados.
 
