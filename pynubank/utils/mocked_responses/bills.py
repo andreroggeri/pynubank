@@ -11,16 +11,16 @@ bills_summary = {
         {
             "_links": {
                 "self": {
-                    "href": "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+                    "href": "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-2512"
                 }
             },
             "state": "future",
             "summary": {
                 "adjustments": "0",
-                "close_date": "2018-05-03",
-                "due_date": "2018-05-10",
-                "effective_due_date": "2018-05-10",
-                "expenses": "126.94",
+                "close_date": "2016-05-03",
+                "due_date": "2016-05-10",
+                "effective_due_date": "2016-05-10",
+                "expenses": "176.94",
                 "fees": "0",
                 "interest": 0,
                 "interest_charge": "0",
@@ -49,16 +49,16 @@ bills_summary = {
         {
             "_links": {
                 "self": {
-                    "href": "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+                    "href": "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-abcd"
                 }
             },
             "state": "open",
             "summary": {
                 "adjustments": "0",
-                "close_date": "2018-04-03",
-                "due_date": "2018-04-10",
-                "effective_due_date": "2018-04-10",
-                "expenses": "303.36",
+                "close_date": "2017-04-03",
+                "due_date": "2017-04-10",
+                "effective_due_date": "2017-04-10",
+                "expenses": "393.36",
                 "fees": "0",
                 "interest": 0,
                 "interest_charge": "0",
@@ -75,7 +75,7 @@ bills_summary = {
                 "previous_bill_balance": "285.152041645013",
                 "tax": "0",
                 "total_accrued": "0",
-                "total_balance": 30336,
+                "total_balance": 306,
                 "total_credits": "0",
                 "total_cumulative": 30336,
                 "total_financed": "0",
