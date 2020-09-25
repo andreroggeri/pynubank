@@ -47,11 +47,6 @@ bills_summary = {
             }
         },
         {
-            "_links": {
-                "self": {
-                    "href": "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-abcd"
-                }
-            },
             "state": "open",
             "summary": {
                 "adjustments": "0",
