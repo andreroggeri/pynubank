@@ -4,7 +4,7 @@ from qrcode import QRCode
 
 from pynubank.nubank import Nubank
 from pynubank.utils.http import HttpClient
-from pynubank.utils.mock_http import MockHttpClient
+from pynubank import MockHttpClient
 
 
 def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return):

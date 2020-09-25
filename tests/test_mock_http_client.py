@@ -1,7 +1,7 @@
 import pytest
 from pynubank.nubank import Nubank
 from pynubank.exception import NuException
-from pynubank.utils.mock_http import MockHttpClient
+from pynubank import MockHttpClient
 
 
 @pytest.fixture(scope="module")

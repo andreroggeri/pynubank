@@ -34,7 +34,7 @@ Você pode utilizar este recurso para receber dados falsos para testar a sua sol
 
 ```python
 from pynubank import Nubank
-from pynubank.utils.mock_http import MockHttpClient
+from pynubank import MockHttpClient
 
 nu = Nubank(MockHttpClient())
 
