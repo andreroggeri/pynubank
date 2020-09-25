@@ -29,7 +29,7 @@ def test_get_bills(nubank_client):
 
 
 def test_get_bill_details(nubank_client):
-    assert nubank_client.get_bill_details(nubank_client.get_bills()[0])
+    assert nubank_client.get_bill_details(nubank_client.get_bills()[1])
 
 
 def test_get_account_feed(nubank_client):

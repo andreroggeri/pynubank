@@ -39,28 +39,29 @@ class MockHttpClient(HttpClient):
                 return self._results.get((k[0], params))
 
     _results = {}
-    _results[('https://*/api/discovery', '')] = discovery.api_discovery
-    _results[('https://*/api/app/discovery', '')] = discovery.app_discovery
-    _results[('https://mocked-proxy-url/api/token', '')] = discovery.login
-    _results[('https://mocked-proxy-url/api/proxy/login', '')] = discovery.login
-    _results[('https://mocked-proxy-url/api/proxy/lift', '')] = discovery.login
+    _results[('https://*/api/discovery', '')] = discovery.api_discovery()
+    _results[('https://*/api/app/discovery', '')] = discovery.app_discovery()
+    _results[('https://mocked-proxy-url/api/token', '')] = discovery.login()
+    _results[('https://mocked-proxy-url/api/proxy/login', '')] = discovery.login()
+    _results[('https://mocked-proxy-url/api/proxy/lift', '')] = discovery.login()
 
-    _results[('https://mocked-proxy-url/api/proxy/bills_summary_123', '')] = bills.bills_summary
-    _results[('https://mocked-proxy-url/api/proxy/events_123', '')] = proxy.proxy_events
-
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_balance')))] = account.account_balance
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_feed')))] = account.feed
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_investments')))] = account.investments
+    _results[('https://mocked-proxy-url/api/proxy/bills_summary_123', '')] = bills.bills_summary()
+    _results[('https://mocked-proxy-url/api/proxy/events_123', '')] = proxy.proxy_events()
 
     _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_id')))] = boleto.create
+              str(prepare_request_body('account_balance')))] = account.account_balance()
     _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('create_boleto')))] = boleto.create
+              str(prepare_request_body('account_feed')))] = account.feed()
+    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+              str(prepare_request_body('account_investments')))] = account.investments()
 
     _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('create_money_request')))] = money.request
+              str(prepare_request_body('account_id')))] = boleto.create()
+    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+              str(prepare_request_body('create_boleto')))] = boleto.create()
 
-    _results[('https://*/api/bills/*', '')] = bills.bills
+    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+              str(prepare_request_body('create_money_request')))] = money.request()
+
+    _results[('https://*/api/bills/*', '')] = bills.bills()
+    _results[('https://*/api/*/bills/*', '')] = bills.bills()
