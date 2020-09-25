@@ -1,5 +1,6 @@
 import pytest
 from pynubank.nubank import Nubank
+from pynubank.exception import NuException
 from pynubank.utils.mock_http import MockHttpClient
 
 
@@ -53,3 +54,15 @@ def test_create_boleto(nubank_client):
 
 def test_create_money_request(nubank_client):
     assert nubank_client.create_money_request(456)
+
+
+def test_get_invalid_url_should_throw_exception():
+    client = MockHttpClient()
+    with pytest.raises(NuException):
+        client.get('invalid.url')
+
+
+def test_post_invalid_url_should_throw_exception():
+    client = MockHttpClient()
+    with pytest.raises(NuException):
+        client.post('invalid.url', {})
