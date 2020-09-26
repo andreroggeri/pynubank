@@ -1,17 +1,37 @@
+import os
+import json
 import fnmatch
 from pynubank.utils.http import HttpClient
 from pynubank.utils.graphql import prepare_request_body
 from pynubank import NuException
 
-from pynubank.utils.mocked_responses import discovery
-from pynubank.utils.mocked_responses import proxy
-from pynubank.utils.mocked_responses import bills
-from pynubank.utils.mocked_responses import account
-from pynubank.utils.mocked_responses import money
-from pynubank.utils.mocked_responses import boleto
-
 
 class MockHttpClient(HttpClient):
+    _results = {}
+
+    def __init__(self):
+        super().__init__()
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('account_balance')))] = self._read_data('account_balance')
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('account_feed')))] = self._read_data('account_feed')
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('account_investments')))] = self._read_data('account_investments')
+        self._results[('https://*/api*bills/*', '')] = self._read_data('bills')
+        self._results[('https://mocked-proxy-url/api/proxy/bills_summary_123', '')] = self._read_data('bills_summary')
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('account_id')))] = self._read_data('boleto_create')
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('create_boleto')))] = self._read_data('boleto_create')
+        self._results[('https://*/api/discovery', '')] = self._read_data('discovery_api')
+        self._results[('https://*/api/app/discovery', '')] = self._read_data('discovery_app')
+        self._results[('https://mocked-proxy-url/api/token', '')] = self._read_data('discovery_login')
+        self._results[('https://mocked-proxy-url/api/proxy/login', '')] = self._read_data('discovery_login')
+        self._results[('https://mocked-proxy-url/api/proxy/lift', '')] = self._read_data('discovery_login')
+        self._results[('https://mocked-proxy-url/api/proxy/events_123', '')] = self._read_data('proxy_events')
+        self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
+                       str(prepare_request_body('create_money_request')))] = self._read_data('money')
+
     def get(self, url: str) -> dict:
         result = self._find(url)
         if result is None:
@@ -38,30 +58,7 @@ class MockHttpClient(HttpClient):
             if fnmatch.fnmatch(url, k[0]):
                 return self._results.get((k[0], params))
 
-    _results = {}
-    _results[('https://*/api/discovery', '')] = discovery.api_discovery()
-    _results[('https://*/api/app/discovery', '')] = discovery.app_discovery()
-    _results[('https://mocked-proxy-url/api/token', '')] = discovery.login()
-    _results[('https://mocked-proxy-url/api/proxy/login', '')] = discovery.login()
-    _results[('https://mocked-proxy-url/api/proxy/lift', '')] = discovery.login()
-
-    _results[('https://mocked-proxy-url/api/proxy/bills_summary_123', '')] = bills.bills_summary()
-    _results[('https://mocked-proxy-url/api/proxy/events_123', '')] = proxy.proxy_events()
-
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_balance')))] = account.account_balance()
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_feed')))] = account.feed()
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_investments')))] = account.investments()
-
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('account_id')))] = boleto.create()
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('create_boleto')))] = boleto.create()
-
-    _results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
-              str(prepare_request_body('create_money_request')))] = money.request()
-
-    _results[('https://*/api/bills/*', '')] = bills.bills()
-    _results[('https://*/api/*/bills/*', '')] = bills.bills()
+    @staticmethod
+    def _read_data(name):
+        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'mocked_responses', name + '.json'))
+        return json.loads(open(json_path, 'r').read())

@@ -131,7 +131,7 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     assert bill['barcode'] == ''
     assert bill['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['line_items'][0]['amount'] == 2390
-    assert bill['line_items'][0]['category'] == 'Eletrônicos'
+    assert bill['line_items'][0]['category'] == 'Eletronicos'
     assert bill['line_items'][0]['charges'] == 1
     assert bill['line_items'][0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['line_items'][0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
@@ -215,13 +215,13 @@ def test_get_account_feed(monkeypatch, account_statements_return):
     assert len(statements) == 6
     assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvxy'
     assert statements[1]['__typename'] == 'TransferOutReversalEvent'
-    assert statements[1]['title'] == 'Transferência devolvida'
+    assert statements[1]['title'] == 'Transferencia devolvida'
     assert statements[1]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
     assert statements[1]['postDate'] == '2018-03-06'
 
     assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert statements[2]['__typename'] == 'TransferOutEvent'
-    assert statements[2]['title'] == 'Transferência enviada'
+    assert statements[2]['title'] == 'Transferencia enviada'
     assert statements[2]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
     assert statements[2]['postDate'] == '2018-03-06'
     assert statements[2]['amount'] == 20.0
@@ -238,7 +238,7 @@ def test_get_account_statements(monkeypatch, account_statements_return):
     assert len(statements) == 5
     assert statements[3]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
     assert statements[3]['__typename'] == 'TransferInEvent'
-    assert statements[3]['title'] == 'Transferência recebida'
+    assert statements[3]['title'] == 'Transferencia recebida'
     assert statements[3]['detail'] == 'R$127.33'
     assert statements[3]['postDate'] == '2018-03-06'
     assert statements[3]['amount'] == 127.33

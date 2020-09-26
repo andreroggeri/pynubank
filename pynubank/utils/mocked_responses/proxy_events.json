@@ -1,0 +1,33 @@
+{
+  "events": [
+    {
+      "description": "Shopping Iguatemi",
+      "category": "transaction",
+      "amount": 700,
+      "time": "2017-09-09T02:03:55Z",
+      "title": "transporte",
+      "details": {
+        "lat": -12.9818258,
+        "lon": -38.4652058,
+        "subcategory": "card_present"
+      },
+      "id": "abcde-fghi-jklmn-opqrst-uvxz",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123"
+        }
+      },
+      "href": "nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz"
+    }
+  ],
+  "as_of": "2017-09-09T06:50:22.323Z",
+  "customer_id": "abcde-fghi-jklmn-opqrst-uvxz",
+  "_links": {
+    "updates": {
+      "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/updates_123"
+    },
+    "next": {
+      "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/next_123"
+    }
+  }
+}

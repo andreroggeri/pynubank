@@ -1,0 +1,11 @@
+{
+  "data": {
+    "createMoneyRequest": {
+      "moneyRequest": {
+        "amount": 550.0,
+        "url": "https://some.tld/path1/path2",
+        "id": "123123123123"
+      }
+    }
+  }
+}
