@@ -7,9 +7,7 @@ from pynubank.utils.http import HttpClient
 from pynubank import MockHttpClient
 
 
-def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
+def test_authenticate_with_qr_code_succeeds():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -17,9 +15,7 @@ def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return):
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_authenticate_with_cert(monkeypatch, authentication_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
+def test_authenticate_with_cert():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
 
@@ -27,9 +23,7 @@ def test_authenticate_with_cert(monkeypatch, authentication_return):
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_authenticate_with_refresh_token(monkeypatch, authentication_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
+def test_authenticate_with_refresh_token():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
 
@@ -37,7 +31,7 @@ def test_authenticate_with_refresh_token(monkeypatch, authentication_return):
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_get_card_feed(monkeypatch, authentication_return, events_return):
+def test_get_card_feed():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -62,7 +56,7 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-def test_get_bills(monkeypatch, authentication_return, bills_return):
+def test_get_bills():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -107,8 +101,7 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     assert summary["total_payments"] == "-960.47"
 
 
-def test_get_bill_details(monkeypatch, authentication_return, bill_details_return):
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=bill_details_return))
+def test_get_bill_details():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -174,8 +167,7 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     assert bill['summary']['total_payments'] == '0'
 
 
-def test_get_card_statements(monkeypatch, events_return):
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=events_return))
+def test_get_card_statements():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -195,8 +187,7 @@ def test_get_card_statements(monkeypatch, events_return):
     assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-def test_get_account_balance(monkeypatch, account_balance_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_balance_return))
+def test_get_account_balance():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -205,8 +196,7 @@ def test_get_account_balance(monkeypatch, account_balance_return):
     assert balance == 127.33
 
 
-def test_get_account_feed(monkeypatch, account_statements_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
+def test_get_account_feed():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -228,8 +218,7 @@ def test_get_account_feed(monkeypatch, account_statements_return):
     assert statements[2]['destinationAccount']['name'] == 'Juquinha da Silva Sauro'
 
 
-def test_get_account_statements(monkeypatch, account_statements_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
+def test_get_account_statements():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -251,9 +240,7 @@ def test_get_account_statements(monkeypatch, account_statements_return):
     assert statements[4]['amount'] == 169.2
 
 
-def test_get_account_investments_details(monkeypatch, account_investments_details_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_investments_details_return))
-
+def test_get_account_investments_details():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
@@ -293,24 +280,15 @@ def test_get_qr_code(monkeypatch):
     assert isinstance(qr, QRCode)
 
 
-def test_should_generate_boleto(monkeypatch, create_boleto_return):
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=create_boleto_return))
+def test_should_generate_boleto():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    boleto = nubank_client.create_boleto(200.50)
-
-    assert boleto == create_boleto_return['data']['createTransferInBoleto']['boleto']['readableBarcode']
+    assert nubank_client.create_boleto(200.50) == '123131321231231.2313212312.2131231.21332123'
 
 
-def test_should_create_money_request(monkeypatch, create_money_request_return, account_statements_return):
-    post_mock = Mock()
-    post_mock.side_effect = [account_statements_return, create_money_request_return]
-    monkeypatch.setattr(HttpClient, 'post', post_mock)
-
+def test_should_create_money_request():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    url = nubank_client.create_money_request(200)
-
-    assert url == create_money_request_return['data']['createMoneyRequest']['moneyRequest']['url']
+    assert nubank_client.create_money_request(200) == 'https://some.tld/path1/path2'
