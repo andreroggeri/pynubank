@@ -61,5 +61,5 @@ class MockHttpClient(HttpClient):
 
     @staticmethod
     def _read_data(name):
-        json_path = Path().joinpath('..', 'pynubank', 'utils', 'mocked_responses', f'{name}.json').absolute()
+        json_path = Path().joinpath('pynubank', 'utils', 'mocked_responses', f'{name}.json').absolute()
         return json.loads(open(json_path, 'r').read())
