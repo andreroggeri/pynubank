@@ -1,6 +1,7 @@
 import os
 import json
 import fnmatch
+from pathlib import Path
 from pynubank.utils.http import HttpClient
 from pynubank.utils.graphql import prepare_request_body
 from pynubank import NuException
@@ -60,5 +61,5 @@ class MockHttpClient(HttpClient):
 
     @staticmethod
     def _read_data(name):
-        json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), 'mocked_responses', name + '.json'))
+        json_path = Path().joinpath('..', 'pynubank', 'utils', 'mocked_responses', f'{name}.json').absolute()
         return json.loads(open(json_path, 'r').read())
