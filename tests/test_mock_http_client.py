@@ -1,6 +1,8 @@
+import sys
 import inspect
 import pytest
 from pynubank.nubank import Nubank
+from pynubank.exception import NuException
 from pynubank import MockHttpClient
 
 
@@ -9,6 +11,18 @@ def nubank_client():
     client = Nubank(client=MockHttpClient())
     client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
     return client
+
+
+def test_get_invalid_url_should_throw_exception():
+    client = MockHttpClient()
+    with pytest.raises(NuException):
+        client.get('invalid.url')
+
+
+def test_post_invalid_url_should_throw_exception():
+    client = MockHttpClient()
+    with pytest.raises(NuException):
+        client.post('invalid.url', {})
 
 
 def test_check_not_tested_new_methods(nubank_client):
