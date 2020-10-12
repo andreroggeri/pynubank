@@ -111,8 +111,9 @@ class Nubank:
         request = self.client.get(self.bills_url)
         return request['bills']
 
-    def get_bill_details(self, bill):
-        return self.client.get(bill['_links']['self']['href'])
+    def get_bill_details(self, bill: dict):
+        if '_links' in bill:
+            return self.client.get(bill['_links']['self']['href'])
 
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
