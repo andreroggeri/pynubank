@@ -1,0 +1,17 @@
+{
+  "register_prospect_savings_web": "https://mocked-proxy-url/api/proxy/register_prospect_savings_web",
+  "register_prospect_savings_mgm": "https://mocked-proxy-url/api/proxy/register_prospect_savings_mgm",
+  "pusher_auth_channel": "https://mocked-proxy-url/api/proxy/pusher_auth_channel",
+  "register_prospect_debit": "https://mocked-proxy-url/api/proxy/register_prospect_debit",
+  "reset_password": "https://mocked-proxy-url/api/proxy/reset_password",
+  "register_prospect": "https://mocked-proxy-url/api/proxy/register_prospect",
+  "register_prospect_savings_request_money": "https://mocked-proxy-url/api/proxy/register_prospect_savings_request_money",
+  "register_prospect_global_web": "https://mocked-proxy-url/api/proxy/register_prospect_global_web",
+  "register_prospect_c": "https://mocked-proxy-url/api/proxy/register_prospect_c",
+  "request_password_reset": "https://mocked-proxy-url/api/proxy/request_password_reset",
+  "auth_gen_certificates": "https://mocked-proxy-url/api/proxy/auth_gen_certificates",
+  "login": "https://mocked-proxy-url/api/proxy/login",
+  "email_verify": "https://mocked-proxy-url/api/proxy/email_verify",
+  "auth_device_resend_code": "https://mocked-proxy-url/api/proxy/auth_device_resend_code",
+  "msat": "https://mocked-proxy-url/api/proxy/msat"
+}
