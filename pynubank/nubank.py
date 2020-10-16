@@ -60,9 +60,9 @@ class Nubank:
 
     def _save_auth_data(self, auth_data: dict) -> None:
         self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
-        self.feed_url = auth_data['_links']['events']['href']
+        self.feed_url = auth_data['_links']['magnitude']['href']
         self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['bills_summary']['href']
+        self.bills_url = auth_data['_links']['savings_account']['href']
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
@@ -123,6 +123,7 @@ class Nubank:
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
     def get_bills(self):
+        print(self.bills_url)
         request = self.client.get(self.bills_url)
         return request['bills']
 
