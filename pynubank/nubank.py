@@ -45,9 +45,19 @@ class Nubank:
 
     def _save_auth_data(self, auth_data: dict) -> None:
         self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
-        self.feed_url = auth_data['_links']['magnitude']['href']
-        self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['savings_account']['href']
+
+        _links = auth_data['_links']
+        self.query_url = _links['ghostflame']['href']
+
+        if 'magnitude' in _links:
+            self.feed_url = _links['magnitude']['href']
+        else:
+            self.feed_url = _links['events']['href']
+
+        if 'bills_summary' in _links:
+            self.bills_url = _links['bills_summary']['href']
+        else:
+            self.bills_url = _links['savings_account']['href']
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
