@@ -123,7 +123,6 @@ class Nubank:
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
     def get_bills(self):
-        print(self.bills_url)
         request = self.client.get(self.bills_url)
         return request['bills']
 
