@@ -1,0 +1,59 @@
+{
+  "data": {
+    "viewer": {
+      "savingsAccount": {
+        "id": "abc123123",
+        "feed": [
+          {
+            "id": "abcde-fghi-jklmn-opqrst-uvxw",
+            "__typename": "BillPaymentEvent",
+            "title": "Pagamento da fatura",
+            "detail": "Cartão Nubank - R$ 50,00",
+            "postDate": "2018-03-07"
+          },
+          {
+            "id": "abcde-fghi-jklmn-opqrst-uvxy",
+            "__typename": "TransferOutReversalEvent",
+            "title": "Transferencia devolvida",
+            "detail": "Juquinha da Silva Sauro - R$ 20,00",
+            "postDate": "2018-03-06"
+          },
+          {
+            "id": "abcde-fghi-jklmn-opqrst-uvxz",
+            "__typename": "TransferOutEvent",
+            "title": "Transferencia enviada",
+            "detail": "Juquinha da Silva Sauro - R$ 20,00",
+            "postDate": "2018-03-06",
+            "amount": 20.0,
+            "destinationAccount": {
+              "name": "Juquinha da Silva Sauro"
+            }
+          },
+          {
+            "id": "abcde-fghi-jklmn-opqrst-uvx1",
+            "__typename": "TransferInEvent",
+            "title": "Transferencia recebida",
+            "detail": "R$127.33",
+            "postDate": "2018-03-06",
+            "amount": 127.33
+          },
+          {
+            "id": "abcdefgh-ijkl-mnop-qrst-uvwxyz0123",
+            "__typename": "BarcodePaymentEvent",
+            "title": "Pagamento efetuado",
+            "detail": "AES ELETROPAULO",
+            "postDate": "2018-02-05",
+            "amount": 169.2
+          },
+          {
+            "id": "abcde-fghi-jklmn-opqrst-uvx2",
+            "__typename": "WelcomeEvent",
+            "title": "Bem vindo a sua conta!",
+            "detail": "Waldisney Santos\nBanco 260 - Nu Pagamentos S.A.\nAgencia 0001\nConta 000000-1",
+            "postDate": "2017-12-18"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -3,60 +3,37 @@ from unittest.mock import MagicMock, Mock
 from qrcode import QRCode
 
 from pynubank.nubank import Nubank
-from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
+from pynubank import MockHttpClient
 
 
-def fake_update_proxy(self: Discovery):
-    self.proxy_list_app_url = {
-        'token': 'https://some-url/token',
-        'lift': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/B'
-    }
-    self.proxy_list_url = {
-        'login': 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/A',
-    }
-
-
-def test_authenticate_with_qr_code_succeeds(monkeypatch, authentication_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
-    nubank_client = Nubank()
+def test_authenticate_with_qr_code_succeeds():
+    nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_authenticate_with_cert(monkeypatch, authentication_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
-    nubank_client = Nubank()
-
+def test_authenticate_with_cert():
+    nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
 
-    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_authenticate_with_refresh_token(monkeypatch, authentication_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-
-    nubank_client = Nubank()
-
+def test_authenticate_with_refresh_token():
+    nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
 
-    assert nubank_client.feed_url == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/events_123'
+    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
-def test_get_card_feed(monkeypatch, authentication_return, events_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=events_return))
-    nubank_client = Nubank()
+def test_get_card_feed():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     feed = nubank_client.get_card_feed()
     assert feed['as_of'] == '2017-09-09T06:50:22.323Z'
@@ -79,17 +56,15 @@ def test_get_card_feed(monkeypatch, authentication_return, events_return):
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-def test_get_bills(monkeypatch, authentication_return, bills_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=bills_return))
-    nubank_client = Nubank()
+def test_get_bills():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     bills = nubank_client.get_bills()
 
     assert len(bills) == 3
     assert bills[2]['_links']['self'][
-               'href'] == "https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
+               'href'] == "https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz"
     assert bills[2]['href'] == 'nuapp://bill/abcde-fghi-jklmn-opqrst-uvxz'
     assert bills[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bills[2]['state'] == 'overdue'
@@ -126,32 +101,30 @@ def test_get_bills(monkeypatch, authentication_return, bills_return):
     assert summary["total_payments"] == "-960.47"
 
 
-def test_get_bill_details(monkeypatch, authentication_return, bill_details_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=authentication_return))
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=bill_details_return))
-    nubank_client = Nubank()
+def test_get_bill_details():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     bill_mock = {
-        '_links': {'self': {'href': 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
+        '_links': {'self': {'href': 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
     bill_response = nubank_client.get_bill_details(bill_mock)
 
     bill = bill_response['bill']
 
     assert bill['_links']['barcode'][
-               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
+               'href'] == 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/barcode'
     assert bill['_links']['boleto_email'][
-               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
+               'href'] == 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz/boleto/email'
     assert bill['_links']['invoice_email'][
-               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
+               'href'] == 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz/invoice/email'
     assert bill['_links']['self'][
-               'href'] == 'https://prod-s0-billing.nubank.com.br/api/bills/abcde-fghi-jklmn-opqrst-uvxz'
+               'href'] == 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst'
     assert bill['account_id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['auto_debit_failed'] == False
     assert bill['barcode'] == ''
     assert bill['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['line_items'][0]['amount'] == 2390
-    assert bill['line_items'][0]['category'] == 'Eletrônicos'
+    assert bill['line_items'][0]['category'] == 'Eletronicos'
     assert bill['line_items'][0]['charges'] == 1
     assert bill['line_items'][0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert bill['line_items'][0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
@@ -194,10 +167,9 @@ def test_get_bill_details(monkeypatch, authentication_return, bill_details_retur
     assert bill['summary']['total_payments'] == '0'
 
 
-def test_get_card_statements(monkeypatch, events_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=events_return))
-    nubank_client = Nubank()
+def test_get_card_statements():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     statements = nubank_client.get_card_statements()
 
@@ -215,50 +187,47 @@ def test_get_card_statements(monkeypatch, events_return):
     assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
 
 
-def test_get_account_balance(monkeypatch, account_balance_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_balance_return))
-    nubank_client = Nubank()
+def test_get_account_balance():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     balance = nubank_client.get_account_balance()
 
     assert balance == 127.33
 
 
-def test_get_account_feed(monkeypatch, account_statements_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
-    nubank_client = Nubank()
+def test_get_account_feed():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     statements = nubank_client.get_account_feed()
 
     assert len(statements) == 6
     assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvxy'
     assert statements[1]['__typename'] == 'TransferOutReversalEvent'
-    assert statements[1]['title'] == 'Transferência devolvida'
+    assert statements[1]['title'] == 'Transferencia devolvida'
     assert statements[1]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
     assert statements[1]['postDate'] == '2018-03-06'
 
     assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
     assert statements[2]['__typename'] == 'TransferOutEvent'
-    assert statements[2]['title'] == 'Transferência enviada'
+    assert statements[2]['title'] == 'Transferencia enviada'
     assert statements[2]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
     assert statements[2]['postDate'] == '2018-03-06'
     assert statements[2]['amount'] == 20.0
     assert statements[2]['destinationAccount']['name'] == 'Juquinha da Silva Sauro'
 
 
-def test_get_account_statements(monkeypatch, account_statements_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_statements_return))
-    nubank_client = Nubank()
+def test_get_account_statements():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     statements = nubank_client.get_account_statements()
 
     assert len(statements) == 5
     assert statements[3]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
     assert statements[3]['__typename'] == 'TransferInEvent'
-    assert statements[3]['title'] == 'Transferência recebida'
+    assert statements[3]['title'] == 'Transferencia recebida'
     assert statements[3]['detail'] == 'R$127.33'
     assert statements[3]['postDate'] == '2018-03-06'
     assert statements[3]['amount'] == 127.33
@@ -270,10 +239,10 @@ def test_get_account_statements(monkeypatch, account_statements_return):
     assert statements[4]['postDate'] == '2018-02-05'
     assert statements[4]['amount'] == 169.2
 
-def test_get_account_investments_details(monkeypatch, account_investments_details_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=account_investments_details_return))
-    nubank_client = Nubank()
+
+def test_get_account_investments_details():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     statements = nubank_client.get_account_investments_details()
 
@@ -302,32 +271,24 @@ def test_get_account_investments_details(monkeypatch, account_investments_detail
     assert statements[2]['redeemedBalance']['iofTax'] == 0.01
     assert statements[2]['redeemedBalance']['id'] == 'sdfgehhdf-jkre-thre-nghh-kuvsnjue633'
 
+
 def test_get_qr_code(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    client = Nubank()
-    uid, qr = client.get_qr_code()
+    nubank_client = Nubank(client=MockHttpClient())
+    uid, qr = nubank_client.get_qr_code()
 
     assert uid != ''
     assert isinstance(qr, QRCode)
 
 
-def test_should_generate_boleto(monkeypatch, create_boleto_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'post', MagicMock(return_value=create_boleto_return))
-    client = Nubank()
+def test_should_generate_boleto():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    boleto = client.create_boleto(200.50)
-
-    assert boleto == create_boleto_return['data']['createTransferInBoleto']['boleto']['readableBarcode']
+    assert nubank_client.create_boleto(200.50) == '123131321231231.2313212312.2131231.21332123'
 
 
-def test_should_create_money_request(monkeypatch, create_money_request_return, account_statements_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    post_mock = Mock()
-    post_mock.side_effect = [account_statements_return, create_money_request_return]
-    monkeypatch.setattr(HttpClient, 'post', post_mock)
-    client = Nubank()
+def test_should_create_money_request():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    url = client.create_money_request(200)
-
-    assert url == create_money_request_return['data']['createMoneyRequest']['moneyRequest']['url']
+    assert nubank_client.create_money_request(200) == 'https://some.tld/path1/path2'

@@ -1,4 +1,3 @@
-import os
 import uuid
 from typing import Tuple
 
@@ -6,6 +5,7 @@ from qrcode import QRCode
 
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
+from pynubank.utils.graphql import prepare_request_body
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -25,28 +25,13 @@ class Nubank:
     query_url = None
     bills_url = None
 
-    def __init__(self):
-        self.client = HttpClient()
+    def __init__(self, client=HttpClient()):
+        self.client = client
         self.discovery = Discovery(self.client)
 
-    @staticmethod
-    def _get_query(query_name):
-        root = os.path.abspath(os.path.dirname(__file__))
-        gql_file = query_name + '.gql'
-        path = os.path.join(root, 'queries', gql_file)
-        with open(path) as gql:
-            return gql.read()
-
     def _make_graphql_request(self, graphql_object, variables=None):
-        if variables is None:
-            variables = {}
-
-        body = {
-            'variables': variables,
-            'query': self._get_query(graphql_object)
-        }
-
-        return self.client.post(self.query_url, json=body)
+        return self.client.post(self.query_url,
+                                json=prepare_request_body(graphql_object, variables))
 
     def _password_auth(self, cpf: str, password: str):
         payload = {
@@ -126,7 +111,7 @@ class Nubank:
         request = self.client.get(self.bills_url)
         return request['bills']
 
-    def get_bill_details(self, bill):
+    def get_bill_details(self, bill: dict):
         return self.client.get(bill['_links']['self']['href'])
 
     def get_account_feed(self):
