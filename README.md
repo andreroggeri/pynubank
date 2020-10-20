@@ -33,12 +33,12 @@ Por conta disso, **evite enviar muitas requisições**. Você também pode utili
 Você pode utilizar este recurso para receber dados falsos para testar a sua solução sem correr riscos de ser bloqueado pelo Nubank e com tempo de resposta instantâneo. Para isso, utilize o exemplo a seguir:
 
 ```python
-from pynubank import Nubank
-from pynubank import MockHttpClient
+from pynubank import Nubank, MockHttpClient
 
 nu = Nubank(MockHttpClient())
+nu.authenticate_with_qr_code("qualquer-cpf", "qualquer-senha", "qualquer-coisa") # Essa linha funciona porque não estamos chamando o servidor do Nubank ;)
 
-# A partir daqui, não haverá nenhuma requisição para os servidores do NuBank ;) 
+# Qualquer método chamado não passará pelo Nubank e terá o retorno instantâneo.
 ```
 
 
