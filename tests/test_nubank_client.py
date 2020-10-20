@@ -1,9 +1,5 @@
-from unittest.mock import MagicMock, Mock
-
 from qrcode import QRCode
-
 from pynubank.nubank import Nubank
-from pynubank.utils.http import HttpClient
 from pynubank import MockHttpClient
 
 
@@ -28,6 +24,15 @@ def test_authenticate_with_refresh_token():
     nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
 
     assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
+    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+
+
+def test_authenticate_with_cert_with_new_urls():
+    nubank_client = Nubank(client=MockHttpClient(test_new_feed_bills_urls=True))
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
+    assert nubank_client.bills_url == 'https://mocked-proxy-url/api/proxy/savings_account_123'
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 

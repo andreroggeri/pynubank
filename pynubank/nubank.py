@@ -43,21 +43,23 @@ class Nubank:
         }
         return self.client.post(self.discovery.get_url('login'), json=payload)
 
+    def _find_key(self, known_keys: set, links: dict) -> str:
+        return next(iter(known_keys.intersection(links)))
+
     def _save_auth_data(self, auth_data: dict) -> None:
         self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
 
-        _links = auth_data['_links']
-        self.query_url = _links['ghostflame']['href']
+        links = auth_data['_links']
+        self.query_url = links['ghostflame']['href']
 
-        if 'magnitude' in _links:
-            self.feed_url = _links['magnitude']['href']
-        else:
-            self.feed_url = _links['events']['href']
+        feed_url_keys = {'magnitude', 'events'}
+        bills_url_keys = {'bills_summary', 'savings_account'}
 
-        if 'bills_summary' in _links:
-            self.bills_url = _links['bills_summary']['href']
-        else:
-            self.bills_url = _links['savings_account']['href']
+        feed_url_key = self._find_key(feed_url_keys, links)
+        bills_url_key = self._find_key(bills_url_keys, links)
+
+        self.feed_url = links[feed_url_key]['href']
+        self.bills_url = links[bills_url_key]['href']
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
