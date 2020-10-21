@@ -1,0 +1,51 @@
+{
+  "access_token": "access_token_123",
+  "token_type": "bearer",
+  "_links": {
+    "change_password": {
+      "href": "https://mocked-proxy-url/api/proxy/change_password_123"
+    },
+    "enabled_features": {
+      "href": "https://mocked-proxy-url/api/proxy/enabled_features_123"
+    },
+    "revoke_token": {
+      "href": "https://mocked-proxy-url/api/proxy/revoke_token_123"
+    },
+    "userinfo": {
+      "href": "https://mocked-proxy-url/api/proxy/userinfo_123"
+    },
+    "events_page": {
+      "href": "https://mocked-proxy-url/api/proxy/events_page_123"
+    },
+    "postcode": {
+      "href": "https://mocked-proxy-url/api/proxy/post_code_123"
+    },
+    "app_flows": {
+      "href": "https://mocked-proxy-url/api/proxy/app_flows_123"
+    },
+    "revoke_all": {
+      "href": "https://mocked-proxy-url/api/proxy/revoke_all_123"
+    },
+    "customer": {
+      "href": "https://mocked-proxy-url/api/proxy/customer_123"
+    },
+    "account": {
+      "href": "https://mocked-proxy-url/api/proxy/account_123"
+    },
+    "purchases": {
+      "href": "https://mocked-proxy-url/api/proxy/purchases_123"
+    },
+    "ghostflame": {
+      "href": "https://mocked-proxy-url/api/proxy/ghostflame_123"
+    },
+    "user_change_password": {
+      "href": "https://mocked-proxy-url/api/proxy/user_change_password_123"
+    },
+    "magnitude": {
+      "href": "https://mocked-proxy-url/api/proxy/magnitude_123"
+    },
+    "savings_account": {
+      "href": "https://mocked-proxy-url/api/proxy/savings_account_123"
+    }
+  }
+}
