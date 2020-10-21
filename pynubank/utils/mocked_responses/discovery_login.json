@@ -17,6 +17,9 @@
     "events_page": {
       "href": "https://mocked-proxy-url/api/proxy/events_page_123"
     },
+    "events": {
+      "href": "https://mocked-proxy-url/api/proxy/events_123"
+    },
     "postcode": {
       "href": "https://mocked-proxy-url/api/proxy/post_code_123"
     },
@@ -31,6 +34,9 @@
     },
     "account": {
       "href": "https://mocked-proxy-url/api/proxy/account_123"
+    },
+    "bills_summary": {
+      "href": "https://mocked-proxy-url/api/proxy/bills_summary_123"
     },
     "purchases": {
       "href": "https://mocked-proxy-url/api/proxy/purchases_123"
