@@ -38,6 +38,9 @@
     "bills_summary": {
       "href": "https://mocked-proxy-url/api/proxy/bills_summary_123"
     },
+    "savings_account": {
+      "href": "https://mocked-proxy-url/api/proxy/savings_account_123"
+    },
     "purchases": {
       "href": "https://mocked-proxy-url/api/proxy/purchases_123"
     },

@@ -30,18 +30,16 @@ def test_authenticate_with_refresh_token():
 def test_authenticate_with_cert_with_new_urls():
     mock_client = MockHttpClient()
     mock_client.remove_mock_url(('https://mocked-proxy-url/api/proxy/events_123', ''))
-    mock_client.remove_mock_url(('https://mocked-proxy-url/api/proxy/bills_summary_123', ''))
     mock_client.remove_mock_url(('https://mocked-proxy-url/api/token', ''))
 
     mock_client.add_mock_url('https://mocked-proxy-url/api/proxy/magnitude_123', '', 'proxy_events')
-    mock_client.add_mock_url('https://mocked-proxy-url/api/proxy/savings_account_123', '', 'bills_summary')
     mock_client.add_mock_url('https://mocked-proxy-url/api/token', '', 'discovery_login_alternative')
 
     nubank_client = Nubank(client=mock_client)
     nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
 
     assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
-    assert nubank_client.bills_url == 'https://mocked-proxy-url/api/proxy/savings_account_123'
+    assert nubank_client.bills_url is None
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
