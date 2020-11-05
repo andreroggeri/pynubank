@@ -1,10 +1,8 @@
-from unittest.mock import MagicMock, Mock
-
+import pytest
 from qrcode import QRCode
-
 from pynubank.nubank import Nubank
-from pynubank.utils.http import HttpClient
 from pynubank import MockHttpClient
+from pynubank.exception import NuMissingCreditCard
 
 
 def test_authenticate_with_qr_code_succeeds():
@@ -31,6 +29,22 @@ def test_authenticate_with_refresh_token():
     assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
 
 
+def test_authenticate_with_cert_missing_credit_card():
+    mock_client = MockHttpClient()
+    mock_client.remove_mock_url(('https://mocked-proxy-url/api/proxy/events_123', ''))
+    mock_client.remove_mock_url(('https://mocked-proxy-url/api/token', ''))
+
+    mock_client.add_mock_url('https://mocked-proxy-url/api/proxy/magnitude_123', '', 'proxy_events')
+    mock_client.add_mock_url('https://mocked-proxy-url/api/token', '', 'discovery_login_alternative')
+
+    nubank_client = Nubank(client=mock_client)
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
+    assert nubank_client.bills_url is None
+    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+
+
 def test_get_card_feed():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
@@ -54,6 +68,21 @@ def test_get_card_feed():
     assert events[0]['details']['subcategory'] == 'card_present'
     assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
     assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
+
+
+def test_get_bills_missing_credit_card():
+    mock_client = MockHttpClient()
+    mock_client.remove_mock_url(('https://mocked-proxy-url/api/proxy/events_123', ''))
+    mock_client.remove_mock_url(('https://mocked-proxy-url/api/token', ''))
+
+    mock_client.add_mock_url('https://mocked-proxy-url/api/proxy/magnitude_123', '', 'proxy_events')
+    mock_client.add_mock_url('https://mocked-proxy-url/api/token', '', 'discovery_login_alternative')
+
+    nubank_client = Nubank(client=mock_client)
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    with pytest.raises(NuMissingCreditCard):
+        nubank_client.get_bills()
 
 
 def test_get_bills():

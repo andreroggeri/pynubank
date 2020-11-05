@@ -33,6 +33,12 @@ class MockHttpClient(HttpClient):
         self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
                        str(prepare_request_body('create_money_request')))] = self._read_data('money')
 
+    def add_mock_url(self, url: str, graphql_object: str, response_json_name: str):
+        self._results[(url, graphql_object)] = self._read_data(response_json_name)
+
+    def remove_mock_url(self, route: tuple):
+        del self._results[route]
+
     def get(self, url: str) -> dict:
         result = self._find(url)
         if result is None:

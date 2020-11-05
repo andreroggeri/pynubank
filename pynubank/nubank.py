@@ -6,6 +6,7 @@ from qrcode import QRCode
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
 from pynubank.utils.graphql import prepare_request_body
+from pynubank.exception import NuMissingCreditCard
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -43,11 +44,23 @@ class Nubank:
         }
         return self.client.post(self.discovery.get_url('login'), json=payload)
 
+    def _find_url(self, known_keys: set, links: dict) -> str:
+            intersection = known_keys.intersection(links)
+            iterator = iter(intersection)
+            key = next(iterator, None)
+            return links.get(key, {}).get('href', None)
+
     def _save_auth_data(self, auth_data: dict) -> None:
         self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
-        self.feed_url = auth_data['_links']['events']['href']
-        self.query_url = auth_data['_links']['ghostflame']['href']
-        self.bills_url = auth_data['_links']['bills_summary']['href']
+
+        links = auth_data['_links']
+        self.query_url = links['ghostflame']['href']
+
+        feed_url_keys = {'magnitude', 'events'}
+        bills_url_keys = {'bills_summary'}
+
+        self.feed_url = self._find_url(feed_url_keys, links)
+        self.bills_url = self._find_url(bills_url_keys, links)
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
@@ -108,8 +121,11 @@ class Nubank:
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
     def get_bills(self):
-        request = self.client.get(self.bills_url)
-        return request['bills']
+        if self.bills_url is not None:
+            request = self.client.get(self.bills_url)
+            return request['bills']
+        else:
+            raise NuMissingCreditCard
 
     def get_bill_details(self, bill: dict):
         return self.client.get(bill['_links']['self']['href'])
