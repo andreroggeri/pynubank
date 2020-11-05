@@ -45,13 +45,10 @@ class Nubank:
         return self.client.post(self.discovery.get_url('login'), json=payload)
 
     def _find_url(self, known_keys: set, links: dict) -> str:
-        try:
             intersection = known_keys.intersection(links)
             iterator = iter(intersection)
-            key = next(iterator)
-            return links[key]['href']
-        except StopIteration:
-            return None
+            key = next(iterator, None)
+            return links.get(key, {}).get('href', None)
 
     def _save_auth_data(self, auth_data: dict) -> None:
         self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
