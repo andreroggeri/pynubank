@@ -8,7 +8,7 @@ setup(
     author_email='a.roggeri.c@gmail.com',
     license='MIT',
     packages=find_packages(),
-    package_data={'pynubank': ['queries/*.gql']},
+    package_data={'pynubank': ['queries/*.gql', 'utils/mocked_responses/*.json']},
     install_requires=['requests', 'qrcode', 'pyOpenSSL', 'colorama', 'requests-pkcs12'],
     entry_points={
         'console_scripts': [
