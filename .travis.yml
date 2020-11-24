@@ -24,6 +24,11 @@ jobs:
       env:
         - TOXENV=py38
       script: tox
+    - stage: test
+      python: 3.9
+      env:
+        - TOXENV=py39
+      script: tox
       after_success:
         - coveralls
     - stage: deploy
