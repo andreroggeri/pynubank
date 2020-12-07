@@ -2,7 +2,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pynubank)
 [![PyPI version](https://badge.fury.io/py/pynubank.svg)](https://badge.fury.io/py/pynubank)
 [![Coverage Status](https://coveralls.io/repos/github/andreroggeri/pynubank/badge.svg?branch=master)](https://coveralls.io/github/andreroggeri/pynubank?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/e550387e85d315a212af/maintainability)](https://codeclimate.com/github/andreroggeri/pynubank/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e550387e85d315a212af/maintainability)](https://codeclimate.com/github/andreroggeri/pynubank/maintainability) [![Join the chat at https://gitter.im/pynubank/pynubank](https://badges.gitter.im/pynubank/pynubank.svg)](https://gitter.im/pynubank/pynubank?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Acesse seus extratos do Nubank pelo Python ([Baseado na versão js](https://github.com/Astrocoders/nubank-api))
 
