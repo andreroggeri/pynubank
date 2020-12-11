@@ -11,6 +11,9 @@ class NuMissingCreditCard(NuException):
     def __init__(self):
         super().__init__(f'Couldn\'t fetch bills due to missing credit card.')
 
+class NuMissingCustomer(NuException):
+    def __init__(self):
+        super().__init__(f'Couldn\'t fetch customer due to missing customer information.')
 
 class NuRequestException(NuException):
     def __init__(self, response: Response):
