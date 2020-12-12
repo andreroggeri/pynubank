@@ -59,11 +59,11 @@ class Nubank:
 
         feed_url_keys = {'events', 'magnitude'}
         bills_url_keys = {'bills_summary'}
-        custoner_url_keys = {'customer'}
+        customer_url_keys = {'customer'}
 
         self.feed_url = self._find_url(feed_url_keys, links)
         self.bills_url = self._find_url(bills_url_keys, links)
-        self.customer_url = self._find_url(custoner_url_keys, links)
+        self.customer_url = self._find_url(customer_url_keys, links)
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
