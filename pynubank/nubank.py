@@ -6,7 +6,7 @@ from qrcode import QRCode
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
 from pynubank.utils.graphql import prepare_request_body
-from pynubank.exception import NuMissingCreditCard, NuMissingCustomer
+from pynubank.exception import NuMissingCreditCard
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -131,11 +131,8 @@ class Nubank:
             raise NuMissingCreditCard
 
     def get_customer(self):
-        if self.customer_url is not None:
-            request = self.client.get(self.customer_url)
-            return request['customer']
-        else:
-            raise NuMissingCustomer
+        request = self.client.get(self.customer_url)
+        return request['customer']
 
     def get_bill_details(self, bill: dict):
         return self.client.get(bill['_links']['self']['href'])
