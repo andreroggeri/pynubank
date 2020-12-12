@@ -1,0 +1,166 @@
+{
+    "customer": {
+      "address_state": "SA",
+      "cpf": "12312312312",
+      "email": "this.fake@email.com",
+      "address_postcode": "12312312",
+      "billing_address_line1": "Paulista Avenue",
+      "billing_address_state": "SP",
+      "primary_device": {
+        "id": "abcde-fghi-jklmn-opqrst-uvxz",
+        "device_id": "12ab34c56d789e01",
+        "user_agent": "Android/1.23.34-5000006789 (12ab34c56d789e01; 10; samgoog; SG-G1234)",
+        "push_token": "23434324:agfretfghtydudhfgdhawerdsfdasaytgQQtafd9kUMyENLRf_w:LK:LJJkjkj;jaeBO_ffsdfs",
+        "_links": {
+          "self": {
+            "href": "https://prod-s0-customers.nubank.com.br/api/devices/abcde-fghi-jklmn-opqrst-uvxz"
+          }
+        }
+      },
+      "address_number": "123",
+      "channels": [
+        "mgm_wait",
+        "mgm_other_wait"
+      ],
+      "billing_address_city": "São Paulo",
+      "phone": "1122334455678",
+      "billing_address_locality": "Bebedouro",
+      "name": "John Doe Mary Doe",
+      "nationality": "BRA",
+      "billing_address_line2": "apto 123 torre 456",
+      "printed_name": "JOHN D M DOE",
+      "external_ids": {
+        "foursquare": "ghkhjGHGkhgHKgkjgkViPwTgj4jhhlHOHL:hlHL:HL:H:20jkgyK1vNtKLUp2VJHHlhlkklhlhl787lkhjlHLKHL"
+      },
+      "preferred_name": "John",
+      "address_country": "Brasil",
+      "address_line2": "apto 123 torre 456",
+      "billing_address_postcode": "01234567",
+      "documents": [
+        {
+          "id": "12345d6f-3dc6-1234-9ec7-ab12c34abc01",
+          "type": "rg",
+          "number": "12345678",
+          "issuer": "SSP",
+          "uf": "SP"
+        },
+        {
+          "id": "12345d6f-3dc6-1234-9ec7-ab12c34abc02",
+          "type": "rg",
+          "number": "12345678",
+          "issuer": "SSP",
+          "uf": "SP"
+        }
+      ],
+      "dob": "1969-06-09",
+      "id": "12345d6f-3dc6-1234-9ec7-ab12c34abc02",
+      "address_locality": "Bebedouro",
+      "marital_status": "single",
+      "billing_address_country": "Brasil",
+      "devices": [
+        {
+          "id": "12345d6f-3dc6-1234-9ec7-ab12c34abc11",
+          "device_id": "a2132dsfdfvfg32",
+          "user_agent": "Android/1.23.34-5000006789 (a2132dsfdfvfg32; 10; samgoog; SG-G1234)",
+          "push_token": "khgKGKGKgkgkc2_hqqvIvhdjkgkjJKHGKhjhllkljlJxakkdIci7K8h67KJgkjgjKGKGgkhlhl",
+          "_links": {
+            "self": {
+              "href": "https://prod-s0-customers.nubank.com.br/api/devices/12345d6f-3dc6-1234-9ec7-ab12c34abc11"
+            }
+          }
+        },
+        {
+          "id": "12345d6f-3dc6-1234-9ec7-ab12c34abc22",
+          "device_id": "sdfdsf2342343",
+          "user_agent": "Android/1.23.34-5000006789 (sdfdsf2342343; 10; samgoog; SG-G1234)",
+          "push_token": "fhkjhKHGK:LL:)*&)KHWCkcMhbwM93jhjhLHLHLlkOrXjcgfUYFLLKKk;klh",
+          "_links": {
+            "self": {
+              "href": "https://prod-s0-customers.nubank.com.br/api/devices/12345d6f-3dc6-1234-9ec7-ab12c34abc22"
+            }
+          }
+        }
+      ],
+      "address_line1": "Paulista Avenue",
+      "profession": "CEO",
+      "address_updated_at": "2018-05-18T16:23:09.349Z",
+      "gender": "male",
+      "last_atualizacao_cadastral_at": "2019-12-10T10:47:25.964Z",
+      "billing_address_number": "123",
+      "_links": {
+        "account_request": {
+          "href": "https://prod-s0-acquisition.nubank.com.br/api/account-requests/customer/12345d6f-3dc6-1234-9ec7-ab12c34abc69"
+        },
+        "google_credentials": {
+          "href": "https://prod-s0-notification.nubank.com.br/api/google/credentials"
+        },
+        "confirm_mobile": {
+          "href": "https://prod-s0-notification.nubank.com.br/api/contacts/12345d6f-3dc6-1234-9ec7-ab12c34abc69/verify/mobile/confirm"
+        },
+        "social_link": {
+          "href": "https://prod-s0-simba.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/invitations/social"
+        },
+        "primary_device": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/primary-device"
+        },
+        "revoke_token": {
+          "href": "https://prod-global-auth.nubank.com.br/api/revoke"
+        },
+        "verify_mobile": {
+          "href": "https://prod-s0-notification.nubank.com.br/api/contacts/12345d6f-3dc6-1234-9ec7-ab12c34abc69/verify/mobile/trigger"
+        },
+        "product_offers": {
+          "href": "https://prod-s0-vitrine.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/product-offers"
+        },
+        "update_address": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/address"
+        },
+        "active_certificates": {
+          "href": "https://prod-s0-karma-police.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/trusted-certificate/client-certificates"
+        },
+        "trust_delegate_certificate": {
+          "href": "https://prod-s0-control-tower.nubank.com.br/api/trust-certificate"
+        },
+        "nubank_contact": {
+          "href": "https://prod-global-counterspell.nubank.com.br/api/contact"
+        },
+        "credit_card_offer": {
+          "href": "https://prod-s0-bonafont.nubank.com.br/api/flows/card-cross-sell/owners/12345d6f-3dc6-1234-9ec7-ab12c34abc69"
+        },
+        "activate_card": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/cards/activation"
+        },
+        "applied_friends": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/invitations/applied"
+        },
+        "card_cross_sell_product_info": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/cross-sell/product-info"
+        },
+        "card_cross_sell_apply": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/prospects/cross-sell"
+        },
+        "accounts": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/account"
+        },
+        "invitations": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/invitations"
+        },
+        "update_phone": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/phone"
+        },
+        "self": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69"
+        },
+        "update_email": {
+          "href": "https://prod-s0-customers.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/email"
+        },
+        "card_cross_sell_status": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/customers/12345d6f-3dc6-1234-9ec7-ab12c34abc69/cross-sell/status"
+        }
+      },
+      "reported_income": "6900",
+      "mothers_name": "MOM DOE MID DOE",
+      "invitations": 4,
+      "address_city": "São Paulo"
+    }
+  }

@@ -301,6 +301,26 @@ def test_get_account_investments_details():
     assert statements[2]['redeemedBalance']['id'] == 'sdfgehhdf-jkre-thre-nghh-kuvsnjue633'
 
 
+def test_get_customer():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    customer = nubank_client.get_customer()
+
+    assert len(customer) == 39
+    assert customer['cpf'] == '12312312312'
+    assert customer['email'] == 'this.fake@email.com'
+    assert customer['phone'] == '1122334455678'
+    assert customer['name'] == 'John Doe Mary Doe'
+    assert customer['billing_address_number'] == '123'
+    assert customer['billing_address_line1'] == "Paulista Avenue"
+    assert customer['billing_address_city'] == "São Paulo"
+    assert customer['billing_address_locality'] == "Bebedouro"
+    assert customer['billing_address_state'] == "SP"
+    assert customer['billing_address_postcode'] == "01234567"
+    assert customer['billing_address_country'] == "Brasil"
+
+
 def test_get_qr_code(monkeypatch):
     nubank_client = Nubank(client=MockHttpClient())
     uid, qr = nubank_client.get_qr_code()
