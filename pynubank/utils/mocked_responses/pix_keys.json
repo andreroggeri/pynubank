@@ -1,0 +1,43 @@
+{
+  "data": {
+    "viewer": {
+      "name": "Some Joe Doe",
+      "maskedTaxId": "•••.456.789-••",
+      "savingsAccount": {
+        "id": "xxxxxxxxxxxxxxxxxxxxxxxx",
+        "dict": {
+          "maxKeys": 5,
+          "keysAvailableForRegistration": [
+            {
+              "kind": "PHONE"
+            },
+            {
+              "kind": "EMAIL"
+            },
+            {
+              "kind": "EVP"
+            }
+          ],
+          "keys": [
+            {
+              "id": "zzzzzzzzzzzzzz",
+              "kind": "CPF",
+              "value": "12345678912",
+              "formattedValue": "123.456.789-10",
+              "itemDeepLink": "nuapp://pix/dict/key-details/zzzzzzzzzzzzzz",
+              "badge": null
+            },
+            {
+              "id": "yyyyyyyyyyyyyyyyyyyyyyy",
+              "kind": "EMAIL",
+              "value": "john@doe",
+              "formattedValue": "john@doe",
+              "itemDeepLink": "nuapp://pix/dict/key-details/yyyyyyyyyyyyyyyyyyyyyyy",
+              "badge": null
+            }
+          ]
+        }
+      }
+    }
+  }
+}

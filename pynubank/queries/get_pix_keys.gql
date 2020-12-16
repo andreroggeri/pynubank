@@ -1,0 +1,19 @@
+query customerKeys {
+  viewer {
+    name
+    maskedTaxId
+    savingsAccount {
+      id
+      dict {
+        keys(onlyActive: true) {
+          id
+          kind
+          value
+          formattedValue
+          itemDeepLink
+          badge
+        }
+      }
+    }
+  }
+}

@@ -314,7 +314,7 @@ def test_get_customer():
     assert customer['name'] == 'John Doe Mary Doe'
     assert customer['billing_address_number'] == '123'
     assert customer['billing_address_line1'] == "Paulista Avenue"
-    assert customer['billing_address_city'] == "São Paulo"
+    assert customer['billing_address_city'] == "Sao Paulo"
     assert customer['billing_address_locality'] == "Bebedouro"
     assert customer['billing_address_state'] == "SP"
     assert customer['billing_address_postcode'] == "01234567"
@@ -341,3 +341,27 @@ def test_should_create_money_request():
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
     assert nubank_client.create_money_request(200) == 'https://some.tld/path1/path2'
+
+
+def test_should_fetch_pix_keys():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    data = nubank_client.get_available_pix_keys()
+
+    keys = data['keys']
+    account_id = data['account_id']
+
+    assert len(keys) == 2
+    assert keys[0]['value'] == '12345678912'
+    assert account_id == 'xxxxxxxxxxxxxxxxxxxxxxxx'
+
+def test_should_create_pix_money_request():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    keys_data = nubank_client.get_available_pix_keys()
+    request = nubank_client.create_pix_payment_qrcode('1231231232', 1232213.23, keys_data['keys'][0])
+
+    assert request['qr_code'] is not None
+    assert request['payment_url'] == 'https://nubank.com.br/pagar/tttttt/yyyyyyy'
