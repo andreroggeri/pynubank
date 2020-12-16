@@ -179,3 +179,29 @@ class Nubank:
         money_request_response = self._make_graphql_request('create_money_request', payload)
 
         return money_request_response['data']['createMoneyRequest']['moneyRequest']['url']
+
+    def get_available_pix_keys(self):
+        response = self._make_graphql_request('get_pix_keys')
+        savings_acount = response['data']['viewer']['savingsAccount']
+
+        return {'keys': savings_acount['dict']['keys'], 'account_id': savings_acount['id']}
+
+    def create_pix_payment_qrcode(self, account_id: str, amount: float, pix_key: dict) -> dict:
+        payload = {
+            'createPaymentRequestInput': {
+                'amount': amount,
+                'pixAlias': pix_key.get('value'),
+                "savingsAccountId": account_id
+            }
+        }
+
+        response = self._make_graphql_request('create_pix_money_request', payload)
+
+        data = response['data']['createPaymentRequest']['paymentRequest']
+        qr = QRCode()
+        qr.add_data(data['brcode'])
+
+        return {
+            'payment_url': data['url'],
+            'qr_code': qr
+        }

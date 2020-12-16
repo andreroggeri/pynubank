@@ -108,4 +108,4 @@ ENV/
 .DS_Store
 
 *.p12
-*.json
+./*.json

@@ -1,0 +1,15 @@
+{
+  "data": {
+    "createPaymentRequest": {
+      "paymentRequest": {
+        "id": "zzzzzzzzzzzzzzzzzz",
+        "amount": 500.0,
+        "message": null,
+        "url": "https://nubank.com.br/pagar/tttttt/yyyyyyy",
+        "transactionId": "iiiiiiii",
+        "pixAlias": "12345678910",
+        "brcode": "12464565442165BR.GOV.BCB.PIX42136542416542146542165.005802BR5920John Doe6009SAO PAULOSf5ASF56sf654aA65sa4f6S56fs"
+      }
+    }
+  }
+}

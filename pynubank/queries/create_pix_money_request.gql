@@ -1,0 +1,13 @@
+mutation createPaymentRequest($createPaymentRequestInput: CreatePaymentRequestInput) {
+  createPaymentRequest(input: $createPaymentRequestInput) {
+    paymentRequest {
+      id
+      amount
+      message
+      url
+      transactionId
+      pixAlias
+      brcode
+    }
+  }
+}
