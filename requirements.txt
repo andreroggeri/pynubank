@@ -1,4 +1,4 @@
-requests==2.25.0
+requests==2.25.1
 qrcode==6.1
 pyOpenSSL==20.0.1
 colorama==0.4.3
