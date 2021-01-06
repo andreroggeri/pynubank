@@ -9,24 +9,24 @@ def test_authenticate_with_qr_code_succeeds():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
 
-    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
-    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+    assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
+    assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
 
 
 def test_authenticate_with_cert():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
 
-    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
-    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+    assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
+    assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
 
 
 def test_authenticate_with_refresh_token():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
 
-    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
-    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+    assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
+    assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
 
 
 def test_authenticate_with_cert_missing_credit_card():
@@ -40,9 +40,9 @@ def test_authenticate_with_cert_missing_credit_card():
     nubank_client = Nubank(client=mock_client)
     nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
 
-    assert nubank_client.feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
-    assert nubank_client.bills_url is None
-    assert nubank_client.client.get_header('Authorization') == 'Bearer access_token_123'
+    assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
+    assert nubank_client._bills_url is None
+    assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
 
 
 def test_get_card_feed():
@@ -365,3 +365,11 @@ def test_should_create_pix_money_request():
 
     assert request['qr_code'] is not None
     assert request['payment_url'] == 'https://nubank.com.br/pagar/tttttt/yyyyyyy'
+
+def test_should_revoke_certificate():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    nubank_client.revoke_token()
+
+    assert nubank_client._client.get_header('Authorization') is None

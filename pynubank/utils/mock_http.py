@@ -37,6 +37,7 @@ class MockHttpClient(HttpClient):
                        str(prepare_request_body('get_pix_keys')))] = self._read_data('pix_keys')
         self._results[('https://mocked-proxy-url/api/proxy/ghostflame_123',
                        str(prepare_request_body('create_pix_money_request')))] = self._read_data('pix_money_request')
+        self._results[('https://mocked-proxy-url/api/proxy/revoke_token_123', '')] = {}
 
     def add_mock_url(self, url: str, graphql_object: str, response_json_name: str):
         self._results[(url, graphql_object)] = self._read_data(response_json_name)
@@ -62,7 +63,7 @@ class MockHttpClient(HttpClient):
 
     def _find(self, url: str, json: dict = None):
         result = self._results.get((url, ''))
-        if result:
+        if result is not None:
             return result
 
         params = '' if json is None else str(json)

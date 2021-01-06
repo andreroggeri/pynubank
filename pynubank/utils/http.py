@@ -17,10 +17,13 @@ class HttpClient:
     def set_cert(self, cert_path: str):
         self._cert = cert_path
 
-    def set_header(self, name, value):
+    def set_header(self, name: str, value: str):
         self._headers[name] = value
 
-    def get_header(self, name):
+    def remove_header(self, name: str):
+        self._headers.pop(name)
+
+    def get_header(self, name: str):
         return self._headers.get(name)
 
     @property

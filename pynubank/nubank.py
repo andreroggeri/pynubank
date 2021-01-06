@@ -22,18 +22,18 @@ PAYMENT_EVENT_TYPES = (
 
 
 class Nubank:
-    feed_url = None
-    query_url = None
-    bills_url = None
-    customer_url = None
-
     def __init__(self, client=HttpClient()):
-        self.client = client
-        self.discovery = Discovery(self.client)
+        self._client = client
+        self._discovery = Discovery(self._client)
+        self._feed_url = None
+        self._query_url = None
+        self._bills_url = None
+        self._customer_url = None
+        self._revoke_token_url = None
 
     def _make_graphql_request(self, graphql_object, variables=None):
-        return self.client.post(self.query_url,
-                                json=prepare_request_body(graphql_object, variables))
+        return self._client.post(self._query_url,
+                                 json=prepare_request_body(graphql_object, variables))
 
     def _password_auth(self, cpf: str, password: str):
         payload = {
@@ -43,7 +43,7 @@ class Nubank:
             "client_id": "other.conta",
             "client_secret": "yQPeLzoHuJzlMMSAjC-LgNUJdUecx8XO"
         }
-        return self.client.post(self.discovery.get_url('login'), json=payload)
+        return self._client.post(self._discovery.get_url('login'), json=payload)
 
     def _find_url(self, known_keys: list, links: dict) -> str:
         links_keys = links.keys()
@@ -52,17 +52,19 @@ class Nubank:
         return links.get(key, {}).get('href', None)
 
     def _save_auth_data(self, auth_data: dict) -> None:
-        self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
+        self._client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
 
         links = auth_data['_links']
-        self.query_url = links['ghostflame']['href']
+
         feed_url_keys = ['events', 'magnitude']
         bills_url_keys = ['bills_summary']
         customer_url_keys = ['customer']
 
-        self.feed_url = self._find_url(feed_url_keys, links)
-        self.bills_url = self._find_url(bills_url_keys, links)
-        self.customer_url = self._find_url(customer_url_keys, links)
+        self._feed_url = self._find_url(feed_url_keys, links)
+        self._bills_url = self._find_url(bills_url_keys, links)
+        self._customer_url = self._find_url(customer_url_keys, links)
+        self._query_url = links['ghostflame']['href']
+        self._revoke_token_url = links['revoke_token']['href']
 
     def get_qr_code(self) -> Tuple[str, QRCode]:
         content = str(uuid.uuid4())
@@ -72,20 +74,20 @@ class Nubank:
 
     def authenticate_with_qr_code(self, cpf: str, password, uuid: str):
         auth_data = self._password_auth(cpf, password)
-        self.client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
+        self._client.set_header('Authorization', f'Bearer {auth_data["access_token"]}')
 
         payload = {
             'qr_code_id': uuid,
             'type': 'login-webapp'
         }
 
-        response = self.client.post(self.discovery.get_app_url('lift'), json=payload)
+        response = self._client.post(self._discovery.get_app_url('lift'), json=payload)
 
         self._save_auth_data(response)
 
     def authenticate_with_cert(self, cpf: str, password: str, cert_path: str):
-        self.client.set_cert(cert_path)
-        url = self.discovery.get_app_url('token')
+        self._client.set_cert(cert_path)
+        url = self._discovery.get_app_url('token')
         payload = {
             'grant_type': 'password',
             'client_id': 'legacy_client_id',
@@ -94,16 +96,16 @@ class Nubank:
             'password': password
         }
 
-        response = self.client.post(url, json=payload)
+        response = self._client.post(url, json=payload)
 
         self._save_auth_data(response)
 
         return response.get('refresh_token')
 
     def authenticate_with_refresh_token(self, refresh_token: str, cert_path: str):
-        self.client.set_cert(cert_path)
+        self._client.set_cert(cert_path)
 
-        url = self.discovery.get_app_url('token')
+        url = self._discovery.get_app_url('token')
         payload = {
             'grant_type': 'refresh_token',
             'client_id': 'legacy_client_id',
@@ -111,30 +113,35 @@ class Nubank:
             'refresh_token': refresh_token,
         }
 
-        response = self.client.post(url, json=payload)
+        response = self._client.post(url, json=payload)
 
         self._save_auth_data(response)
 
+    def revoke_token(self):
+        self._client.post(self._revoke_token_url, {})
+
+        self._client.remove_header('Authorization')
+
     def get_card_feed(self):
-        return self.client.get(self.feed_url)
+        return self._client.get(self._feed_url)
 
     def get_card_statements(self):
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
     def get_bills(self):
-        if self.bills_url is not None:
-            request = self.client.get(self.bills_url)
+        if self._bills_url is not None:
+            request = self._client.get(self._bills_url)
             return request['bills']
         else:
             raise NuMissingCreditCard
 
     def get_customer(self):
-        request = self.client.get(self.customer_url)
+        request = self._client.get(self._customer_url)
         return request['customer']
 
     def get_bill_details(self, bill: dict):
-        return self.client.get(bill['_links']['self']['href'])
+        return self._client.get(bill['_links']['self']['href'])
 
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
