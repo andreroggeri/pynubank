@@ -80,6 +80,7 @@ def test_post(monkeypatch):
 
     assert response['key'] == 555
 
+
 def test_client_should_clear_headers_on_new_instance():
     client = HttpClient()
     client.set_header('SomeHeader', 'SomeValue')
