@@ -1,6 +1,6 @@
 -r requirements.txt
 pytest==6.2.1
-pytest-cov==2.11.0
+pytest-cov==2.11.1
 coveralls==3.0.0
 tox==3.21.2
 six==1.15.0
