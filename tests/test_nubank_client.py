@@ -212,6 +212,7 @@ def test_get_card_statements():
     assert statements[0]['href'] == 'nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
     assert statements[0]['_links']['self']['href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
 
+
 def test_get_account_balance():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
@@ -296,6 +297,15 @@ def test_get_account_investments_details():
     assert statements[2]['redeemedBalance']['incomeTax'] == 0.01
     assert statements[2]['redeemedBalance']['iofTax'] == 0.01
     assert statements[2]['redeemedBalance']['id'] == 'sdfgehhdf-jkre-thre-nghh-kuvsnjue633'
+
+
+def test_get_account_investments_yield():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    month_yield = nubank_client.get_account_investments_yield()
+
+    assert month_yield == 0.14
 
 
 def test_get_customer():
