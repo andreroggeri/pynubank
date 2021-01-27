@@ -36,6 +36,9 @@ class HttpClient:
 
         return response.json()
 
+    def raw_get(self, url:str) -> Response:
+        return get(url, headers=self._headers, **self._cert_args)
+
     def get(self, url: str) -> dict:
         return self._handle_response(get(url, headers=self._headers, **self._cert_args))
 
