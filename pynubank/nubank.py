@@ -1,12 +1,15 @@
+import calendar
+import datetime
+import re
 import uuid
 from typing import Tuple
 
 from qrcode import QRCode
 
-from pynubank.utils.discovery import Discovery
-from pynubank.utils.http import HttpClient
-from pynubank.utils.graphql import prepare_request_body
 from pynubank.exception import NuMissingCreditCard
+from pynubank.utils.discovery import Discovery
+from pynubank.utils.graphql import prepare_request_body
+from pynubank.utils.http import HttpClient
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -163,6 +166,20 @@ class Nubank:
     def get_account_investments_details(self):
         data = self._make_graphql_request('account_investments')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']
+
+    def get_account_investments_yield(self, date=datetime.datetime.now()) -> float:
+        _, last_day = calendar.monthrange(date.year, date.month)
+        last_month_day = datetime.date(date.year, date.month, last_day)
+
+        payload = {
+            "asOf": last_month_day.strftime('%Y-%m-%d')
+        }
+
+        data = self._make_graphql_request('account_investments_yield', payload)
+
+        value = data['data']['viewer']['productFeatures']['savings']['screens']['detailedBalance']['monthBalanceSection']['yieldSection']['semantics']['label']
+
+        return float(re.search(r'\d*,\d\d', value).group().replace(',', '.'))
 
     def create_boleto(self, amount: float) -> str:
         customer_id_response = self._make_graphql_request('account_id')

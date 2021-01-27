@@ -1,0 +1,21 @@
+{
+  "data": {
+    "viewer": {
+      "productFeatures": {
+        "savings": {
+          "screens": {
+            "detailedBalance": {
+              "monthBalanceSection": {
+                "yieldSection": {
+                  "semantics": {
+                    "label": "Este m\u00eas at\u00e9 dia 30/Abril, seu dinheiro rendeu R$\u00a00,14"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,9 +1,11 @@
-import sys
 import inspect
+from datetime import datetime
+
 import pytest
-from pynubank.nubank import Nubank
-from pynubank.exception import NuException
+
 from pynubank import MockHttpClient
+from pynubank.exception import NuException
+from pynubank.nubank import Nubank
 
 
 @pytest.fixture(scope="module")
@@ -29,6 +31,9 @@ def test_check_not_tested_new_methods(nubank_client):
     default_params = {
         'get_bill_details': {
             'bill': {'_links': {'self': {'href': 'https://mocked-proxy-url/api/bills/abcde-fghi-jklmn-opqrst-uvxz'}}}
+        },
+        'get_account_investments_yield': {
+            'date': datetime.now(),
         }
     }
 

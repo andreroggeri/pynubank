@@ -1,0 +1,19 @@
+query detailedBalanceScreen($asOf: Date) {
+  viewer {
+    productFeatures {
+      savings {
+        screens {
+          detailedBalance(asOf: $asOf) {
+            monthBalanceSection {
+              yieldSection {
+                semantics {
+                  label
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
