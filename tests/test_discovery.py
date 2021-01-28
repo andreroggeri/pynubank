@@ -43,12 +43,11 @@ def test_get_app_url(monkeypatch, proxy_return):
     200, 201
 ])
 def test_is_alive_if_nubank_server_is_up(monkeypatch, http_status):
-    discovery = Discovery(MockHttpClient())
     response = Response()
     response.status_code = http_status
     monkeypatch.setattr('pynubank.utils.http.get', MagicMock(return_value=response))
 
-    assert discovery.is_alive() == True
+    assert Discovery.is_alive() == True
 
 @pytest.mark.parametrize('http_status', [
     100, 101, 102, 103,
@@ -60,9 +59,8 @@ def test_is_alive_if_nubank_server_is_up(monkeypatch, http_status):
     500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 520, 521, 522, 523, 524, 525, 526, 527, 530, 598
 ])
 def test_is_alive_if_nubank_server_is__down(monkeypatch, http_status):
-    discovery = Discovery(MockHttpClient())
     response = Response()
     response.status_code = http_status
     monkeypatch.setattr('pynubank.utils.http.get', MagicMock(return_value=response))
 
-    assert discovery.is_alive() == False
+    assert Discovery.is_alive() == False

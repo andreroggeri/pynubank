@@ -34,7 +34,6 @@ class Discovery:
 
         return url
 
-    def is_alive() -> bool:
-        client = HttpClient()
+    def is_alive(client=HttpClient()) -> bool:
         response = client.raw_get(DISCOVERY_URL)
         return response.status_code in [200, 201]
