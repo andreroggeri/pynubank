@@ -36,4 +36,4 @@ class Discovery:
 
     def is_alive(self) -> bool:
         response = self.client.raw_get(DISCOVERY_URL)
-        return True if response.status_code in [200, 201] else False
+        return response.status_code in [200, 201]
