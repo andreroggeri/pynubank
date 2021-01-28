@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest
 from requests import Response
 
-from pynubank import NuException
+from pynubank import NuException, is_alive
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
 from pynubank.utils.mock_http import MockHttpClient
@@ -47,7 +47,7 @@ def test_is_alive_if_nubank_server_is_up(monkeypatch, http_status):
     response.status_code = http_status
     monkeypatch.setattr('pynubank.utils.http.get', MagicMock(return_value=response))
 
-    assert Discovery.is_alive() == True
+    assert is_alive() == True
 
 @pytest.mark.parametrize('http_status', [
     100, 101, 102, 103,
@@ -63,4 +63,4 @@ def test_is_alive_if_nubank_server_is__down(monkeypatch, http_status):
     response.status_code = http_status
     monkeypatch.setattr('pynubank.utils.http.get', MagicMock(return_value=response))
 
-    assert Discovery.is_alive() == False
+    assert is_alive() == False
