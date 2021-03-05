@@ -117,6 +117,8 @@ class Nubank:
 
         self._save_auth_data(response)
 
+        return response.get('refresh_token')
+        
     def revoke_token(self):
         self._client.post(self._revoke_token_url, {})
 
