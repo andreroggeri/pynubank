@@ -1,8 +1,9 @@
 import pytest
 from qrcode import QRCode
-from pynubank.nubank import Nubank
+
 from pynubank import MockHttpClient
 from pynubank.exception import NuMissingCreditCard
+from pynubank.nubank import Nubank
 
 
 def test_authenticate_with_qr_code_succeeds():
@@ -356,6 +357,7 @@ def test_should_fetch_pix_keys():
     assert keys[0]['value'] == '12345678912'
     assert account_id == 'xxxxxxxxxxxxxxxxxxxxxxxx'
 
+
 def test_should_create_pix_money_request():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
@@ -366,6 +368,7 @@ def test_should_create_pix_money_request():
     assert request['qr_code'] is not None
     assert request['payment_url'] == 'https://nubank.com.br/pagar/tttttt/yyyyyyy'
 
+
 def test_should_revoke_certificate():
     nubank_client = Nubank(client=MockHttpClient())
     nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
@@ -373,3 +376,9 @@ def test_should_revoke_certificate():
     nubank_client.revoke_token()
 
     assert nubank_client._client.get_header('Authorization') is None
+
+
+def test_should_use_http_client_if_none_is_provided():
+    nubank_client = Nubank()
+
+    assert nubank_client is not None
