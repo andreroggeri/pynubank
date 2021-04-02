@@ -20,6 +20,14 @@ PAYMENT_EVENT_TYPES = (
     'DebitWithdrawalEvent'
 )
 
+PIX_DEBIT_TRANSFER_TITLE = 'Transferência enviada'
+PIX_REFUND_TITLE = 'Reembolso enviado'
+
+PIX_DEBIT_TITLES = [
+    PIX_DEBIT_TRANSFER_TITLE,
+    PIX_REFUND_TITLE
+]
+
 
 class Nubank:
     def __init__(self, client: HttpClient = None):
@@ -154,7 +162,14 @@ class Nubank:
 
     def get_account_statements(self):
         feed = self.get_account_feed()
-        return list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES, feed))
+        statements = list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES or (x['__typename'] == 'GenericFeedEvent' and x['title'] in PIX_DEBIT_TITLES), feed))
+        for s in statements:
+            if s['__typename'] == 'GenericFeedEvent':
+                payee, detail = s['detail'].split(u'\n')
+                s['destinationAccount'] = {'name': payee}
+                s['detail'] = detail
+                s['amount'] = float(detail.split('R$')[1].replace('.', '').replace(',','.'))
+        return statements
 
     def get_account_balance(self):
         data = self._make_graphql_request('account_balance')
