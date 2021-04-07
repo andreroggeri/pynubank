@@ -17,7 +17,9 @@ PAYMENT_EVENT_TYPES = (
     'DebitPurchaseReversalEvent',
     'BillPaymentEvent',
     'DebitWithdrawalFeeEvent',
-    'DebitWithdrawalEvent'
+    'DebitWithdrawalEvent',
+    'AddToReserveEvent',
+    'RemoveFromReserveEvent'
 )
 
 
