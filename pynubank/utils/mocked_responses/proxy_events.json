@@ -1,23 +1,164 @@
 {
   "events": [
     {
-      "description": "Shopping Iguatemi",
+      "description": "Netflix.Com",
       "category": "transaction",
-      "amount": 700,
-      "time": "2017-09-09T02:03:55Z",
-      "title": "transporte",
+      "amount": 3290,
+      "time": "2021-04-21T10:01:48Z",
+      "source": "upfront_national",
+      "title": "serviços",
+      "amount_without_iof": 3290,
+      "account": "0cedea55-3fa8-4c4d-b72a-1bab24f0fb0a",
       "details": {
-        "lat": -12.9818258,
-        "lon": -38.4652058,
-        "subcategory": "card_present"
+        "status": "unsettled",
+        "subcategory": "card_not_present"
       },
-      "id": "abcde-fghi-jklmn-opqrst-uvxz",
+      "id": "43e713a0-07b7-43bb-9700-8d7ad2d5eee6",
       "_links": {
         "self": {
-          "href": "https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123"
+          "href": "https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6"
         }
       },
-      "href": "nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz"
+      "tokenized": true,
+      "href": "nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6"
+    },
+    {
+      "description": "Google Supercell",
+      "category": "transaction",
+      "amount": 2790,
+      "time": "2021-04-13T13:55:51Z",
+      "source": "upfront_national",
+      "title": "eletrônicos",
+      "amount_without_iof": 2790,
+      "account": "0cedea55-3fa8-4c4d-b72a-1bab24f0fb0a",
+      "details": {
+        "status": "settled",
+        "subcategory": "card_not_present"
+      },
+      "id": "1d162494-6aeb-4ce3-b601-be18268bed62",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/transactions/1d162494-6aeb-4ce3-b601-be18268bed62"
+        }
+      },
+      "tokenized": false,
+      "href": "nuapp://transaction/1d162494-6aeb-4ce3-b601-be18268bed62"
+    },
+    {
+      "description": "You Need A Budget",
+      "category": "transaction",
+      "amount": 30877,
+      "time": "2021-04-09T00:09:57Z",
+      "source": "upfront_foreign",
+      "title": "outros",
+      "amount_without_iof": 29025,
+      "account": "0cedea55-3fa8-4c4d-b72a-1bab24f0fb0a",
+      "details": {
+        "status": "settled",
+        "fx": {
+          "currency_origin": "USD",
+          "amount_origin": 5000,
+          "amount_usd": 5000,
+          "precise_amount_origin": "50",
+          "precise_amount_usd": "50",
+          "exchange_rate": 5.805
+        },
+        "subcategory": "card_not_present"
+      },
+      "id": "2819264a-3da3-43b8-b67c-a8ad743302cb",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/transactions/2819264a-3da3-43b8-b67c-a8ad743302cb"
+        }
+      },
+      "tokenized": false,
+      "href": "nuapp://transaction/2819264a-3da3-43b8-b67c-a8ad743302cb"
+    },
+    {
+      "description": "Digitalocean.Com",
+      "category": "transaction",
+      "amount": 3145,
+      "time": "2021-04-01T06:06:38Z",
+      "source": "upfront_foreign",
+      "title": "eletrônicos",
+      "amount_without_iof": 2956,
+      "account": "0cedea55-3fa8-4c4d-b72a-1bab24f0fb0a",
+      "details": {
+        "status": "settled",
+        "fx": {
+          "currency_origin": "USD",
+          "amount_origin": 500,
+          "amount_usd": 500,
+          "precise_amount_origin": "5",
+          "precise_amount_usd": "5",
+          "exchange_rate": 5.912
+        },
+        "subcategory": "card_not_present"
+      },
+      "id": "f9bd0e67-f9e8-4b89-99b3-2cd5b3e3d978",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/transactions/f9bd0e67-f9e8-4b89-99b3-2cd5b3e3d978"
+        }
+      },
+      "tokenized": false,
+      "href": "nuapp://transaction/f9bd0e67-f9e8-4b89-99b3-2cd5b3e3d978"
+    },
+    {
+      "category": "payment",
+      "time": "2021-03-30T02:59:59.999Z",
+      "title": "Pagamento recebido",
+      "id": "6061c696-3bfa-488f-abbd-a503f99d0f97",
+      "amount": 6378
+    },
+    {
+      "category": "bill_flow_paid",
+      "time": "2021-03-29T12:22:46.96Z",
+      "title": "Fatura paga",
+      "description": "",
+      "id": "6061c697-988e-49ad-a37a-fb1b599e5390",
+      "href": "nuapp://bill/1b15cb64-39b2-4262-87ed-a3bc9fcde4ff",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-billing.nubank.com.br/api/bills/1b15cb64-39b2-4262-87ed-a3bc9fcde4ff"
+        }
+      }
+    },
+    {
+      "category": "bill_flow_closed",
+      "time": "2021-03-29T03:54:46.658Z",
+      "title": "Fatura fechada",
+      "description": "Vence em 05/04, e hoje é o melhor dia para compras.",
+      "id": "1b15cb64-39b2-4262-87ed-a3bc9fcde4ff",
+      "href": "nuapp://bill/1b15cb64-39b2-4262-87ed-a3bc9fcde4ff",
+      "amount": 6378,
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-billing.nubank.com.br/api/bills/1b15cb64-39b2-4262-87ed-a3bc9fcde4ff"
+        }
+      }
+    },
+    {
+      "description": "Netflix.Com",
+      "category": "transaction",
+      "amount": 3290,
+      "time": "2021-03-21T10:56:13Z",
+      "source": "upfront_national",
+      "title": "serviços",
+      "amount_without_iof": 3290,
+      "account": "0cedea55-3fa8-4c4d-b72a-1bab24f0fb0a",
+      "details": {
+        "status": "settled",
+        "subcategory": "card_not_present"
+      },
+      "id": "4ecd9a59-3747-4af4-9192-a969b23cf513",
+      "_links": {
+        "self": {
+          "href": "https://prod-s0-facade.nubank.com.br/api/transactions/4ecd9a59-3747-4af4-9192-a969b23cf513"
+        }
+      },
+      "tokenized": true,
+      "href": "nuapp://transaction/4ecd9a59-3747-4af4-9192-a969b23cf513"
     }
   ],
   "as_of": "2017-09-09T06:50:22.323Z",
