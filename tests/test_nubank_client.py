@@ -57,18 +57,16 @@ def test_get_card_feed():
     assert feed['_links']['next']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/next_123'
 
     events = feed['events']
-    assert len(events) == 1
-    assert events[0]['description'] == 'Shopping Iguatemi'
+    assert len(events) == 8
+    assert events[0]['description'] == 'Netflix.Com'
     assert events[0]['category'] == 'transaction'
-    assert events[0]['amount'] == 700
-    assert events[0]['time'] == '2017-09-09T02:03:55Z'
-    assert events[0]['title'] == 'transporte'
-    assert events[0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
-    assert events[0]['details']['lat'] == -12.9818258
-    assert events[0]['details']['lon'] == -38.4652058
-    assert events[0]['details']['subcategory'] == 'card_present'
-    assert events[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
-    assert events[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
+    assert events[0]['amount'] == 3290
+    assert events[0]['time'] == '2021-04-21T10:01:48Z'
+    assert events[0]['title'] == 'serviços'
+    assert events[0]['id'] == '43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert events[0]['details']['subcategory'] == 'card_not_present'
+    assert events[0]['href'] == 'nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert events[0]['_links']['self']['href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
 
 
 def test_get_bills_missing_credit_card():
@@ -203,19 +201,16 @@ def test_get_card_statements():
 
     statements = nubank_client.get_card_statements()
 
-    assert len(statements) == 1
-    assert statements[0]['description'] == 'Shopping Iguatemi'
+    assert len(statements) == 5
+    assert statements[0]['description'] == 'Netflix.Com'
     assert statements[0]['category'] == 'transaction'
-    assert statements[0]['amount'] == 700
-    assert statements[0]['time'] == '2017-09-09T02:03:55Z'
-    assert statements[0]['title'] == 'transporte'
-    assert statements[0]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
-    assert statements[0]['details']['lat'] == -12.9818258
-    assert statements[0]['details']['lon'] == -38.4652058
-    assert statements[0]['details']['subcategory'] == 'card_present'
-    assert statements[0]['href'] == 'nuapp://transaction/abcde-fghi-jklmn-opqrst-uvxz'
-    assert statements[0]['_links']['self']['href'] == 'https://prod-s0-webapp-proxy.nubank.com.br/api/proxy/_links_123'
-
+    assert statements[0]['amount'] == 3290
+    assert statements[0]['time'] == '2021-04-21T10:01:48Z'
+    assert statements[0]['title'] == 'serviços'
+    assert statements[0]['id'] == '43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert statements[0]['details']['subcategory'] == 'card_not_present'
+    assert statements[0]['href'] == 'nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert statements[0]['_links']['self']['href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
 
 def test_get_account_balance():
     nubank_client = Nubank(client=MockHttpClient())
@@ -232,20 +227,21 @@ def test_get_account_feed():
 
     statements = nubank_client.get_account_feed()
 
-    assert len(statements) == 6
-    assert statements[1]['id'] == 'abcde-fghi-jklmn-opqrst-uvxy'
-    assert statements[1]['__typename'] == 'TransferOutReversalEvent'
-    assert statements[1]['title'] == 'Transferencia devolvida'
-    assert statements[1]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
-    assert statements[1]['postDate'] == '2018-03-06'
+    assert len(statements) == 24
+    assert statements[0]['id'] == 'e409e495-4a16-4bad-9ddb-5c447c84fdcb'
+    assert statements[0]['__typename'] == 'TransferOutEvent'
+    assert statements[0]['title'] == 'Transferência enviada'
+    assert statements[0]['detail'] == 'Waldisney da Silva - R$ 4.496,90'
+    assert statements[0]['postDate'] == '2021-04-14'
+    assert statements[0]['amount'] == 4496.9
 
-    assert statements[2]['id'] == 'abcde-fghi-jklmn-opqrst-uvxz'
-    assert statements[2]['__typename'] == 'TransferOutEvent'
-    assert statements[2]['title'] == 'Transferencia enviada'
-    assert statements[2]['detail'] == 'Juquinha da Silva Sauro - R$ 20,00'
-    assert statements[2]['postDate'] == '2018-03-06'
-    assert statements[2]['amount'] == 20.0
-    assert statements[2]['destinationAccount']['name'] == 'Juquinha da Silva Sauro'
+    assert statements[1]['id'] == 'acb9a16b-2a1c-40cc-a20b-0778a4503f12'
+    assert statements[1]['__typename'] == 'TransferInEvent'
+    assert statements[1]['title'] == 'Transferência recebida'
+    assert statements[1]['detail'] == 'R$ 1.483,80'
+    assert statements[1]['postDate'] == '2021-04-06'
+    assert statements[1]['amount'] == 1483.8
+    assert statements[1]['originAccount']['name'] == 'Waldisney da Silva'
 
 
 def test_get_account_statements():
@@ -254,20 +250,20 @@ def test_get_account_statements():
 
     statements = nubank_client.get_account_statements()
 
-    assert len(statements) == 5
-    assert statements[3]['id'] == 'abcde-fghi-jklmn-opqrst-uvx1'
-    assert statements[3]['__typename'] == 'TransferInEvent'
-    assert statements[3]['title'] == 'Transferencia recebida'
-    assert statements[3]['detail'] == 'R$127.33'
-    assert statements[3]['postDate'] == '2018-03-06'
-    assert statements[3]['amount'] == 127.33
+    assert len(statements) == 12
+    assert statements[0]['id'] == 'e409e495-4a16-4bad-9ddb-5c447c84fdcb'
+    assert statements[0]['__typename'] == 'TransferOutEvent'
+    assert statements[0]['title'] == 'Transferência enviada'
+    assert statements[0]['detail'] == 'Waldisney da Silva - R$ 4.496,90'
+    assert statements[0]['postDate'] == '2021-04-14'
+    assert statements[0]['amount'] == 4496.9
 
-    assert statements[4]['id'] == 'abcdefgh-ijkl-mnop-qrst-uvwxyz0123'
-    assert statements[4]['__typename'] == 'BarcodePaymentEvent'
-    assert statements[4]['title'] == 'Pagamento efetuado'
-    assert statements[4]['detail'] == 'AES ELETROPAULO'
-    assert statements[4]['postDate'] == '2018-02-05'
-    assert statements[4]['amount'] == 169.2
+    assert statements[11]['id'] == 'a9f96774-37f2-431e-9e6f-a081defacf25'
+    assert statements[11]['__typename'] == 'BarcodePaymentEvent'
+    assert statements[11]['title'] == 'Pagamento efetuado'
+    assert statements[11]['detail'] == 'CONFIDENCE CORRETORA DE CAMBIO S A'
+    assert statements[11]['postDate'] == '2020-12-08'
+    assert statements[11]['amount'] == 4245.1
 
 
 def test_get_account_investments_details():
