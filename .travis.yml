@@ -37,9 +37,9 @@ jobs:
       script: skip
       deploy:
         provider: pypi
-        user: andreroggeri
+        user: "__token__"
         skip_upload_docs: true
         password:
-          secure: Tvc1QMsgO6/a/UoBqjrxLSyySUBQ5RIug9JU/BzP4HAGgUz68+8WRpelwGJUmKmcPrZ0OmhDohl8CDGsBuKLw/eXuxrJaWZbnEzFfEHoFOSRsDKdJYlEOhH71P5J1A3AmyDJ1b7n0cCfg/g4/uRgiA/3pBB+2/OA2y0YbL1nHdQ8M2xD9VvmPTVrjx7fqKLBRbxi1MU9LguPsRqzLAO6rJ/m9dP0YHiorpXbgghidquJMv5q0rq6NQSxsZU4bsP62BxJxtNXc64uot2DXTXNpx2SlyQabMA9rFPWu9OU/WjChcv1t25JbVBmS/KtKlOe3o7Zm7VS5tMjJg9m1LYI29iXuS75nQWzwTUv5CzLxzq4O0YF5ds29QfO8os5tYI3hKeyMFmiCEL1dK5/T9JdjVbDSFGSyXvGq4D9u3lTvm/OyKqnnyeT+88UMogfyFA3OZRmlCzzALjqPfdxfcLoNkE3xa9LZe9cZ4wtMLmsfC+wqqLqJ0WSQtDjbx5SYgF6bqzy70fnFZ2+IQLlJTSRn3UwkF5Fw3joi9fK3yKwBFQ0kIRPAoP/xq63ZTEWGFtq/tO9wCZFmhoXFqpiwY3xFl9zTXjjE0JNdzGLKXtdpVqoNV0mHuryrNGmbGJfFBoUdK16NgJgqf0FDhqdfqGdIuW7vflvTCpDgbK5mNzkUDo=
+          secure: NhNTWuF2HH2SH/kPYky3oGy+Y3so6Ot1mCf+1qLGk+VOxVblVfvX39S0c7TZ+0xYSD/NlsCsVnRlHwI0vAPf6wknCScvCMcOWPCfPrkmtOgSAsSwrvbaLtoD3KymwYGRkVq3sr/7Gxn5GBrPhOKFot0orxFZa6+7WQSFPl0Ysv+sQi9oXWdRUt6q1+804aFDhHDe2bR4X2RZLtyOwm+g12gaqexz5HF9kDn8BfYgeHDdTVgmsITfWEWN3XB/ApY2FWWbI4mxFYB1UlLTWanMPjNMsQiJACl8HTjyUoq8YqDzpEBXs4qbhmaor88/REHa8LeWTI9TXN/QmnHpouf9sOlrBDSmz7W0cHyQzFnnWk31sAUjKOavtEw0GOcwAw8Zfov5zR5bDYSTpt8sK0iJCb7MPGThJDKLvLucIvnyGAQguS3H9D/nMgC4XwcUqVdYCfBwVU70NsAmubH9kS1rOEoQS8wVqTNmdhWxCyLItecRdkB8ZW/WPLdhUFijpYraVrC7yViR69DJMtU45+BPqvL0Re24r/6SRvtG5j78DKrMTCbZK8pPt24tzCbZ72nsDKqx28AuNMaZE2bT9YtQI/ESpr0/vooHMXsZgsM30v0GZnYLi0EiEAMVvWV2b+j3bXB98nFMHw1VolRkbAmxqUv/HHqxcrZr5lsvw3IRNnk=
         on:
           tags: true
