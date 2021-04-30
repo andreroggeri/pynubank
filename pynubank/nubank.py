@@ -7,6 +7,7 @@ from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.exception import NuMissingCreditCard
+import datetime, inspect
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -158,6 +159,23 @@ class Nubank:
     def get_account_investments_details(self):
         data = self._make_graphql_request('account_investments')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']
+
+    def get_account_investments_yield(self, month=datetime.datetime.now().month, year=datetime.datetime.now().year) -> float:
+        if isinstance(month, inspect._empty) or isinstance(year, inspect._empty):
+            month = datetime.datetime.now().month
+            year = datetime.datetime.now().year
+
+        lastDay = datetime.date(year, month+1, 1) - datetime.timedelta(days=1)
+
+        payload = {
+          "asOf": lastDay.strftime('%Y-%m-%d')
+        }
+
+        data = self._make_graphql_request('account_investments_yield', payload)
+
+        value = data['data']['viewer']['productFeatures']['savings']['screens']['detailedBalance']['monthBalanceSection']['yieldSection']['semantics']['label'].split('R$')[1].replace(',', '.')
+
+        return float(''.join(num for num in value if num.isdigit() or num == '.'))
 
     def create_boleto(self, amount: float) -> str:
         customer_id_response = self._make_graphql_request('account_id')
