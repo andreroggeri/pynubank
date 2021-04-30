@@ -21,7 +21,7 @@ money_request['qr_code'].print_ascii()
 
 # Também é possível gerar uma imagem para ser enviada através de algum sistema
 # Nesse caso irá salvar um arquivo qr_code.png que pode ser escaneado pelo app do banco para ser pago
-qr = money_request['qr_ocde']
+qr = money_request['qr_code']
 img = qr.make_image()
 img.save('qr_code.png')
 

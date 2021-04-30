@@ -6,15 +6,11 @@ DISCOVERY_APP_URL = 'https://prod-s0-webapp-proxy.nubank.com.br/api/app/discover
 
 
 class Discovery:
-    _headers = {
-        'Content-Type': 'application/json'
-    }
-
-    proxy_list_url: dict
-    proxy_list_app_url: dict
-
     def __init__(self, client: HttpClient):
         self.client = client
+        self.proxy_list_url = {}
+        self.proxy_list_app_url = {}
+
         self._update_proxy_urls()
 
     def get_url(self, name: str) -> str:

@@ -23,7 +23,10 @@ PAYMENT_EVENT_TYPES = (
 
 
 class Nubank:
-    def __init__(self, client=HttpClient()):
+    def __init__(self, client: HttpClient = None):
+        if client is None:
+            client = HttpClient()
+
         self._client = client
         self._discovery = Discovery(self._client)
         self._feed_url = None
@@ -117,6 +120,8 @@ class Nubank:
         response = self._client.post(url, json=payload)
 
         self._save_auth_data(response)
+
+        return response.get('refresh_token')
 
     def revoke_token(self):
         self._client.post(self._revoke_token_url, {})
