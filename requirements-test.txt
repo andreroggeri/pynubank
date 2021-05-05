@@ -1,5 +1,5 @@
 -r requirements.txt
-pytest==6.2.3
+pytest==6.2.4
 pytest-cov==2.11.1
 coveralls==3.0.1
 tox==3.23.0
