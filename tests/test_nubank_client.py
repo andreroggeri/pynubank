@@ -297,6 +297,15 @@ def test_get_account_investments_details():
     assert statements[2]['redeemedBalance']['iofTax'] == 0.01
     assert statements[2]['redeemedBalance']['id'] == 'sdfgehhdf-jkre-thre-nghh-kuvsnjue633'
 
+def test_get_account_investments_yield():
+    import datetime
+
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    monthYield = nubank_client.get_account_investments_yield()
+
+    assert monthYield == 0.14
 
 def test_get_customer():
     nubank_client = Nubank(client=MockHttpClient())
