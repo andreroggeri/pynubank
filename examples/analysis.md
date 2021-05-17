@@ -26,7 +26,7 @@ nu = Nubank()
 transactions = nu.get_card_statements()
 
 # Agrupa pelo campo "title" que é a categoria e soma os valores
-df = pd.read_json(transactions).groupby(['title']).sum()
+df = pd.DataFrame(transactions).groupby(['title']).sum()
 
 # Plota o gráfico baseado no campo amount
 df['amount'].plot.pie(figsize=(6, 6), autopct='%.2f')
