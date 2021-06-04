@@ -1,6 +1,5 @@
 import calendar
 import datetime
-import re
 import uuid
 from typing import Tuple
 
@@ -10,6 +9,7 @@ from pynubank.exception import NuMissingCreditCard
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.utils.http import HttpClient
+from pynubank.utils.parsing import parse_float, parse_pix_transaction
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -20,7 +20,11 @@ PAYMENT_EVENT_TYPES = (
     'DebitPurchaseReversalEvent',
     'BillPaymentEvent',
     'DebitWithdrawalFeeEvent',
-    'DebitWithdrawalEvent'
+    'DebitWithdrawalEvent',
+    'PixTransferOutEvent',
+    'PixTransferInEvent',
+    'PixTransferOutReversalEvent',
+    'PixTransferFailedEvent',
 )
 
 
@@ -157,6 +161,7 @@ class Nubank:
 
     def get_account_statements(self):
         feed = self.get_account_feed()
+        feed = map(parse_pix_transaction, feed)
         return list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES, feed))
 
     def get_account_balance(self):
@@ -179,7 +184,7 @@ class Nubank:
 
         value = data['data']['viewer']['productFeatures']['savings']['screens']['detailedBalance']['monthBalanceSection']['yieldSection']['semantics']['label']
 
-        return float(re.search(r'\d*,\d\d', value).group().replace(',', '.'))
+        return parse_float(value)
 
     def create_boleto(self, amount: float) -> str:
         customer_id_response = self._make_graphql_request('account_id')
