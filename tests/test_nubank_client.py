@@ -251,7 +251,7 @@ def test_get_account_statements():
 
     statements = nubank_client.get_account_statements()
 
-    assert len(statements) == 12
+    assert len(statements) == 23
     assert statements[0]['id'] == 'e409e495-4a16-4bad-9ddb-5c447c84fdcb'
     assert statements[0]['__typename'] == 'TransferOutEvent'
     assert statements[0]['title'] == 'Transferência enviada'
@@ -259,12 +259,12 @@ def test_get_account_statements():
     assert statements[0]['postDate'] == '2021-04-14'
     assert statements[0]['amount'] == 4496.9
 
-    assert statements[11]['id'] == 'a9f96774-37f2-431e-9e6f-a081defacf25'
-    assert statements[11]['__typename'] == 'BarcodePaymentEvent'
-    assert statements[11]['title'] == 'Pagamento efetuado'
-    assert statements[11]['detail'] == 'CONFIDENCE CORRETORA DE CAMBIO S A'
-    assert statements[11]['postDate'] == '2020-12-08'
-    assert statements[11]['amount'] == 4245.1
+    assert statements[22]['id'] == 'a9f96774-37f2-431e-9e6f-a081defacf25'
+    assert statements[22]['__typename'] == 'BarcodePaymentEvent'
+    assert statements[22]['title'] == 'Pagamento efetuado'
+    assert statements[22]['detail'] == 'CONFIDENCE CORRETORA DE CAMBIO S A'
+    assert statements[22]['postDate'] == '2020-12-08'
+    assert statements[22]['amount'] == 4245.1
 
 
 def test_get_account_investments_details():
