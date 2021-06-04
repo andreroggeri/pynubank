@@ -76,3 +76,39 @@ df.groupby(pd.Grouper(freq='M')).cumsum().plot()
 Resultado:
 
 ![Gráfico de Gasto por Categoria](./img/balance-evolution.PNG)
+
+## Rendimento histórico da NuConta
+
+```python
+from datetime import datetime
+
+import pandas as pd
+from dateutil.relativedelta import relativedelta
+
+from pynubank import Nubank
+
+nu = Nubank()
+# Assumindo que você já fez a autenticação aqui
+
+no_of_months = 12  # Quantos meses para trás queremos obter os dados
+yield_data = []
+now = datetime.now()
+
+# Obtem os dados dos ultimos 12 meses
+for i in range(no_of_months):
+    ref_date = datetime(now.year, now.month, 1) - relativedelta(months=i)
+    yield_data.append({
+        'date': ref_date.strftime('%Y-%m-%d'),
+        'yield': nu.get_account_investments_yield(ref_date)
+    })
+
+    df = pd.DataFrame(yield_data)
+
+    df['date'] = pd.to_datetime(df['date'])
+    df.index = df.date
+    df.groupby(pd.Grouper(freq='M')).cumsum().plot()
+```
+
+Resultado:
+
+![Gráfico da evolução dos rendimentos](./img/yield-evolution.png)
