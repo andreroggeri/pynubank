@@ -1,4 +1,6 @@
-from pynubank.utils.parsing import parse_pix_transaction
+import pytest
+
+from pynubank.utils.parsing import parse_pix_transaction, parse_float
 
 base_transaction = {
     "id": "12c77a49-21c2-427d-8662-beba354e8356",
@@ -58,3 +60,17 @@ def test_should_parse_failed_pix_transaction():
 
     assert parsed['__typename'] == 'PixTransferFailedEvent'
     assert parsed['amount'] == 3668.40
+
+
+@pytest.mark.parametrize(['test_value', 'expected'], [
+    ('R$1,00', 1.0),
+    ('R$0,01', 0.01),
+    ('R$0,1', 0.1),
+    ('R$1.000,20', 1000.20),
+    ('R$83.120,11', 83120.11),
+    ('R$9.183.120,11', 9183120.11),
+])
+def test_parse_float(test_value: str, expected: float):
+    result = parse_float(test_value)
+
+    assert result == expected
