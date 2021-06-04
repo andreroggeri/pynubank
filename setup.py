@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name='pynubank',
-    version='2.11.2',
+    version='2.12.0',
     url='https://github.com/andreroggeri/pynubank',
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
