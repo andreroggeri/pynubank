@@ -372,6 +372,8 @@ def test_should_create_pix_money_request():
     request = nubank_client.create_pix_payment_qrcode('1231231232', 1232213.23, keys_data['keys'][0])
 
     assert request['qr_code'] is not None
+    assert request['payment_code'] == '12464565442165BR.GOV.BCB.PIX42136542416542146542165.005802BR5920John ' \
+                                      'Doe6009SAO PAULOSf5ASF56sf654aA65sa4f6S56fs'
     assert request['payment_url'] == 'https://nubank.com.br/pagar/tttttt/yyyyyyy'
 
 
