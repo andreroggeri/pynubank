@@ -240,5 +240,6 @@ class Nubank:
 
         return {
             'payment_url': data['url'],
-            'qr_code': qr
+            'payment_code': data['brcode'],
+            'qr_code': qr,
         }
