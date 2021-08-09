@@ -4,6 +4,8 @@ from qrcode import QRCode
 from pynubank import MockHttpClient
 from pynubank.exception import NuMissingCreditCard
 from pynubank.nubank import Nubank
+from pynubank.utils.graphql import prepare_request_body
+from pynubank.utils.mock_http import GHOSTFLAME_URL
 
 
 def test_authenticate_with_qr_code_succeeds():
@@ -66,7 +68,8 @@ def test_get_card_feed():
     assert events[0]['id'] == '43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
     assert events[0]['details']['subcategory'] == 'card_not_present'
     assert events[0]['href'] == 'nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
-    assert events[0]['_links']['self']['href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert events[0]['_links']['self'][
+               'href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
 
 
 def test_get_bills_missing_credit_card():
@@ -210,7 +213,8 @@ def test_get_card_statements():
     assert statements[0]['id'] == '43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
     assert statements[0]['details']['subcategory'] == 'card_not_present'
     assert statements[0]['href'] == 'nuapp://transaction/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
-    assert statements[0]['_links']['self']['href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
+    assert statements[0]['_links']['self'][
+               'href'] == 'https://prod-s0-facade.nubank.com.br/api/transactions/43e713a0-07b7-43bb-9700-8d7ad2d5eee6'
 
 
 def test_get_account_balance():
@@ -390,3 +394,37 @@ def test_should_use_http_client_if_none_is_provided():
     nubank_client = Nubank()
 
     assert nubank_client is not None
+
+
+def test_should_return_none_if_isnt_pix_transaction():
+    client = MockHttpClient()
+    client.remove_mock_url((GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen'))))
+    client.add_mock_url(GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen')), 'pix_receipt_screen_not_found')
+    nubank_client = Nubank(client)
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    pix_identifier = nubank_client.get_pix_identifier('tx_123123')
+
+    assert pix_identifier is None
+
+
+def test_should_return_none_if_pix_transaction_doesnt_have_identifier():
+    client = MockHttpClient()
+    client.remove_mock_url((GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen'))))
+    client.add_mock_url(GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen')),
+                        'pix_receipt_screen_without_identifier')
+    nubank_client = Nubank(client)
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    pix_identifier = nubank_client.get_pix_identifier('tx_123123')
+
+    assert pix_identifier is None
+
+
+def test_should_retrieve_pix_identifier_for_pix_transaction():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_qr_code('12345678912', 'hunter12', 'some-uuid')
+
+    pix_identifier = nubank_client.get_pix_identifier('tx_123123')
+
+    assert pix_identifier == 'IdentificadorPixAqui'

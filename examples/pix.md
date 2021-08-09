@@ -6,6 +6,7 @@ Está implementado o suporte a consulta de chaves do Pix e solicitação de cobr
 from pynubank import Nubank, MockHttpClient
 
 nu = Nubank(MockHttpClient())
+nu.authenticate_with_qr_code('some-cpf', 'some-password', 'some-uuid')
 
 data = nu.get_available_pix_keys()
 
@@ -27,5 +28,21 @@ img.save('qr_code.png')
 
 # Além do QRCode também há uma URL para pagamento
 print(money_request['payment_url'])
+```
 
+## Obtendo o identificador de uma transação
+
+```python
+from pynubank import Nubank, MockHttpClient
+
+nu = Nubank(MockHttpClient())
+nu.authenticate_with_qr_code('some-cpf', 'some-password', 'some-uuid')
+
+transactions = nu.get_account_statements()
+
+for transaction in transactions[:100]:
+    tx_status = nu.get_pix_identifier(transaction['id'])
+    # Poderá retornar None caso a transação não seja Pix ou não tiver identificador
+    # Caso contrário retorna o identificador único que foi cadastrado no QRCode
+    print(tx_status) 
 ```

@@ -1,0 +1,32 @@
+{
+  "errors": [
+    {
+      "message": "Not Found",
+      "locations": [
+        {
+          "line": 4,
+          "column": 7
+        }
+      ],
+      "type": "not_found",
+      "query_path": [
+        "viewer",
+        "savingsAccount",
+        "getGenericReceiptScreen"
+      ],
+      "path": [
+        "viewer",
+        "savingsAccount",
+        "getGenericReceiptScreen"
+      ],
+      "extensions": {
+        "type": "not_found"
+      }
+    }
+  ],
+  "data": {
+    "viewer": {
+      "savingsAccount": null
+    }
+  }
+}
