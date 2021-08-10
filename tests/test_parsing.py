@@ -69,6 +69,7 @@ def test_should_parse_failed_pix_transaction():
     ('R$1.000,20', 1000.20),
     ('R$83.120,11', 83120.11),
     ('R$9.183.120,11', 9183120.11),
+    ('Projeção aproximada para 31 de Agosto de 2021, seu dinheiro renderá R$ 0,18', 0.18)
 ])
 def test_parse_float(test_value: str, expected: float):
     result = parse_float(test_value)
