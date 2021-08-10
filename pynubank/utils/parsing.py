@@ -14,7 +14,7 @@ PIX_TRANSACTION_MAP = {
 
 
 def parse_float(value: str):
-    return float(re.search(r'(?:\d*\.)*\d+,\d*', value).group().replace('.', '').replace(',', '.'))
+    return float(re.search(r'(?:\d*\.)*\d+,[0-9][0-9]', value).group().replace('.', '').replace(',', '.'))
 
 
 def parse_pix_transaction(transaction: dict) -> dict:
