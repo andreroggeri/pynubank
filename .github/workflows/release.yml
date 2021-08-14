@@ -1,20 +1,17 @@
-name: Python package
+name: Release to Pypi
 
-on: [push]
+on: release
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.9
       - name: Cache pip
         uses: actions/cache@v2
         with:
@@ -29,12 +26,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install -r requirements-test.txt
-      - name: Test with pytest
+      - name: Build
         run: |
-          coverage run --source=pynubank setup.py test
-      - name: Coveralls
-        run: |
-          coveralls --service=github
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pip install wheel
+          python setup.py bdist_wheel
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
