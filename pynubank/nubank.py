@@ -1,5 +1,6 @@
 import calendar
 import datetime
+import itertools
 import uuid
 from typing import Tuple
 
@@ -186,7 +187,9 @@ class Nubank:
 
         data = self._make_graphql_request('account_investments_yield', payload)
 
-        value = data['data']['viewer']['productFeatures']['savings']['screens']['detailedBalance']['monthBalanceSection']['yieldSection']['semantics']['label']
+        value = \
+            data['data']['viewer']['productFeatures']['savings']['screens']['detailedBalance']['monthBalanceSection'][
+                'yieldSection']['semantics']['label']
 
         return parse_float(value)
 
@@ -223,12 +226,13 @@ class Nubank:
 
         return {'keys': savings_acount['dict']['keys'], 'account_id': savings_acount['id']}
 
-    def create_pix_payment_qrcode(self, account_id: str, amount: float, pix_key: dict) -> dict:
+    def create_pix_payment_qrcode(self, account_id: str, amount: float, pix_key: dict, tx_id: str = '') -> dict:
         payload = {
             'createPaymentRequestInput': {
                 'amount': amount,
                 'pixAlias': pix_key.get('value'),
-                "savingsAccountId": account_id
+                "savingsAccountId": account_id,
+                'transactionId': tx_id,
             }
         }
 
@@ -243,3 +247,21 @@ class Nubank:
             'payment_code': data['brcode'],
             'qr_code': qr,
         }
+
+    def get_pix_identifier(self, transaction_id: str):
+        def find_pix_identifier(table_item: dict):
+            return table_item.get('label') == 'Identificador'
+
+        response = self._make_graphql_request('pix_receipt_screen', {'type': 'TRANSFER_IN', 'id': transaction_id})
+        if 'errors' in response.keys():
+            return
+
+        screen_pieces = response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
+        table_items = list(itertools.chain(*[table_item.get('tableItems', []) for table_item in screen_pieces]))
+
+        identifier_data = next(filter(find_pix_identifier, table_items), None)
+
+        if identifier_data is None:
+            return
+
+        return identifier_data['value']

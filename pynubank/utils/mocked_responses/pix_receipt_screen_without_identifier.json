@@ -1,0 +1,113 @@
+{
+  "data": {
+    "viewer": {
+      "savingsAccount": {
+        "getGenericReceiptScreen": {
+          "screenShowShareAction": true,
+          "screenType": "pix_transfer_in_receipt",
+          "screenPieces": [
+            {
+              "__typename": "ReceiptHeaderPiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "headerTitle": "Comprovante de transferência",
+              "headerSubtitle": "09 AGO 2021 - 17:05:08"
+            },
+            {
+              "__typename": "ReceiptTablePiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "tableHeader": null,
+              "tableItems": [
+                {
+                  "label": "Valor",
+                  "value": "R$ 2,00"
+                },
+                {
+                  "label": "Tipo de transferência",
+                  "value": "Pix"
+                }
+              ]
+            },
+            {
+              "__typename": "ReceiptTablePiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "tableHeader": {
+                "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M21 13V6L3 6L3 16L13 16V18H3H1V16V6V4H3H21H23V6L23 13H21ZM12.0273 12C12.0182 12.0002 12.0091 12.0004 12 12.0004C11.9909 12.0004 11.9818 12.0002 11.9727 12H10.9998V10H12.9998V10.978L13 11.0004L12.9998 11.0227V12H12.0273ZM15 11.0004C15 12.6572 13.6569 14.0004 12 14.0004C10.3431 14.0004 9 12.6572 9 11.0004C9 9.34351 10.3431 8.00037 12 8.00037C13.6569 8.00037 15 9.34351 15 11.0004ZM18.0002 17.1742V22H20.0002V17.1742L23 19.7454V17.1113L19.651 14.2407C19.4659 14.082 19.2372 14.0018 19.008 14H18.9924C18.7632 14.0018 18.5345 14.082 18.3494 14.2407L15 17.1117V19.7458L18.0002 17.1742Z\" fill=\"#727683\"/></svg>",
+                "title": "Origem",
+                "subtitle": null,
+                "deeplinkWithMeta": null
+              },
+              "tableItems": [
+                {
+                  "label": "Nome",
+                  "value": "WALDISNEY DA SILVA"
+                },
+                {
+                  "label": "CPF",
+                  "value": "•••.123.456-••"
+                },
+                {
+                  "label": "Instituição",
+                  "value": "BCO BRADESCO S.A."
+                },
+                {
+                  "label": "Agência",
+                  "value": "0123"
+                },
+                {
+                  "label": "Conta",
+                  "value": "45678-9"
+                },
+                {
+                  "label": "Tipo de conta",
+                  "value": "Conta corrente"
+                }
+              ]
+            },
+            {
+              "__typename": "ReceiptTablePiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "tableHeader": {
+                "icon": "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M21 13V6L3 6L3 16L13 16V18H3H1V16V6V4H3H21H23V6L23 13H21ZM12.0273 12C12.0182 12.0002 12.0091 12.0004 12 12.0004C11.9909 12.0004 11.9818 12.0002 11.9727 12H10.9998V10H12.9998V10.978L13 11.0004L12.9998 11.0227V12H12.0273ZM15 11.0004C15 12.6572 13.6569 14.0004 12 14.0004C10.3431 14.0004 9 12.6572 9 11.0004C9 9.34351 10.3431 8.00037 12 8.00037C13.6569 8.00037 15 9.34351 15 11.0004ZM23 19.1388V16.5046L20 19.076V14H18L18 19.0761L15 16.5046V19.1388L18.3493 22.0095C18.7237 22.3305 19.2764 22.3305 19.6508 22.0095L23 19.1388Z\" fill=\"black\"/></svg>",
+                "title": "Destino",
+                "subtitle": null,
+                "deeplinkWithMeta": null
+              },
+              "tableItems": [
+                {
+                  "label": "Nome",
+                  "value": "Waldisney Silva"
+                },
+                {
+                  "label": "CPF",
+                  "value": "•••.123.456-••"
+                },
+                {
+                  "label": "Instituição",
+                  "value": "Nu Pagamentos S.A. - Instituição de Pagamento"
+                },
+                {
+                  "label": "Agência",
+                  "value": "0001"
+                },
+                {
+                  "label": "Conta",
+                  "value": "55667788-9"
+                },
+                {
+                  "label": "Chave Pix",
+                  "value": "998.096.960-19"
+                }
+              ]
+            },
+            {
+              "__typename": "ReceiptFooterPiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "footerTitle": "Nu Pagamentos S.A. - Instituição de Pagamento\nCNPJ 18.236.120/0001-58\n\nID da transação: E60746948202108092004A3100761Z80",
+              "footerContent": "Estamos aqui para ajudar se você tiver alguma dúvida.\n\n<strong><a href=\"nuapp://chat\">Me ajuda ⟶ </a></strong>"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

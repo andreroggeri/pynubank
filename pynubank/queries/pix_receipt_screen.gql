@@ -1,0 +1,44 @@
+query get_generic_receipt_screen($type: String!, $id: ID!) {
+  viewer {
+    savingsAccount {
+      getGenericReceiptScreen(type: $type, id: $id) {
+        screenShowShareAction
+        screenType
+        screenPieces {
+          __typename
+          fallbackMessage
+          ... on ReceiptHeaderPiece {
+            headerTitle
+            headerSubtitle
+          }
+          ... on ReceiptMessagePiece {
+            messageTitle
+            messageContent
+          }
+          ... on ReceiptFooterPiece {
+            footerTitle
+            footerContent
+          }
+          ... on ReceiptTablePiece {
+            tableHeader {
+              icon
+              title
+              subtitle
+              deeplinkWithMeta {
+                href
+                analytics {
+                  key
+                  value
+                }
+              }
+            }
+            tableItems {
+              label
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+}
