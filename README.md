@@ -1,4 +1,5 @@
 # pynubank
+[![Python package](https://github.com/andreroggeri/pynubank/actions/workflows/build.yml/badge.svg)](https://github.com/andreroggeri/pynubank/actions/workflows/build.yml)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pynubank)
 [![PyPI version](https://badge.fury.io/py/pynubank.svg)](https://badge.fury.io/py/pynubank)
 [![Coverage Status](https://coveralls.io/repos/github/andreroggeri/pynubank/badge.svg?branch=master)](https://coveralls.io/github/andreroggeri/pynubank?branch=master)
