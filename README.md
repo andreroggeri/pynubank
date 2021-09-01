@@ -1,5 +1,4 @@
 # pynubank
-[![Python package](https://github.com/andreroggeri/pynubank/actions/workflows/build.yml/badge.svg)](https://github.com/andreroggeri/pynubank/actions/workflows/build.yml)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pynubank)
 [![PyPI version](https://badge.fury.io/py/pynubank.svg)](https://badge.fury.io/py/pynubank)
 [![Coverage Status](https://coveralls.io/repos/github/andreroggeri/pynubank/badge.svg?branch=master)](https://coveralls.io/github/andreroggeri/pynubank?branch=master)
@@ -74,7 +73,7 @@ nu = Nubank()
 # Insira aqui o código para se autenticar!
 # Veja a seção acima sobre autenticação para mais detalhes ;)
 
-# Lista de dicionários contendo todas as transações de seu cartão de crédito
+# Lista de dicionários contendo todas as transações da sua NuConta
 account_statements = nu.get_account_statements()
 
 # Soma de todas as transações na NuConta
