@@ -1,3 +1,6 @@
+from uuid import uuid4
+from unittest.mock import MagicMock
+
 import pytest
 from qrcode import QRCode
 
@@ -428,3 +431,16 @@ def test_should_retrieve_pix_identifier_for_pix_transaction():
     pix_identifier = nubank_client.get_pix_identifier('tx_123123')
 
     assert pix_identifier == 'IdentificadorPixAqui'
+
+def test_get_card_statement_details(monkeypatch, card_statement_detail):
+    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=card_statement_detail))
+    nubank = Nubank()
+
+    url = f'https://prod-s0-facade.nubank.com.br/api/transactions/{uuid4()}'
+    statement_mock = {'_links': {'self': {'href': url}}}
+
+    statement_details_response = nubank.get_card_statement_details(statement_mock)
+
+    HttpClient.get.assert_called_once_with(url)
+    assert statement_details_response == card_statement_detail

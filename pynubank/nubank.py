@@ -160,6 +160,9 @@ class Nubank:
     def get_bill_details(self, bill: dict):
         return self._client.get(bill['_links']['self']['href'])
 
+    def get_card_statement_details(self, statement):
+        return self.client.get(statement['_links']['self']['href'])
+
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
         return data['data']['viewer']['savingsAccount']['feed']
