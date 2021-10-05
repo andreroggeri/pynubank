@@ -1,5 +1,4 @@
 from uuid import uuid4
-from unittest.mock import MagicMock
 
 import pytest
 from qrcode import QRCode
