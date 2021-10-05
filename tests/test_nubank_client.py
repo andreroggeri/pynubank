@@ -434,11 +434,15 @@ def test_should_retrieve_pix_identifier_for_pix_transaction():
 
 
 def test_get_card_statement_details():
-    nubank= Nubank(client=MockHttpClient())
+    statement_mock = {
+        '_links': {
+            'self': {
+                'href': f'https://mocked-proxy-url/api/transactions/{uuid4()}'
+            }
+        }
+    }
 
-    url = f'https://mocked-proxy-url/api/transactions/{uuid4()}'
-    statement_mock = {'_links': {'self': {'href': url}}}
-
+    nubank = Nubank(client=MockHttpClient())
     statement_details = nubank.get_card_statement_details(statement_mock)
 
     transaction = statement_details['transaction']
