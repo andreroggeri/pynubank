@@ -1,0 +1,85 @@
+{
+    "transaction": {
+        "category": "outros",
+        "amount": 10000,
+        "tags": [],
+        "card_last_four_digits": "1234",
+        "time": "2021-08-12T10:56:00Z",
+        "charges": 2,
+        "original_merchant_name": "Loja",
+        "mcc": "1234",
+        "charges_list": [
+            {
+                "amount": 5000,
+                "status": "future",
+                "index": 1,
+                "source": "installments_merchant",
+                "extras": [],
+                "post_date": "2021-09-10"
+            },
+            {
+                "amount": 5000,
+                "status": "future",
+                "index": 2,
+                "source": "installments_merchant",
+                "extras": [],
+                "post_date": "2021-10-10"
+            }
+        ],
+        "source": "installments_merchant",
+        "adjustments": [],
+        "amount_without_iof": 10000,
+        "account": "4c2c35f8-63ea-478e-8af2-f81f48f6d980",
+        "card": "94ddf0f1-667f-450b-8455-a7d3a6dfebb0",
+        "status": "settled",
+        "id": "7e656992-263e-4007-a186-b51356730e0f",
+        "merchant_name": "Loja",
+        "event_type": "transaction_card_not_present",
+        "_links": {
+            "category": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f/category"
+            },
+            "anticipate": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f/anticipation-with-pin-verification"
+            },
+            "chargeback_reasons_v4": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=chargeback-reasons-v4"
+            },
+            "notify_geo": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/waypoints/transaction/7e656992-263e-4007-a186-b51356730e0f"
+            },
+            "categories": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f/category"
+            },
+            "chargeback": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=chargeback"
+            },
+            "create_tag": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f/tags"
+            },
+            "tx_financing": {
+                "href": "nuapp://informative-bottom-sheet?title=Esta+compra+n%C3%A3o+pode+ser+parcelada"
+            },
+            "chargeback_flow": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/chargeback-requests"
+            },
+            "complaint_flow": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/complaint-requests"
+            },
+            "chargeback_reasons": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=chargeback-reasons"
+            },
+            "merchant": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f/merchant"
+            },
+            "self": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/transactions/7e656992-263e-4007-a186-b51356730e0f"
+            },
+            "get_static_map_bytes": {
+                "href": "https://prod-s0-facade.nubank.com.br/api/static-map-bytes"
+            }
+        },
+        "country": "BRA",
+        "card_type": "credit_card_virtual"
+    }
+}

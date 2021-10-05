@@ -432,15 +432,36 @@ def test_should_retrieve_pix_identifier_for_pix_transaction():
 
     assert pix_identifier == 'IdentificadorPixAqui'
 
-def test_get_card_statement_details(monkeypatch, card_statement_detail):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr(HttpClient, 'get', MagicMock(return_value=card_statement_detail))
-    nubank = Nubank()
 
-    url = f'https://prod-s0-facade.nubank.com.br/api/transactions/{uuid4()}'
+def test_get_card_statement_details():
+    nubank= Nubank(client=MockHttpClient())
+
+    url = f'https://mocked-proxy-url/api/transactions/{uuid4()}'
     statement_mock = {'_links': {'self': {'href': url}}}
 
-    statement_details_response = nubank.get_card_statement_details(statement_mock)
+    statement_details = nubank.get_card_statement_details(statement_mock)
 
-    HttpClient.get.assert_called_once_with(url)
-    assert statement_details_response == card_statement_detail
+    transaction = statement_details['transaction']
+    assert transaction['category'] == "outros"
+    assert transaction['amount'] == 10000
+    assert transaction['card_last_four_digits'] == '1234'
+    assert transaction['charges'] == 2
+    assert transaction['original_merchant_name'] == 'Loja'
+    assert transaction['charges_list'] == [
+        {
+            "amount": 5000,
+            "status": "future",
+            "index": 1,
+            "source": "installments_merchant",
+            "extras": [],
+            "post_date": "2021-09-10"
+        },
+        {
+            "amount": 5000,
+            "status": "future",
+            "index": 2,
+            "source": "installments_merchant",
+            "extras": [],
+            "post_date": "2021-10-10"
+        }
+    ]
