@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 import pytest
 from qrcode import QRCode
 
@@ -428,3 +430,41 @@ def test_should_retrieve_pix_identifier_for_pix_transaction():
     pix_identifier = nubank_client.get_pix_identifier('tx_123123')
 
     assert pix_identifier == 'IdentificadorPixAqui'
+
+
+def test_get_card_statement_details():
+    statement_mock = {
+        '_links': {
+            'self': {
+                'href': f'https://mocked-proxy-url/api/transactions/{uuid4()}'
+            }
+        }
+    }
+
+    nubank = Nubank(client=MockHttpClient())
+    statement_details = nubank.get_card_statement_details(statement_mock)
+
+    transaction = statement_details['transaction']
+    assert transaction['category'] == "outros"
+    assert transaction['amount'] == 10000
+    assert transaction['card_last_four_digits'] == '1234'
+    assert transaction['charges'] == 2
+    assert transaction['original_merchant_name'] == 'Loja'
+    assert transaction['charges_list'] == [
+        {
+            "amount": 5000,
+            "status": "future",
+            "index": 1,
+            "source": "installments_merchant",
+            "extras": [],
+            "post_date": "2021-09-10"
+        },
+        {
+            "amount": 5000,
+            "status": "future",
+            "index": 2,
+            "source": "installments_merchant",
+            "extras": [],
+            "post_date": "2021-10-10"
+        }
+    ]

@@ -22,6 +22,7 @@ class MockHttpClient(HttpClient):
         self._results[(GHOSTFLAME_URL, str(prepare_request_body('account_investments_yield')))] = self._read_data(
             'account_investments_yield')
         self._results[('https://*/api*bills/*', '')] = self._read_data('bills')
+        self._results[('https://mocked-proxy-url/api/transactions/*', '')] = self._read_data('card_statement_detail')
         self._results[('https://mocked-proxy-url/api/proxy/bills_summary_123', '')] = self._read_data('bills_summary')
         self._results[(GHOSTFLAME_URL, str(prepare_request_body('account_id')))] = self._read_data('boleto_create')
         self._results[(GHOSTFLAME_URL, str(prepare_request_body('create_boleto')))] = self._read_data('boleto_create')

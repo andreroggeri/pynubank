@@ -1,5 +1,6 @@
 import inspect
 from datetime import datetime
+from uuid import uuid4
 
 import pytest
 
@@ -34,7 +35,10 @@ def test_check_not_tested_new_methods(nubank_client):
         },
         'get_account_investments_yield': {
             'date': datetime.now(),
-        }
+        },
+        'get_card_statement_details': {
+            'statement': {'_links': {'self': {'href': f'https://mocked-proxy-url/api/transactions/{uuid4()}'}}},
+        },
     }
 
     methods = dir(nubank_client)
