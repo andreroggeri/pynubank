@@ -70,7 +70,7 @@ df.index = df.postDate
 df = df.iloc[::-1]
 
 # Agrupa por mês e faz a soma cumulativa dos dados
-df.groupby(pd.Grouper(freq='M')).cumsum().plot()
+df.groupby(pd.Grouper(freq='M')).sum().cumsum().plot()
 ```
 
 Resultado:
@@ -104,9 +104,9 @@ for i in range(no_of_months):
 
     df = pd.DataFrame(yield_data)
 
-    df['date'] = pd.to_datetime(df['date'])
-    df.index = df.date
-    df.groupby(pd.Grouper(freq='M')).cumsum().plot()
+df['date'] = pd.to_datetime(df['date'])
+df.index = df.date
+df.groupby(pd.Grouper(freq='M')).sum().plot()
 ```
 
 Resultado:
