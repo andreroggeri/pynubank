@@ -12,7 +12,7 @@ _Issues_ ou _pull requests_ que não estejam de acordo com este guia serão recu
 ## Desenvolvimento
 
 - Desenvolva apenas em seu _branch_.
-- Faça _rebase_ com a **develop** **antes** de criar _pull requests_.
+- Faça _rebase_ com a **master** **antes** de criar _pull requests_.
 - Faça squash dos seus commits que não estão completos (_Work In Progress_).
 - Evite fazer alterações que mude a API para matermos a retrocompatibilidade. (Caso necessário explique o porquê no _pull request_)
 
