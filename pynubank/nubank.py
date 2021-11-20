@@ -6,6 +6,7 @@ from typing import Tuple
 
 from qrcode import QRCode
 
+from pynubank.auth_mode import AuthMode, requires_auth_mode
 from pynubank.exception import NuMissingCreditCard
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.graphql import prepare_request_body
@@ -41,6 +42,7 @@ class Nubank:
         self._bills_url = None
         self._customer_url = None
         self._revoke_token_url = None
+        self._auth_mode = AuthMode.UNAUTHENTICATED
 
     def _make_graphql_request(self, graphql_object, variables=None):
         return self._client.post(self._query_url,
@@ -95,6 +97,7 @@ class Nubank:
         response = self._client.post(self._discovery.get_app_url('lift'), json=payload)
 
         self._save_auth_data(response)
+        self._auth_mode = AuthMode.WEB
 
     def authenticate_with_cert(self, cpf: str, password: str, cert_path: str):
         self._client.set_cert(cert_path)
@@ -110,6 +113,7 @@ class Nubank:
         response = self._client.post(url, json=payload)
 
         self._save_auth_data(response)
+        self._auth_mode = AuthMode.APP
 
         return response.get('refresh_token')
 
@@ -127,6 +131,7 @@ class Nubank:
         response = self._client.post(url, json=payload)
 
         self._save_auth_data(response)
+        self._auth_mode = AuthMode.APP
 
         return response.get('refresh_token')
 
@@ -135,17 +140,21 @@ class Nubank:
 
         self._client.remove_header('Authorization')
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_feed(self):
         return self._client.get(self._feed_url)
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_statements(self):
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'transaction', feed['events']))
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_payments(self):
         feed = self.get_card_feed()
         return list(filter(lambda x: x['category'] == 'payment', feed['events']))
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_bills(self):
         if self._bills_url is not None:
             request = self._client.get(self._bills_url)
@@ -153,33 +162,41 @@ class Nubank:
         else:
             raise NuMissingCreditCard
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_customer(self):
         request = self._client.get(self._customer_url)
         return request['customer']
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_bill_details(self, bill: dict):
         return self._client.get(bill['_links']['self']['href'])
 
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_statement_details(self, statement):
         return self._client.get(statement['_links']['self']['href'])
 
+    @requires_auth_mode(AuthMode.APP)
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
         return data['data']['viewer']['savingsAccount']['feed']
 
+    @requires_auth_mode(AuthMode.APP)
     def get_account_statements(self):
         feed = self.get_account_feed()
         feed = map(parse_pix_transaction, feed)
         return list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES, feed))
 
+    @requires_auth_mode(AuthMode.APP)
     def get_account_balance(self):
         data = self._make_graphql_request('account_balance')
         return data['data']['viewer']['savingsAccount']['currentSavingsBalance']['netAmount']
 
+    @requires_auth_mode(AuthMode.APP)
     def get_account_investments_details(self):
         data = self._make_graphql_request('account_investments')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']
 
+    @requires_auth_mode(AuthMode.APP)
     def get_account_investments_yield(self, date=datetime.datetime.now()) -> float:
         _, last_day = calendar.monthrange(date.year, date.month)
         last_month_day = datetime.date(date.year, date.month, last_day)
@@ -196,6 +213,7 @@ class Nubank:
 
         return parse_float(value)
 
+    @requires_auth_mode(AuthMode.APP)
     def create_boleto(self, amount: float) -> str:
         customer_id_response = self._make_graphql_request('account_id')
         customer_id = customer_id_response['data']['viewer']['id']
@@ -210,6 +228,7 @@ class Nubank:
 
         return barcode
 
+    @requires_auth_mode(AuthMode.APP)
     def create_money_request(self, amount: float) -> str:
         account_data = self._make_graphql_request('account_feed')
         account_id = account_data['data']['viewer']['savingsAccount']['id']
@@ -223,12 +242,14 @@ class Nubank:
 
         return money_request_response['data']['createMoneyRequest']['moneyRequest']['url']
 
+    @requires_auth_mode(AuthMode.APP)
     def get_available_pix_keys(self):
         response = self._make_graphql_request('get_pix_keys')
         savings_acount = response['data']['viewer']['savingsAccount']
 
         return {'keys': savings_acount['dict']['keys'], 'account_id': savings_acount['id']}
 
+    @requires_auth_mode(AuthMode.APP)
     def create_pix_payment_qrcode(self, account_id: str, amount: float, pix_key: dict, tx_id: str = '') -> dict:
         payload = {
             'createPaymentRequestInput': {
@@ -251,6 +272,7 @@ class Nubank:
             'qr_code': qr,
         }
 
+    @requires_auth_mode(AuthMode.APP)
     def get_pix_identifier(self, transaction_id: str):
         def find_pix_identifier(table_item: dict):
             return table_item.get('label') == 'Identificador'

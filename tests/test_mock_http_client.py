@@ -45,7 +45,8 @@ def test_check_not_tested_new_methods(nubank_client):
     for method_name in methods:
         method = getattr(nubank_client, method_name)
         if method_name[0] != '_' and callable(method):
-            args = list(range(method.__code__.co_argcount - 1))
+
+            args = list(range(get_method_arg_count(method) - 1))
 
             params = default_params.get(method_name)
             if params is None:
@@ -55,3 +56,10 @@ def test_check_not_tested_new_methods(nubank_client):
                 args[index] = params[name].annotation() if type(params[name]) == inspect.Parameter else params[name]
 
             method(*args)
+
+
+def get_method_arg_count(method):
+    try:
+        return method.__wrapped__.__code__.co_argcount
+    except AttributeError:
+        return method.__code__.co_argcount

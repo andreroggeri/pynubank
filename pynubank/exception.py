@@ -7,6 +7,11 @@ class NuException(Exception):
         super().__init__(message)
 
 
+class NuInvalidAuthenticationMethod(NuException):
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class NuMissingCreditCard(NuException):
     def __init__(self):
         super().__init__(f'Couldn\'t fetch bills due to missing credit card.')
