@@ -10,7 +10,7 @@ def read(fname):
 
 setup(
     name='pynubank',
-    version='2.15.0',
+    version='2.16.0',
     url='https://github.com/andreroggeri/pynubank',
     author='André Roggeri Campos',
     author_email='a.roggeri.c@gmail.com',
