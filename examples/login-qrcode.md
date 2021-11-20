@@ -3,6 +3,8 @@ Ao utilizar a autenticação por QRCode, você estará reproduzindo o fluxo de a
 
 <img src="img/qrcode-web.png" width="650" alt="Exemplo do app web do Nubank"/>
 
+> :warning:  No passado era possível acessar os dados da Nuconta através desse método de autenticação, porém recentemente o Nubank passou a bloquear esse acesso.
+
 Dessa maneira sempre será necessário utilizar o celular para escanear o QRCode e autorizar o acesso.
 
 ```python
