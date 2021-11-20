@@ -19,7 +19,7 @@ Primeiro de tudo, precisamos nos autenticar.
 Para isso, além do seu CPF e senha usuais, precisamos de um fator extra de autenticação.
 
 Temos 3 opções disponíveis, com seus respectivos exemplos:
-- [QR Code](https://github.com/andreroggeri/pynubank/blob/master/examples/login-qrcode.md) (assim como é feito no app web) 
+- [QR Code](https://github.com/andreroggeri/pynubank/blob/master/examples/login-qrcode.md) (assim como é feito no app web. Obs: permite somente acesso aos dados do cartão de crédito) 
 - [Certificado](https://github.com/andreroggeri/pynubank/blob/master/examples/login-certificate.md) (assim como é feito no app mobile)
 - [Certificado e Refresh Token](https://github.com/andreroggeri/pynubank/blob/master/examples/login-refresh-token.md)
 
