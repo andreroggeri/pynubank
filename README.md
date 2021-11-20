@@ -37,7 +37,7 @@ Você pode utilizar este recurso para receber dados falsos para testar a sua sol
 from pynubank import Nubank, MockHttpClient
 
 nu = Nubank(MockHttpClient())
-nu.authenticate_with_qr_code("qualquer-cpf", "qualquer-senha", "qualquer-coisa") # Essa linha funciona porque não estamos chamando o servidor do Nubank ;)
+nu.authenticate_with_cert("qualquer-cpf", "qualquer-senha", "caminho/do_certificado.p12") # Essa linha funciona porque não estamos chamando o servidor do Nubank ;)
 
 # Qualquer método chamado não passará pelo Nubank e terá o retorno instantâneo.
 ```

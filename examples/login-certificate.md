@@ -3,11 +3,11 @@ Ao utilizar a autenticação com certificado, você estará reproduzindo o fluxo
 
 ![Fluxo de geração de certificado](./img/diagram.PNG)
 
-Por esse fluxo você receberá um email do Nubank com o código de acesso e será gerado um certificado (Que você deve manter em um lugar seguro)
+Após instalar a biblioteca, utilize o comando `pynubank` no terminal para iniciar o processo de geração de certificados: arquivo `cert.p12`.
+
+Insira as suas credentials que você receberá um email do Nubank com o código de acesso e será gerado um certificado (Que você deve manter em um lugar seguro)
 
 Com o certificado gerado, é possível fazer o login sem interação humana (Ideal para scripts)
-
-Após instalar a biblioteca, utilize o comando `pynubank` no terminal para iniciar o processo de geração de certificados.
 
 Se executado com sucesso, será gerado um arquivo `cert.p12` **mantenha ele em lugar seguro**. Esse certificado será utilizado pela lib para se comunicar com o servidor do Nubank.
 
