@@ -27,6 +27,7 @@ PAYMENT_EVENT_TYPES = (
     'PixTransferInEvent',
     'PixTransferOutReversalEvent',
     'PixTransferFailedEvent',
+    'PixTransferScheduledEvent',
 )
 
 

@@ -4,12 +4,14 @@ TITLE_INFLOW_PIX = 'Transferência recebida'
 TITLE_OUTFLOW_PIX = 'Transferência enviada'
 TITLE_REVERSAL_PIX = 'Reembolso enviado'
 TITLE_FAILED_PIX = 'Transferência falhou'
+TITLE_SCHEDULED_PIX = 'Transferência agendada'
 
 PIX_TRANSACTION_MAP = {
     TITLE_INFLOW_PIX: 'PixTransferInEvent',
     TITLE_OUTFLOW_PIX: 'PixTransferOutEvent',
     TITLE_REVERSAL_PIX: 'PixTransferOutReversalEvent',
     TITLE_FAILED_PIX: 'PixTransferFailedEvent',
+    TITLE_SCHEDULED_PIX: 'PixTransferScheduledEvent',
 }
 
 
