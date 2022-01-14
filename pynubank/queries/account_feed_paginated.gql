@@ -1,0 +1,21 @@
+query accountFeedPaginated($cursor: String) {
+    viewer {
+        savingsAccount {
+            feedItems(cursor: $cursor) {
+                pageInfo {
+                    hasNextPage
+                }
+                edges {
+                    cursor
+                    node {
+                        id
+                        __typename
+                        title
+                        detail
+                        postDate 
+                    }
+                }
+            }
+        }
+    }
+}

@@ -182,6 +182,14 @@ class Nubank:
         return data['data']['viewer']['savingsAccount']['feed']
 
     @requires_auth_mode(AuthMode.APP)
+    def get_account_feed_paginated(self, cursor=None):
+        payload = {
+            "cursor": cursor
+        }
+        data = self._make_graphql_request('account_feed_paginated', payload)
+        return data['data']['viewer']['savingsAccount']['feedItems']
+
+    @requires_auth_mode(AuthMode.APP)
     def get_account_statements(self):
         feed = self.get_account_feed()
         feed = map(parse_pix_transaction, feed)
