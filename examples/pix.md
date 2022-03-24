@@ -17,7 +17,7 @@ print(data['keys']) # Retorna lista de chaves cadastradas no Pix
 print(data['account_id']) # Retorna id da sua conta
 
 # No exemplo abaixo solicitamos uma cobrança de R$ 50,25 utilizando a primeira chave cadastrada
-money_request = nu.create_pix_payment_qrcode(data['account_id'], 1, data['keys'][0], code)
+money_request = nu.create_pix_payment_qrcode(data['account_id'], 50.25, data['keys'][0], code)
 
 # Irá printar o QRCode no terminal
 money_request['qr_code'].print_ascii()
