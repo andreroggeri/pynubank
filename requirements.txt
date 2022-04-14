@@ -2,4 +2,4 @@ requests==2.27.1
 qrcode==7.3.1
 pyOpenSSL==22.0.0
 colorama==0.4.3
-requests-pkcs12==1.13
+requests-pkcs12==1.14
