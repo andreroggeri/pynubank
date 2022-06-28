@@ -11,3 +11,5 @@
  - [Rendimento histórico da NuConta](./analysis.md#Rendimento-Historico-da-Nuconta)
 ## Pix
  - [Solicitando pagamento](./pix.md)
+## Feed paginado
+ - [Extrair todas as transações](./extract-all-paginated-feed-pages.md)
