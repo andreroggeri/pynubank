@@ -1,0 +1,53 @@
+{
+  "data": {
+    "viewer": {
+      "savingsAccount": {
+        "feedItems": {
+          "pageInfo": {
+            "hasNextPage": true
+          },
+          "edges": [
+            {
+              "cursor": "cursor-here",
+              "node": {
+                "tags": [
+                  "money-out"
+                ],
+                "showClock": false,
+                "displayDate": "Hoje",
+                "footer": "R$ 400,00",
+                "title": "Transferência enviada",
+                "detailsDeeplink": "nuapp://flutter/savings/details-screen/type/TRANSFER_OUT/id/id-here",
+                "id": "id-here",
+                "strikethrough": false,
+                "kind": "NEUTRAL",
+                "iconKey": "nuds_v2_icon.money_out",
+                "postDate": "2022-06-27",
+                "detail": "JOHN DOE"
+              }
+            },
+            {
+              "cursor": "another-cursor",
+              "node": {
+                "tags": [
+                  "money-out"
+                ],
+                "showClock": false,
+                "displayDate": "Hoje",
+                "footer": "R$ 1.300,00",
+                "title": "Transferência enviada",
+                "detailsDeeplink": "nuapp://flutter/savings/details-screen/type/TRANSFER_OUT/id/id-here",
+                "id": "id-here",
+                "strikethrough": false,
+                "kind": "NEUTRAL",
+                "iconKey": "nuds_v2_icon.money_out",
+                "postDate": "2022-06-27",
+                "detail": "JOHN DOE"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

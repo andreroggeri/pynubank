@@ -11,7 +11,7 @@ from pynubank.exception import NuMissingCreditCard
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.utils.http import HttpClient
-from pynubank.utils.parsing import parse_float, parse_pix_transaction
+from pynubank.utils.parsing import parse_float, parse_pix_transaction, parse_generic_transaction
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -187,7 +187,10 @@ class Nubank:
             "cursor": cursor
         }
         data = self._make_graphql_request('account_feed_paginated', payload)
-        return data['data']['viewer']['savingsAccount']['feedItems']
+        items = data['data']['viewer']['savingsAccount']['feedItems']
+        data['data']['viewer']['savingsAccount']['feedItems']['edges'] = list(
+            map(parse_generic_transaction, items['edges']))
+        return items
 
     @requires_auth_mode(AuthMode.APP)
     def get_account_statements(self):

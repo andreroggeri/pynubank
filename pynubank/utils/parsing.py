@@ -28,3 +28,16 @@ def parse_pix_transaction(transaction: dict) -> dict:
         transaction['amount'] = parse_float(transaction['detail'])
 
     return transaction
+
+
+def parse_generic_transaction(transaction: dict) -> dict:
+    amount = None
+    if transaction['node']['detail'] and 'R$' in transaction['node']['detail']:
+        amount = parse_float(transaction['node']['detail'])
+    elif transaction['node']['footer'] and 'R$' in transaction['node']['footer']:
+        amount = parse_float(transaction['node']['footer'])
+
+    if amount:
+        transaction['node']['amount'] = amount
+
+    return transaction

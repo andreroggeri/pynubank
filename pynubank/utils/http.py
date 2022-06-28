@@ -10,7 +10,7 @@ class HttpClient:
         self._cert = None
         self._headers = {
             'Content-Type': 'application/json',
-            'X-Correlation-Id': 'WEB-APP.pewW9',
+            'X-Correlation-Id': 'and-7-86-2-1000005524.9twu3pgr',
             'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
         }
 
