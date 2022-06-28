@@ -1,0 +1,28 @@
+query feed_items($cursor: String) {
+  viewer {
+    savingsAccount {
+      feedItems(cursor: $cursor) {
+        pageInfo {
+          hasNextPage
+        }
+        edges {
+          cursor
+          node {
+            id
+            title
+            detail
+            postDate
+            displayDate
+            footer
+            strikethrough
+            showClock
+            iconKey
+            detailsDeeplink
+            tags
+            kind
+          }
+        }
+      }
+    }
+  }
+}
