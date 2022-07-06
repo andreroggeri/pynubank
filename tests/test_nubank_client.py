@@ -522,3 +522,13 @@ def test_creditcard_methods_should_allow_web_authentication(method_name, method_
 
 def test_creditcard_methods_should_allow_app_authentication():
     pass
+
+
+def test_get_pix_get_pix_message():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    message = nubank_client.get_pix_message('IdentificadorPixAqui')
+
+    assert message is not None
+    assert message == 'Mensagem enviada via PIX'
