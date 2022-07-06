@@ -302,3 +302,18 @@ class Nubank:
             return
 
         return identifier_data['value']
+
+    @requires_auth_mode(AuthMode.APP)
+    def get_pix_message(self, transaction_id: str):
+        message = ''
+        response = self._make_graphql_request('pix_receipt_screen', {'type': 'TRANSFER_IN', 'id': transaction_id})
+        if 'errors' in response.keys():
+            return
+
+        screen_pieces = response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
+
+        for screen_piece in screen_pieces:
+            if screen_piece['__typename'] == 'ReceiptMessagePiece':
+                message = screen_piece['messageContent']
+
+        return message
