@@ -533,5 +533,5 @@ def test_get_pix_details():
     assert pix_details is not None
     assert pix_details['message'] == 'Mensagem enviada via PIX'
     assert pix_details['id'] == 'IdentificadorPixAqui'
-    assert pix_details['value'] == 'R$2,00'
+    assert pix_details['value'] == 'R$ 2,00'
     assert pix_details['date'] == '09 AGO 2021 - 17:05:08'
