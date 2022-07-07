@@ -28,6 +28,12 @@
               ]
             },
             {
+              "__typename": "ReceiptMessagePiece",
+              "fallbackMessage": "Atualize seu app para ver todas as informações!",
+              "messageTitle": "Descrição",
+              "messageContent": "Mensagem enviada via PIX"
+            },
+            {
               "__typename": "ReceiptTablePiece",
               "fallbackMessage": "Atualize seu app para ver todas as informações!",
               "tableHeader": {

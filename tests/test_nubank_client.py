@@ -522,3 +522,16 @@ def test_creditcard_methods_should_allow_web_authentication(method_name, method_
 
 def test_creditcard_methods_should_allow_app_authentication():
     pass
+
+
+def test_get_pix_details():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    pix_details = nubank_client.get_pix_details('IdentificadorPixAqui')
+
+    assert pix_details is not None
+    assert pix_details['message'] == 'Mensagem enviada via PIX'
+    assert pix_details['id'] == 'IdentificadorPixAqui'
+    assert pix_details['value'] == 'R$ 2,00'
+    assert pix_details['date'] == '09 AGO 2021 - 17:05:08'
