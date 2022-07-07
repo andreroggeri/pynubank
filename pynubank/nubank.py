@@ -286,34 +286,61 @@ class Nubank:
 
     @requires_auth_mode(AuthMode.APP)
     def get_pix_identifier(self, transaction_id: str):
-        def find_pix_identifier(table_item: dict):
-            return table_item.get('label') == 'Identificador'
-
         response = self._make_graphql_request('pix_receipt_screen', {'type': 'TRANSFER_IN', 'id': transaction_id})
+
         if 'errors' in response.keys():
             return
 
         screen_pieces = response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
-        table_items = list(itertools.chain(*[table_item.get('tableItems', []) for table_item in screen_pieces]))
 
-        identifier_data = next(filter(find_pix_identifier, table_items), None)
+        return self._get_pix_id(screen_pieces)
+
+    def _get_pix_value(self, screen_pieces: dict):
+        def find_pix_value(table_item: dict):
+            return table_item.get('label') == 'Valor'
+
+        table_items = list(itertools.chain(*[table_item.get('tableItems', []) for table_item in screen_pieces]))
+        value_data = next(filter(find_pix_value, table_items), None)
+
+        if value_data is None:
+            return
+
+        return value_data['value']
+
+    def _get_pix_id(self, screen_pieces: dict):
+        def find_pix_id(table_item: dict):
+            return table_item.get('label') == 'Identificador'
+
+        table_items = list(itertools.chain(*[table_item.get('tableItems', []) for table_item in screen_pieces]))
+        identifier_data = next(filter(find_pix_id, table_items), None)
 
         if identifier_data is None:
             return
 
         return identifier_data['value']
 
+    def _get_pix_message(self, screen_pieces: dict):
+        message_content = list(itertools.chain(*[table_item.get('messageContent', []) for table_item in screen_pieces]))
+
+        return ''.join(message_content)
+
+    def _get_pix_date(self, screen_pieces: dict):
+        transaction_date = list(itertools.chain(*[table_item.get('headerSubtitle', []) for table_item in screen_pieces]))
+
+        return ''.join(transaction_date)
+
     @requires_auth_mode(AuthMode.APP)
-    def get_pix_message(self, transaction_id: str):
-        message = ''
+    def get_pix_details(self, transaction_id: str):
         response = self._make_graphql_request('pix_receipt_screen', {'type': 'TRANSFER_IN', 'id': transaction_id})
+
         if 'errors' in response.keys():
             return
 
         screen_pieces = response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
 
-        for screen_piece in screen_pieces:
-            if screen_piece['__typename'] == 'ReceiptMessagePiece':
-                message = screen_piece['messageContent']
-
-        return message
+        return {
+            "id": self._get_pix_id(screen_pieces),
+            "value": self._get_pix_value(screen_pieces),
+            "message": self._get_pix_message(screen_pieces),
+            "date": self._get_pix_date(screen_pieces),
+        }
