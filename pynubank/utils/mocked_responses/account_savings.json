@@ -1,0 +1,31 @@
+{
+   "data": {
+      "viewer": {
+         "productFeatures": {
+            "buckets": {
+               "screens": {
+                  "home": {
+                     "mainBalance": {
+                        "netAmount": 37.0
+                     },
+                     "balancesList": [
+                        {
+                           "label": "Disponível a qualquer momento",
+                           "maturityDate": "None",
+                           "netAmount": 35.0,
+                           "href": "nuapp://flutter/savings/buckets/daily-liquidity"
+                        },
+						{
+                           "label": "Disponível em 01/07/2023",
+                           "maturityDate": "None",
+                           "netAmount": 35.0,
+                           "href": "nuapp://flutter/savings/buckets/daily-liquidity"
+                        }
+                     ]
+                  }
+               }
+            }
+         }
+      }
+   }
+}
