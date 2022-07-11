@@ -204,6 +204,11 @@ class Nubank:
         return data['data']['viewer']['savingsAccount']['currentSavingsBalance']['netAmount']
 
     @requires_auth_mode(AuthMode.APP)
+    def get_account_savings_balance(self):
+        data = self._make_graphql_request('account_savings')
+        return data['data']['viewer']['productFeatures']['buckets']['screens']['home']
+
+    @requires_auth_mode(AuthMode.APP)
     def get_account_investments_details(self):
         data = self._make_graphql_request('account_investments')
         return data['data']['viewer']['savingsAccount']['redeemableDeposits']

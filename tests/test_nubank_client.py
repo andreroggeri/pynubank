@@ -520,8 +520,17 @@ def test_creditcard_methods_should_allow_web_authentication(method_name, method_
     method(**method_args)
 
 
-def test_creditcard_methods_should_allow_app_authentication():
-    pass
+def test_get_account_savings_balance():
+    nubank_client = Nubank(client=MockHttpClient())
+    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+
+    savings_balance = nubank_client.get_account_savings_balance()
+    savings_balance_list = savings_balance['balancesList']
+
+    assert savings_balance['mainBalance']['netAmount'] == 37.0
+    assert len(savings_balance_list) == 2
+    for balance in savings_balance_list:
+        assert balance['netAmount'] == 35.0
 
 
 def test_get_pix_details():

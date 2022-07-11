@@ -45,6 +45,8 @@ class MockHttpClient(HttpClient):
             'pix_receipt_screen')
         self._results[GHOSTFLAME_URL, str(prepare_request_body('account_feed_paginated'))] = self._read_data(
             'account_feed_paginated')
+        self._results[(GHOSTFLAME_URL, str(prepare_request_body('account_savings')))] = self._read_data(
+            'account_savings')
 
     def add_mock_url(self, url: str, graphql_object: str, response_json_name: str):
         self._results[(url, graphql_object)] = self._read_data(response_json_name)

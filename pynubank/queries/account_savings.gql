@@ -1,0 +1,21 @@
+query bucketsHomeInfo {
+  viewer {
+    productFeatures {
+      buckets {
+        screens {
+          home {
+            mainBalance {
+              netAmount
+            }
+            balancesList {
+              label
+              maturityDate
+              netAmount
+              href
+            }
+          }
+        }
+      }
+    }
+  }
+}
