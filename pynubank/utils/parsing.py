@@ -1,5 +1,6 @@
 import re
 
+BRL = 'R$'
 TITLE_INFLOW_PIX = 'Transferência recebida'
 TITLE_OUTFLOW_PIX = 'Transferência enviada'
 TITLE_REVERSAL_PIX = 'Reembolso enviado'
@@ -23,7 +24,7 @@ def parse_pix_transaction(transaction: dict) -> dict:
     if transaction['__typename'] != 'GenericFeedEvent':
         return transaction
 
-    if transaction['title'] in PIX_TRANSACTION_MAP.keys():
+    if BRL in transaction['detail'] and transaction['title'] in PIX_TRANSACTION_MAP.keys():
         transaction['__typename'] = PIX_TRANSACTION_MAP[transaction['title']]
         transaction['amount'] = parse_float(transaction['detail'])
 
@@ -32,9 +33,9 @@ def parse_pix_transaction(transaction: dict) -> dict:
 
 def parse_generic_transaction(transaction: dict) -> dict:
     amount = None
-    if transaction['node']['detail'] and 'R$' in transaction['node']['detail']:
+    if transaction['node']['detail'] and BRL in transaction['node']['detail']:
         amount = parse_float(transaction['node']['detail'])
-    elif transaction['node']['footer'] and 'R$' in transaction['node']['footer']:
+    elif transaction['node']['footer'] and BRL in transaction['node']['footer']:
         amount = parse_float(transaction['node']['footer'])
 
     if amount:
