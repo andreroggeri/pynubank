@@ -71,6 +71,17 @@ def test_should_parse_failed_pix_transaction():
     assert parsed['amount'] == 3668.40
 
 
+def test_should_ignore_transactions_without_value():
+    transaction = base_generic_transaction.copy()
+    transaction['title'] = 'Transferência enviada'
+    transaction['detail'] = 'Something without money'
+
+    parsed = parse_pix_transaction(transaction)
+
+    assert parsed['__typename'] == 'GenericFeedEvent'
+    assert parsed.get('amount') is None
+
+
 def test_parse_generic_transaction_should_retrieve_amount_from_detail_when_contains_rs():
     transaction = create_edge_transaction()
     transaction['node']['detail'] = 'R$ 123,56'
