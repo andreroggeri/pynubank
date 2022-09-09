@@ -42,6 +42,7 @@ class Nubank:
         self._query_url = None
         self._bills_url = None
         self._customer_url = None
+        self._account_url = None
         self._revoke_token_url = None
         self._auth_mode = AuthMode.UNAUTHENTICATED
 
@@ -73,10 +74,12 @@ class Nubank:
         feed_url_keys = ['events', 'magnitude']
         bills_url_keys = ['bills_summary']
         customer_url_keys = ['customer']
+        account_url_keys = ['account']
 
         self._feed_url = self._find_url(feed_url_keys, links)
         self._bills_url = self._find_url(bills_url_keys, links)
         self._customer_url = self._find_url(customer_url_keys, links)
+        self._account_url = self._find_url(account_url_keys, links)
         self._query_url = links['ghostflame']['href']
         self._revoke_token_url = links['revoke_token']['href']
 
@@ -140,6 +143,11 @@ class Nubank:
         self._client.post(self._revoke_token_url, {})
 
         self._client.remove_header('Authorization')
+
+    @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
+    def get_credit_card_balance(self):
+        account_details = self._client.get(self._account_url)
+        return account_details['account']['balances']
 
     @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_feed(self):
@@ -325,7 +333,8 @@ class Nubank:
         return ''.join(message_content)
 
     def _get_pix_date(self, screen_pieces: dict):
-        transaction_date = list(itertools.chain(*[table_item.get('headerSubtitle', []) for table_item in screen_pieces]))
+        transaction_date = list(
+            itertools.chain(*[table_item.get('headerSubtitle', []) for table_item in screen_pieces]))
 
         return ''.join(transaction_date)
 
