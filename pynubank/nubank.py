@@ -145,9 +145,9 @@ class Nubank:
         self._client.remove_header('Authorization')
 
     @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
-    def get_credit_card_open(self):
+    def get_credit_card_balance(self):
         account_details = self._client.get(self._account_url)
-        return account_details['account']['balances']['open'] / 100
+        return account_details['account']['balances']
 
     @requires_auth_mode(AuthMode.APP, AuthMode.WEB)
     def get_card_feed(self):
@@ -333,7 +333,8 @@ class Nubank:
         return ''.join(message_content)
 
     def _get_pix_date(self, screen_pieces: dict):
-        transaction_date = list(itertools.chain(*[table_item.get('headerSubtitle', []) for table_item in screen_pieces]))
+        transaction_date = list(
+            itertools.chain(*[table_item.get('headerSubtitle', []) for table_item in screen_pieces]))
 
         return ''.join(transaction_date)
 

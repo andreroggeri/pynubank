@@ -1,0 +1,182 @@
+{
+  "account": {
+    "due_day": 5,
+    "interest_product": "standard_revolving",
+    "temporary_limit_amount": 0,
+    "limit_range_min": 0,
+    "next_due_date": "2022-09-05",
+    "interest_rate": 0.0775,
+    "status": "active",
+    "id": "some-id",
+    "balances": {
+      "prepaid": 0,
+      "due": 0,
+      "open": 0,
+      "available": 15000,
+      "future": 0
+    },
+    "cards": [
+      {
+        "id": "some-id",
+        "type": "credit_card_physical",
+        "status": "active",
+        "status_detail": "active",
+        "product_id": "ff98fb1b-b502-4634-b7e9-fe841373af6d",
+        "card_number": "1234XXXXXXXX5678",
+        "_links": {
+          "block": {
+            "href": "https://prod-s0-facade.nubank.com.br/api/cards/some-id/block"
+          },
+          "unblock": {
+            "href": "https://prod-s0-facade.nubank.com.br/api/cards/some-id/unblock"
+          },
+          "recover_pin": {
+            "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/recover-pin"
+          },
+          "card_tracking": {
+            "href": "https://prod-s0-sendman.nubank.com.br/api/card-trackings/some-id"
+          }
+        }
+      }
+    ],
+    "net_available": 15000,
+    "_links": {
+      "closed_bill_pay_flow": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/closed-bill-payment"
+      },
+      "payments": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=payments"
+      },
+      "interest_rates": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/accounts/some-id/interest-rates"
+      },
+      "get_limit_evolution_survey": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit/survey/:origin"
+      },
+      "anticipatable_list": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/transactions/anticipatable"
+      },
+      "increase_limit_request_realtime": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/increase-limit-request/realtime"
+      },
+      "create_kushki_payment": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?hypermedia-name=create-kushki-payment-reference"
+      },
+      "get_desired_limit": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit"
+      },
+      "travel_notification": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/travel-notification"
+      },
+      "new_virtual_card": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/virtual-cards"
+      },
+      "bills_sketch": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/bills/sketch"
+      },
+      "events": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/feed"
+      },
+      "refinancing_parameters": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/refinancing-parameters"
+      },
+      "get_desired_limit_state": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit/state"
+      },
+      "dashboard": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/dashboard"
+      },
+      "objective_reasons_options": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit/objective-reasons/options"
+      },
+      "limit_dashboard": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/path-to-credit/dashboard/v1"
+      },
+      "secured_lines_hiring_balances": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/secured-lines/hiring-balances"
+      },
+      "rewards_signup_widget": {
+        "href": "https://prod-s0-chateau.nubank.com.br/api/customers/some-id/cross-sell"
+      },
+      "simple_virtual_cards": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/virtual-cards"
+      },
+      "bills_summary": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/bills/summary"
+      },
+      "save_desired_limit": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit"
+      },
+      "virtual_cards": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/virtual-cards/non-canceled"
+      },
+      "change_due_day": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/due-day/change"
+      },
+      "rewards_enrollment": {
+        "href": "https://prod-s0-maitre.nubank.com.br/api/enrollments/some-id"
+      },
+      "open_bill_pay_flow": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/open-bill-payment"
+      },
+      "pse_bank_list": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?hypermedia-name=get-pse-bank-list"
+      },
+      "anticipatable_purchases": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/transactions/anticipatable-purchases"
+      },
+      "limits_mgm_nudge": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/nudge/:scenario"
+      },
+      "feed_banners": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=feed_banners"
+      },
+      "change_installments_screen": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?hypermedia-name=change-installments-screen"
+      },
+      "payment_instructions": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/payment-instructions"
+      },
+      "co_payments_discovery": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?hypermedia-name=co-payments-discovery"
+      },
+      "bills_screen": {
+        "href": "https://prod-s0-showbillz.nubank.com.br/api/accounts/some-id/bills/screen"
+      },
+      "save_limit_evolution_survey": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit/survey"
+      },
+      "transactions": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?name=transactions"
+      },
+      "good_behaviors_deeplinks": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/desired-limit/good-behaviors/deeplinks"
+      },
+      "reactive_limit_flow": {
+        "href": "https://prod-s0-bonafont.nubank.com.br/api/flows/reactive-limit-request/owners/some-id"
+      },
+      "secured_lines_withdrawal_balances": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/customers/some-id/secured-lines/withdrawal-balances"
+      },
+      "change_limit": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/change-limit"
+      },
+      "anticipation_discovery": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/universal-anticipation/accounts/some-id/discovery"
+      },
+      "kushki_payment_networks": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/removed?hypermedia-name=get-kushki-payment-networks"
+      },
+      "stats": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id/stats"
+      },
+      "self": {
+        "href": "https://prod-s0-facade.nubank.com.br/api/accounts/some-id"
+      }
+    },
+    "limit_range_max": 2000000,
+    "next_close_date": "2022-08-29",
+    "customer_id": "some-id",
+    "credit_limit": 15000
+  }
+}

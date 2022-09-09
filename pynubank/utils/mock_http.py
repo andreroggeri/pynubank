@@ -30,6 +30,7 @@ class MockHttpClient(HttpClient):
         self._results[('https://*/api/app/discovery', '')] = self._read_data('discovery_app')
         self._results[('https://mocked-proxy-url/api/token', '')] = self._read_data('discovery_login')
         self._results[('https://mocked-proxy-url/api/proxy/login', '')] = self._read_data('discovery_login')
+        self._results[('https://mocked-proxy-url/api/proxy/account_123', '')] = self._read_data('account')
         self._results[('https://mocked-proxy-url/api/proxy/lift', '')] = self._read_data('discovery_login')
         self._results[('https://mocked-proxy-url/api/proxy/events_123', '')] = self._read_data('proxy_events')
         self._results[(GHOSTFLAME_URL, str(prepare_request_body('create_money_request')))] = self._read_data('money')
