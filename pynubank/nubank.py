@@ -3,6 +3,7 @@ import datetime
 import itertools
 import uuid
 from typing import Tuple
+from deprecated import deprecated
 
 from qrcode import QRCode
 
@@ -185,6 +186,7 @@ class Nubank:
         return self._client.get(statement['_links']['self']['href'])
 
     @requires_auth_mode(AuthMode.APP)
+    @deprecated(version='2.21.0', reason='Use get_account_feed_paginated instead')
     def get_account_feed(self):
         data = self._make_graphql_request('account_feed')
         return data['data']['viewer']['savingsAccount']['feed']
@@ -201,10 +203,16 @@ class Nubank:
         return items
 
     @requires_auth_mode(AuthMode.APP)
+    @deprecated(version='2.21.0', reason='Use get_account_statements_paginated instead')
     def get_account_statements(self):
         feed = self.get_account_feed()
         feed = map(parse_pix_transaction, feed)
         return list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES, feed))
+
+    def get_account_statements_paginated(self, cursor=None):
+        feed = self.get_account_feed_paginated(cursor)
+        feed['edges'] = list(filter(lambda x: x['node'].get('amount') is not None, feed['edges']))
+        return feed
 
     @requires_auth_mode(AuthMode.APP)
     def get_account_balance(self):
