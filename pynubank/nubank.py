@@ -11,7 +11,7 @@ from pynubank.exception import NuMissingCreditCard
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.utils.http import HttpClient
-from pynubank.utils.parsing import parse_float, parse_pix_transaction
+from pynubank.utils.parsing import parse_float, parse_transaction
 
 PAYMENT_EVENT_TYPES = (
     'TransferOutEvent',
@@ -184,7 +184,7 @@ class Nubank:
     @requires_auth_mode(AuthMode.APP)
     def get_account_statements(self):
         feed = self.get_account_feed()
-        feed = map(parse_pix_transaction, feed)
+        feed = map(parse_transaction, feed)
         return list(filter(lambda x: x['__typename'] in PAYMENT_EVENT_TYPES, feed))
 
     @requires_auth_mode(AuthMode.APP)
