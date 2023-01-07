@@ -18,7 +18,7 @@ Acesse pela url local http://127.0.0.1:5000/ e utilize os seguintes endpoints:
 
 `/feed?cursor=ezpwcmlvcml0eSAwLCA6dGltZ...` - Lista todas as transações de forma paginada informando o cursor da última transação. Isso irá retornar os próximos registros.
 
-Obs: Tomar cuidado com os endpoints `/list` e `/find?code=123` com contas com muitas transações. 
+Obs: Tomar cuidado com os endpoints `/list` e `/find?code=123` em contas com muitas transações. Necessário melhorias.
 
 ```python
 from pynubank import Nubank
