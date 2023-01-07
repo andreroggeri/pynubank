@@ -11,5 +11,6 @@
  - [Rendimento histórico da NuConta](./analysis.md#Rendimento-Historico-da-Nuconta)
 ## Pix
  - [Solicitando pagamento](./pix.md)
+ - [Solicitar, listar e buscar pagamento utilizando Flask](./flask-criar-listar-buscar-pix.md)
 ## Feed paginado
  - [Extrair todas as transações](./extract-all-paginated-feed-pages.md)
