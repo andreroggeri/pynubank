@@ -1,3 +1,4 @@
+from pathlib import Path
 from uuid import uuid4
 
 import pytest
@@ -8,6 +9,8 @@ from pynubank.exception import NuMissingCreditCard, NuInvalidAuthenticationMetho
 from pynubank.nubank import Nubank
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.utils.mock_http import GHOSTFLAME_URL
+
+cert_path = Path(__file__).parent / 'fixtures' / 'cert.cer'
 
 
 def test_authenticate_with_qr_code_succeeds():
@@ -20,7 +23,7 @@ def test_authenticate_with_qr_code_succeeds():
 
 def test_authenticate_with_cert():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
     assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
@@ -28,7 +31,7 @@ def test_authenticate_with_cert():
 
 def test_authenticate_with_refresh_token():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_refresh_token('token', 'some-file.p12')
+    nubank_client.authenticate_with_refresh_token('token', cert_path)
 
     assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/events_123'
     assert nubank_client._client.get_header('Authorization') == 'Bearer access_token_123'
@@ -43,7 +46,7 @@ def test_authenticate_with_cert_missing_credit_card():
     mock_client.add_mock_url('https://mocked-proxy-url/api/token', '', 'discovery_login_alternative')
 
     nubank_client = Nubank(client=mock_client)
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     assert nubank_client._feed_url == 'https://mocked-proxy-url/api/proxy/magnitude_123'
     assert nubank_client._bills_url is None
@@ -83,7 +86,7 @@ def test_get_bills_missing_credit_card():
     mock_client.add_mock_url('https://mocked-proxy-url/api/token', '', 'discovery_login_alternative')
 
     nubank_client = Nubank(client=mock_client)
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     with pytest.raises(NuMissingCreditCard):
         nubank_client.get_bills()
@@ -221,7 +224,7 @@ def test_get_card_statements():
 
 def test_get_account_balance():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     balance = nubank_client.get_account_balance()
 
@@ -230,7 +233,7 @@ def test_get_account_balance():
 
 def test_get_account_feed():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     statements = nubank_client.get_account_feed()
 
@@ -253,7 +256,7 @@ def test_get_account_feed():
 
 def test_get_account_statements():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     statements = nubank_client.get_account_statements()
 
@@ -275,7 +278,7 @@ def test_get_account_statements():
 
 def test_get_account_investments_details():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     statements = nubank_client.get_account_investments_details()
 
@@ -307,7 +310,7 @@ def test_get_account_investments_details():
 
 def test_get_account_investments_yield():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     month_yield = nubank_client.get_account_investments_yield()
 
@@ -344,21 +347,21 @@ def test_get_qr_code(monkeypatch):
 
 def test_should_generate_boleto():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     assert nubank_client.create_boleto(200.50) == '123131321231231.2313212312.2131231.21332123'
 
 
 def test_should_create_money_request():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     assert nubank_client.create_money_request(200) == 'https://some.tld/path1/path2'
 
 
 def test_should_fetch_pix_keys():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     data = nubank_client.get_available_pix_keys()
 
@@ -372,7 +375,7 @@ def test_should_fetch_pix_keys():
 
 def test_should_create_pix_money_request():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     keys_data = nubank_client.get_available_pix_keys()
     request = nubank_client.create_pix_payment_qrcode('1231231232', 1232213.23, keys_data['keys'][0])
@@ -403,7 +406,7 @@ def test_should_return_none_if_isnt_pix_transaction():
     client.remove_mock_url((GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen'))))
     client.add_mock_url(GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen')), 'pix_receipt_screen_not_found')
     nubank_client = Nubank(client)
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     pix_identifier = nubank_client.get_pix_identifier('tx_123123')
 
@@ -416,7 +419,7 @@ def test_should_return_none_if_pix_transaction_doesnt_have_identifier():
     client.add_mock_url(GHOSTFLAME_URL, str(prepare_request_body('pix_receipt_screen')),
                         'pix_receipt_screen_without_identifier')
     nubank_client = Nubank(client)
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     pix_identifier = nubank_client.get_pix_identifier('tx_123123')
 
@@ -425,7 +428,7 @@ def test_should_return_none_if_pix_transaction_doesnt_have_identifier():
 
 def test_should_retrieve_pix_identifier_for_pix_transaction():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     pix_identifier = nubank_client.get_pix_identifier('tx_123123')
 
@@ -442,7 +445,7 @@ def test_get_card_statement_details():
     }
 
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
     statement_details = nubank_client.get_card_statement_details(statement_mock)
 
     transaction = statement_details['transaction']
@@ -522,7 +525,7 @@ def test_creditcard_methods_should_allow_web_authentication(method_name, method_
 
 def test_get_account_savings_balance():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     savings_balance = nubank_client.get_account_savings_balance()
     savings_balance_list = savings_balance['balancesList']
@@ -535,7 +538,7 @@ def test_get_account_savings_balance():
 
 def test_get_pix_details():
     nubank_client = Nubank(client=MockHttpClient())
-    nubank_client.authenticate_with_cert('1234', 'hunter12', 'some-file.p12')
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_path)
 
     pix_details = nubank_client.get_pix_details('IdentificadorPixAqui')
 
@@ -544,3 +547,20 @@ def test_get_pix_details():
     assert pix_details['id'] == 'IdentificadorPixAqui'
     assert pix_details['value'] == 'R$ 2,00'
     assert pix_details['date'] == '09 AGO 2021 - 17:05:08'
+
+
+def test_should_error_if_cert_not_provided():
+    nubank_client = Nubank(client=MockHttpClient())
+
+    with pytest.raises(ValueError) as ex:
+        nubank_client.authenticate_with_cert('1234', 'hunter12')
+
+        assert ex is not None
+
+
+def test_should_authenticate_with_cert_data():
+    nubank_client = Nubank(client=MockHttpClient())
+
+    nubank_client.authenticate_with_cert('1234', 'hunter12', cert_data=b'SOME_CERT')
+
+    assert nubank_client._client._cert == b'SOME_CERT'

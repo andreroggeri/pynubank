@@ -14,8 +14,8 @@ class HttpClient:
             'User-Agent': 'pynubank Client - https://github.com/andreroggeri/pynubank',
         }
 
-    def set_cert(self, cert_path: str):
-        self._cert = cert_path
+    def set_cert_data(self, cert_data: bytes):
+        self._cert = cert_data
 
     def set_header(self, name: str, value: str):
         self._headers[name] = value
@@ -28,7 +28,7 @@ class HttpClient:
 
     @property
     def _cert_args(self):
-        return {'pkcs12_filename': self._cert, 'pkcs12_password': ''} if self._cert else {}
+        return {'pkcs12_data': self._cert, 'pkcs12_password': ''} if self._cert else {}
 
     def _handle_response(self, response: Response) -> dict:
         if response.status_code != 200:
