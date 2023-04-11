@@ -39,6 +39,15 @@ def test_check_not_tested_new_methods(nubank_client):
         'get_card_statement_details': {
             'statement': {'_links': {'self': {'href': f'https://mocked-proxy-url/api/transactions/{uuid4()}'}}},
         },
+        'authenticate_with_cert': {
+            'cpf': '12345678912',
+            'password': 'hunter12',
+            'cert_data': b'cert_data',
+        },
+        'authenticate_with_refresh_token': {
+            'refresh_token': 'refresh_token',
+            'cert_data': b'cert_data',
+        }
     }
 
     methods = dir(nubank_client)
