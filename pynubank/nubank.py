@@ -2,7 +2,8 @@ import calendar
 import datetime
 import itertools
 import uuid
-from typing import Tuple
+from pathlib import Path
+from typing import Tuple, Optional
 from deprecated import deprecated
 
 from qrcode import QRCode
@@ -104,8 +105,16 @@ class Nubank:
         self._save_auth_data(response)
         self._auth_mode = AuthMode.WEB
 
-    def authenticate_with_cert(self, cpf: str, password: str, cert_path: str):
-        self._client.set_cert(cert_path)
+    def authenticate_with_cert(self, cpf: str, password: str, cert_path: Optional[str] = None,
+                               cert_data: Optional[bytes] = None):
+        if cert_path is None and cert_data is None:
+            raise ValueError('cert_path or cert_data must be provided')
+
+        if cert_data:
+            self._client.set_cert_data(cert_data)
+        else:
+            self._load_cert(cert_path)
+
         url = self._discovery.get_app_url('token')
         payload = {
             'grant_type': 'password',
@@ -122,8 +131,15 @@ class Nubank:
 
         return response.get('refresh_token')
 
-    def authenticate_with_refresh_token(self, refresh_token: str, cert_path: str):
-        self._client.set_cert(cert_path)
+    def authenticate_with_refresh_token(self, refresh_token: str, cert_path: Optional[str] = None,
+                                        cert_data: Optional[str] = None):
+        if cert_path is None and cert_data is None:
+            raise ValueError('cert_path or cert_data must be provided')
+
+        if cert_data:
+            self._client.set_cert_data(cert_data)
+        else:
+            self._load_cert(cert_path)
 
         url = self._discovery.get_app_url('token')
         payload = {
@@ -367,6 +383,7 @@ class Nubank:
             "date": self._get_pix_date(screen_pieces),
         }
 
+
     @requires_auth_mode(AuthMode.APP)
     def get_transaction_details(self, transaction_type: str, transaction_id: str):
         response = self._make_graphql_request('pix_receipt_screen', {'type': transaction_type, 'id': transaction_id})
@@ -375,3 +392,12 @@ class Nubank:
             return
 
         return response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
+
+    def _load_cert(self, cert_path: str):
+        cert_file = Path(cert_path)
+        if not cert_file.exists() or not cert_file.is_file():
+            raise FileNotFoundError(f'File not found: {cert_path}')
+
+        with cert_file.open('rb') as c:
+            self._client.set_cert_data(c.read())
+
