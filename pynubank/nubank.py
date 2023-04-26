@@ -383,6 +383,16 @@ class Nubank:
             "date": self._get_pix_date(screen_pieces),
         }
 
+
+    @requires_auth_mode(AuthMode.APP)
+    def get_transaction_details(self, transaction_type: str, transaction_id: str):
+        response = self._make_graphql_request('pix_receipt_screen', {'type': transaction_type, 'id': transaction_id})
+
+        if 'errors' in response.keys():
+            return
+
+        return response['data']['viewer']['savingsAccount']['getGenericReceiptScreen']['screenPieces']
+
     def _load_cert(self, cert_path: str):
         cert_file = Path(cert_path)
         if not cert_file.exists() or not cert_file.is_file():
@@ -390,3 +400,4 @@ class Nubank:
 
         with cert_file.open('rb') as c:
             self._client.set_cert_data(c.read())
+
