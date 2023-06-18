@@ -8,6 +8,9 @@ def read(fname):
         return f.read()
 
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name='pynubank',
     version='2.23.0',
@@ -17,7 +20,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     package_data={'pynubank': ['queries/*.gql', 'utils/mocked_responses/*.json']},
-    install_requires=['requests', 'qrcode', 'pyOpenSSL', 'colorama', 'requests-pkcs12', 'Deprecated'],
+    install_requires=required,
     setup_requires=['pytest-runner'],
     long_description=read("README.md"),
     long_description_content_type="text/markdown",
