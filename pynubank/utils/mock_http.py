@@ -2,6 +2,8 @@ import fnmatch
 import json
 from pathlib import Path
 
+from requests import Response
+
 from pynubank import NuException
 from pynubank.utils.graphql import prepare_request_body
 from pynubank.utils.http import HttpClient
@@ -70,6 +72,16 @@ class MockHttpClient(HttpClient):
             if result is None:
                 raise NuException(f'There is no result expected for {url}')
         return result
+
+    def raw_get(self, url: str) -> Response:
+        res = Response()
+        res.status_code = 200
+        return res
+
+    def raw_post(self, url: str, json: dict) -> Response:
+        res = Response()
+        res.status_code = 200
+        return res
 
     def _find(self, url: str, json: dict = None):
         result = self._results.get((url, ''))
