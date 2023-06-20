@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from requests import Response
 
-from pynubank import NuException
+from pynubank import NuException, MockHttpClient
 from pynubank.utils.certificate_generator import CertificateGenerator
 from pynubank.utils.discovery import Discovery
 
@@ -30,10 +30,10 @@ def mock_response(content=None, return_headers=None, status_code=200):
 
 
 def test_request_code_fails_when_status_code_is_different_from_401(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response()))
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response()))
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     with pytest.raises(NuException) as ex:
         email = generator.request_code()
@@ -43,10 +43,10 @@ def test_request_code_fails_when_status_code_is_different_from_401(monkeypatch):
 
 
 def test_request_code_fails_when_there_is_no_authenticate_header(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, {}, 401)))
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, {}, 401)))
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     with pytest.raises(NuException) as ex:
         email = generator.request_code()
@@ -56,10 +56,10 @@ def test_request_code_fails_when_there_is_no_authenticate_header(monkeypatch):
 
 
 def test_request_code(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, headers, 401)))
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     email = generator.request_code()
 
@@ -68,9 +68,9 @@ def test_request_code(monkeypatch):
 
 
 def test_exchange_certs_fails_when_called_without_request_code(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
+    http = MockHttpClient()
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     with pytest.raises(NuException) as ex:
         cert1, cert2 = generator.exchange_certs('1234')
@@ -81,10 +81,10 @@ def test_exchange_certs_fails_when_called_without_request_code(monkeypatch):
 
 
 def test_exchange_cert_fails_when_status_code_is_different_from_200(monkeypatch):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, headers, 401)))
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     generator.request_code()
 
@@ -97,13 +97,13 @@ def test_exchange_cert_fails_when_status_code_is_different_from_200(monkeypatch)
 
 
 def test_exchange_certs(monkeypatch, gen_certificate_return):
-    monkeypatch.setattr(Discovery, '_update_proxy_urls', fake_update_proxy)
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(None, headers, 401)))
+    http = MockHttpClient()
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(None, headers, 401)))
 
-    generator = CertificateGenerator('123456789', 'hunter12', '1234')
+    generator = CertificateGenerator('123456789', 'hunter12', '1234', http_client=http)
 
     generator.request_code()
-    monkeypatch.setattr('requests.post', MagicMock(return_value=mock_response(gen_certificate_return, headers, 200)))
+    monkeypatch.setattr(http, 'raw_post', MagicMock(return_value=mock_response(gen_certificate_return, headers, 200)))
     cert1, cert2 = generator.exchange_certs('1234')
 
     assert cert1 is not None

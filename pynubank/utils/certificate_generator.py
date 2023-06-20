@@ -1,5 +1,6 @@
+from typing import Optional
+
 import OpenSSL
-import requests
 from OpenSSL.crypto import X509
 
 from pynubank import NuException, NuRequestException
@@ -9,18 +10,19 @@ from pynubank.utils.http import HttpClient
 
 class CertificateGenerator:
 
-    def __init__(self, login, password, device_id, encrypted_code=None):
+    def __init__(self, login, password, device_id, encrypted_code=None, http_client: Optional[HttpClient] = None):
         self.login = login
         self.password = password
         self.device_id = device_id
         self.encrypted_code = encrypted_code
         self.key1 = self._generate_key()
         self.key2 = self._generate_key()
-        discovery = Discovery(HttpClient())
+        self.http = HttpClient() if http_client is None else http_client
+        discovery = Discovery(self.http)
         self.url = discovery.get_app_url('gen_certificate')
 
     def request_code(self) -> str:
-        response = requests.post(self.url, json=self._get_payload())
+        response = self.http.raw_post(self.url, json=self._get_payload())
 
         if response.status_code != 401 or not response.headers.get('WWW-Authenticate'):
             raise NuException('Authentication code request failed.')
@@ -38,7 +40,7 @@ class CertificateGenerator:
         payload['code'] = code
         payload['encrypted-code'] = self.encrypted_code
 
-        response = requests.post(self.url, json=payload)
+        response = self.http.raw_post(self.url, json=payload)
 
         if response.status_code != 200:
             raise NuRequestException(response)

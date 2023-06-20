@@ -39,6 +39,9 @@ class HttpClient:
     def raw_get(self, url: str) -> Response:
         return get(url, headers=self._headers, **self._cert_args)
 
+    def raw_post(self, url: str, json: dict) -> Response:
+        return post(url, json=json, headers=self._headers, **self._cert_args)
+
     def get(self, url: str) -> dict:
         return self._handle_response(self.raw_get(url))
 
