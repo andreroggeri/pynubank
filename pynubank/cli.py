@@ -47,7 +47,11 @@ def main():
     log(f'Email sent to {Fore.LIGHTBLACK_EX}{email}{Fore.LIGHTBLUE_EX}')
     code = input('[>] Type the code received by email: ')
 
-    cert1, cert2 = generator.exchange_certs(code)
+    try:
+        cert1, cert2 = generator.exchange_certs(code)
+    except NuException:
+        log(f'{Fore.RED}Failed to exchange code. Check the code and try again!', Fore.RED)
+        return
 
     save_cert(cert1, 'cert.p12')
 

@@ -50,6 +50,26 @@ def test_request_code_exception_should_stop_execution(monkeypatch, proxy_return)
     clean()
 
 
+def mock_exchange_error(*args):
+    raise NuException('invalid code')
+
+
+@patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'exchange_certs', mock_exchange_error)
+@patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'request_code', lambda x: 'email@tld')
+@patch('builtins.input', lambda *args: '12341234')
+@patch('getpass.getpass', lambda *args: '12341234')
+def test_exchange_error_should_not_raise_traceback(monkeypatch, proxy_return, capsys):
+    from pynubank import cli
+    monkeypatch.setattr(HttpClient, 'get', lambda *args: proxy_return)
+
+    clean()
+    cli.main()  # must not raise
+
+    out = capsys.readouterr().out
+    assert 'Failed to exchange code' in out
+    clean()
+
+
 @patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'exchange_certs', mock_certs)
 @patch.object(pynubank.utils.certificate_generator.CertificateGenerator, 'request_code', lambda x: 'email@tld')
 @patch('builtins.input', lambda *args: '12341234')
