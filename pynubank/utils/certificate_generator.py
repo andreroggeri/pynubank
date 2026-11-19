@@ -1,11 +1,28 @@
 from typing import Optional
 
-import OpenSSL
-from OpenSSL.crypto import X509
+from cryptography import x509
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.serialization import pkcs12
 
 from pynubank import NuException, NuRequestException
 from pynubank.utils.discovery import Discovery
 from pynubank.utils.http import HttpClient
+
+
+class PKCS12Certificate:
+    """A private key and its certificate, exported as an unencrypted PKCS#12 file.
+
+    Replaces ``OpenSSL.crypto.PKCS12``, which pyOpenSSL 24.1 removed.
+    """
+
+    def __init__(self, key: rsa.RSAPrivateKey, cert: Optional[x509.Certificate] = None):
+        self.key = key
+        self.cert = cert
+
+    def export(self) -> bytes:
+        return pkcs12.serialize_key_and_certificates(
+            None, self.key, self.cert, None, serialization.NoEncryption())
 
 
 class CertificateGenerator:
@@ -62,24 +79,18 @@ class CertificateGenerator:
             'device_id': self.device_id
         }
 
-    def _parse_cert(self, content: str) -> X509:
-        return OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, content.encode())
+    def _parse_cert(self, content: str) -> x509.Certificate:
+        return x509.load_pem_x509_certificate(content.encode())
 
-    def _gen_cert(self, key, cert):
-        p12 = OpenSSL.crypto.PKCS12()
-        p12.set_privatekey(key)
-        p12.set_certificate(cert)
+    def _gen_cert(self, key, cert) -> PKCS12Certificate:
+        return PKCS12Certificate(key, cert)
 
-        return p12
-
-    def _generate_key(self):
-        key = OpenSSL.crypto.PKey()
-        key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
-
-        return key
+    def _generate_key(self) -> rsa.RSAPrivateKey:
+        return rsa.generate_private_key(public_exponent=65537, key_size=2048)
 
     def _get_public_key(self, key) -> str:
-        return OpenSSL.crypto.dump_publickey(OpenSSL.crypto.FILETYPE_PEM, key).decode()
+        return key.public_key().public_bytes(
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo).decode()
 
     def _parse_authenticate_headers(self, header_content: str) -> dict:
         chunks = header_content.split(',')

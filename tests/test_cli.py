@@ -2,11 +2,11 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-import OpenSSL
+from cryptography.hazmat.primitives.asymmetric import rsa
 
 import pynubank
 from pynubank import NuException
-from pynubank.utils.certificate_generator import CertificateGenerator
+from pynubank.utils.certificate_generator import CertificateGenerator, PKCS12Certificate
 from pynubank.utils.http import HttpClient
 
 
@@ -15,10 +15,8 @@ def mock_error(_):
 
 
 def mock_certs(*args):
-    key = OpenSSL.crypto.PKey()
-    key.generate_key(OpenSSL.crypto.TYPE_RSA, 2048)
-    p12 = OpenSSL.crypto.PKCS12()
-    p12.set_privatekey(key)
+    key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    p12 = PKCS12Certificate(key)
 
     return p12, p12
 

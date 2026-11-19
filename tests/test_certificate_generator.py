@@ -1,11 +1,17 @@
+import datetime
 import json
 from unittest.mock import MagicMock
 
 import pytest
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives.serialization import pkcs12
+from cryptography.x509.oid import NameOID
 from requests import Response
 
 from pynubank import NuException, MockHttpClient
-from pynubank.utils.certificate_generator import CertificateGenerator
+from pynubank.utils.certificate_generator import CertificateGenerator, PKCS12Certificate
 from pynubank.utils.discovery import Discovery
 
 headers = {
@@ -108,3 +114,19 @@ def test_exchange_certs(monkeypatch, gen_certificate_return):
 
     assert cert1 is not None
     assert cert2 is not None
+
+
+def test_exported_certificate_loads_with_empty_password():
+    key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, 'pynubank')])
+    now = datetime.datetime.now(datetime.timezone.utc)
+    cert = (x509.CertificateBuilder().subject_name(name).issuer_name(name).public_key(key.public_key())
+            .serial_number(1).not_valid_before(now).not_valid_after(now + datetime.timedelta(days=1))
+            .sign(key, hashes.SHA256()))
+
+    data = PKCS12Certificate(key, cert).export()
+
+    # HttpClient passes the file to requests-pkcs12 with pkcs12_password=''
+    loaded_key, loaded_cert, _ = pkcs12.load_key_and_certificates(data, b'')
+    assert loaded_cert == cert
+    assert loaded_key.private_numbers() == key.private_numbers()
